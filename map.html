@@ -28,7 +28,7 @@
     }
 
     .rightbar {
-      width: 360px;
+      width: 420px;  /* more space for videos */
       background: white;
       border: 1px solid #ddd;
       border-left: 1px solid #ddd;
@@ -99,17 +99,15 @@
     .map-container {
       flex: 1;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 12px;
+      padding: 6px;  /* less padding -> less grey margin */
     }
 
     .map-card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      width: 70vmin;      /* smaller than before */
-      height: 70vmin;
+      width: 100%;     /* fill the available central width */
+      height: 100%;    /* fill vertically */
       position: relative;
       overflow: hidden;
     }
@@ -186,7 +184,7 @@
 
     .sim-video {
       width: 100%;
-      max-height: 300px;
+      max-height: 320px;
       border-radius: 6px;
       margin-bottom: 8px;
       background: #000000;
@@ -343,7 +341,7 @@
       alert("Domain and dates saved successfully!");
     });
 
-    // Simulación ficticia
+    // Fake simulation
     let running=false, intervalId=null, progress=0;
     const term=document.getElementById("terminal");
     const bar=document.getElementById("progress");
@@ -389,7 +387,6 @@
           log("Simulation complete. Output saved to AWS bucket /results.");
           clearInterval(intervalId);
           running=false;
-          // Show results box
           resultsBox.classList.remove("hidden");
         }else{
           progress+=2;
@@ -409,7 +406,7 @@
       }
     });
 
-    // Vídeos de simulación
+    // Simulation videos
     function setupSimulationVideos() {
       const btnSim1 = document.getElementById("sim1Button");
       const btnSim2 = document.getElementById("sim2Button");
