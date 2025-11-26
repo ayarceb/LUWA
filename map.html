@@ -9,157 +9,191 @@
   <style>
     body {
       font-family: monospace;
-      background:#f4f6fa;
-      display:flex;
-      height:100vh;
-      margin:0;
-    }
-    .sidebar, .rightbar {
-      width:280px;
-      background:white;
-      border:1px solid #ddd;
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      box-shadow:2px 0 6px rgba(0,0,0,0.05);
-      overflow:auto;
-    }
-    .rightbar {
-      border-left:1px solid #ddd;
-    }
-    .sidebar img {
-      width:160px;
-      align-self:center;
-    }
-    .info-box {
-      border:1px solid #ddd;
-      padding:8px;
-      border-radius:6px;
-      background:#fafafa;
-      font-size:0.9rem;
-    }
-    label {
-      font-size:0.9rem;
-      margin-top:8px;
-    }
-    input[type="date"], select {
-      width:100%;
-      padding:6px;
-      border-radius:4px;
-      border:1px solid #ccc;
-      font-family:monospace;
-    }
-    input[type="range"] {
-      width:100%;
-    }
-    button {
-      padding:10px;
-      border:none;
-      border-radius:6px;
-      color:white;
-      font-size:0.9rem;
-      cursor:pointer;
-    }
-    #saveButton {
-      background:#28a745;
-    }
-    #backButton {
-      background:#007bff;
-    }
-    #runButton {
-      background:#d9534f;
-    }
-    #stopButton {
-      background:#6c757d;
-    }
-    .map-container {
-      flex:1;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:12px;
-    }
-    .map-card {
-      background:white;
-      border-radius:12px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.1);
-      width:80vmin;
-      height:80vmin;
-      position:relative;
-      overflow:hidden;
-    }
-    #map {
-      width:100%;
-      height:100%;
-      border-radius:12px;
-    }
-    #terminal {
-      background:#000;
-      color:#0f0;
-      height:200px;
-      overflow:auto;
-      border-radius:6px;
-      padding:8px;
-      font-size:0.85rem;
-    }
-    .progress-bar {
-      width:100%;
-      background:#333;
-      border-radius:4px;
-      height:12px;
-      margin-top:6px;
-    }
-    .progress {
-      height:100%;
-      width:0%;
-      background:#00ff00;
-      border-radius:4px;
+      background: #f4f6fa;
+      display: flex;
+      height: 100vh;
+      margin: 0;
     }
 
-    /* Recuadro de resultados y vídeos de simulación */
+    .sidebar {
+      width: 260px;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+      overflow: auto;
+    }
+
+    .rightbar {
+      width: 360px;
+      background: white;
+      border: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+      overflow: auto;
+    }
+
+    .sidebar img {
+      width: 160px;
+      align-self: center;
+    }
+
+    .info-box {
+      border: 1px solid #ddd;
+      padding: 8px;
+      border-radius: 6px;
+      background: #fafafa;
+      font-size: 0.9rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-family: monospace;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    #saveButton {
+      background: #28a745;
+    }
+
+    #backButton {
+      background: #007bff;
+    }
+
+    #runButton {
+      background: #d9534f;
+    }
+
+    #stopButton {
+      background: #6c757d;
+    }
+
+    .map-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .map-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      width: 70vmin;      /* smaller than before */
+      height: 70vmin;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+    }
+
+    #terminal {
+      background: #000;
+      color: #0f0;
+      height: 200px;
+      overflow: auto;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.85rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background: #333;
+      border-radius: 4px;
+      height: 12px;
+      margin-top: 6px;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #00ff00;
+      border-radius: 4px;
+    }
+
     .results-box {
-      margin-top:12px;
-      padding:10px;
-      border-radius:6px;
-      border:1px solid #ddd;
-      background:#fafafa;
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fafafa;
     }
+
     .results-title {
-      font-size:0.9rem;
-      font-weight:bold;
-      margin-bottom:6px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 6px;
     }
+
     .sim-controls {
-      margin-top:6px;
-      display:flex;
-      gap:8px;
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
     }
+
     .sim-controls button {
-      flex:1;
-      padding:6px 8px;
-      border-radius:4px;
-      border:1px solid #ccc;
-      cursor:pointer;
-      font-size:0.85rem;
-      background:#ffffff;
-      color:#333333;
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-size: 0.85rem;
+      background: #ffffff;
+      color: #333333;
     }
+
     .sim-controls button:hover {
-      filter:brightness(0.95);
+      filter: brightness(0.95);
     }
+
     #sim-videos {
-      margin-top:8px;
+      margin-top: 8px;
     }
+
     .sim-video {
-      width:100%;
-      max-height:260px;
-      border-radius:6px;
-      margin-bottom:8px;
-      background:#000000;
+      width: 100%;
+      max-height: 300px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: #000000;
     }
+
     .hidden {
-      display:none;
+      display: none;
     }
   </style>
 </head>
@@ -195,7 +229,10 @@
       <option value="WRF LOTOS-EUROS">WRF LOTOS-EUROS</option>
     </select>
 
-    <label for="nodes">Computation Nodes: <span id="nodes-value">4</span></label>
+    <label for="nodes">
+      Computation Nodes:
+      <span id="nodes-value">4</span>
+    </label>
     <input type="range" id="nodes" min="1" max="64" value="4" step="1">
 
     <button id="runButton">RUN SIMULATION</button>
@@ -330,7 +367,7 @@
       bar.style.width="0%";
       term.textContent="Initializing simulation...\n";
 
-      // Oculta resultados de runs anteriores
+      // Hide results from previous runs
       resultsBox.classList.add("hidden");
 
       const model=document.getElementById("model-select").value;
@@ -352,7 +389,7 @@
           log("Simulation complete. Output saved to AWS bucket /results.");
           clearInterval(intervalId);
           running=false;
-          // Muestra el recuadro de resultados y los botones de simulación
+          // Show results box
           resultsBox.classList.remove("hidden");
         }else{
           progress+=2;
