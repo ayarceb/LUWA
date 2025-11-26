@@ -117,9 +117,21 @@
       border-radius:4px;
     }
 
-    /* Controles y vídeos de simulación */
-    .sim-controls {
+    /* Recuadro de resultados y vídeos de simulación */
+    .results-box {
       margin-top:12px;
+      padding:10px;
+      border-radius:6px;
+      border:1px solid #ddd;
+      background:#fafafa;
+    }
+    .results-title {
+      font-size:0.9rem;
+      font-weight:bold;
+      margin-bottom:6px;
+    }
+    .sim-controls {
+      margin-top:6px;
       display:flex;
       gap:8px;
     }
@@ -137,7 +149,7 @@
       filter:brightness(0.95);
     }
     #sim-videos {
-      margin-top:12px;
+      margin-top:8px;
     }
     .sim-video {
       width:100%;
@@ -189,30 +201,30 @@
     <button id="runButton">RUN SIMULATION</button>
     <button id="stopButton">STOP SIMULATION</button>
 
-    <!-- Botones de simulación -->
-    <div class="sim-controls">
-      <button id="sim1Button">Simulation #1</button>
-      <button id="sim2Button">Simulation #2</button>
-    </div>
-
-    <!-- Vídeos de simulación -->
-    <div id="sim-videos">
-      <video id="video-sim1" class="sim-video hidden" controls>
-        <!-- Ajusta esta ruta al primer MP4 -->
-        <source src="LE_nst_MAC_SPAIN_2021_001_conc-sfc_2021060.mp4" type="video/mp4">
-        Your browser requires video support.
-      </video>
-
-      <video id="video-sim2" class="sim-video hidden" controls>
-        <!-- Ajusta esta ruta al segundo MP4 -->
-        <source src="LE_nst_MAC_SPAIN_2021_002_conc-sfc_2021060.mp4" type="video/mp4">
-        Your browser requires video support.
-      </video>
-    </div>
-
     <div id="terminal">Waiting for simulation...</div>
     <div class="progress-bar">
       <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- Results box: appears after simulation ends -->
+    <div id="results-box" class="results-box hidden">
+      <div class="results-title">Simulation results</div>
+      <div class="sim-controls">
+        <button id="sim1Button">Simulation #1</button>
+        <button id="sim2Button">Simulation #2</button>
+      </div>
+
+      <div id="sim-videos">
+        <video id="video-sim1" class="sim-video hidden" controls>
+          <source src="LE_nst_MAC_SPAIN_2021_002_conc-sfc_2021060.mp4" type="video/mp4">
+          Your browser requires video support.
+        </video>
+
+        <video id="video-sim2" class="sim-video hidden" controls>
+          <source src="LE_nst_MAC_SPAIN_2021_001_conc-sfc_2021060.mp4" type="video/mp4">
+          Your browser requires video support.
+        </video>
+      </div>
     </div>
   </div>
 
@@ -298,6 +310,7 @@
     let running=false, intervalId=null, progress=0;
     const term=document.getElementById("terminal");
     const bar=document.getElementById("progress");
+    const resultsBox=document.getElementById("results-box");
 
     function log(line){
       term.textContent+=`\n${line}`;
@@ -316,6 +329,9 @@
       progress=0;
       bar.style.width="0%";
       term.textContent="Initializing simulation...\n";
+
+      // Oculta resultados de runs anteriores
+      resultsBox.classList.add("hidden");
 
       const model=document.getElementById("model-select").value;
       const nodes=nodeSlider.value;
@@ -336,6 +352,8 @@
           log("Simulation complete. Output saved to AWS bucket /results.");
           clearInterval(intervalId);
           running=false;
+          // Muestra el recuadro de resultados y los botones de simulación
+          resultsBox.classList.remove("hidden");
         }else{
           progress+=2;
           bar.style.width=progress+"%";
