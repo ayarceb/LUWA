@@ -9,93 +9,189 @@
   <style>
     body {
       font-family: monospace;
-      background:#f4f6fa;
-      display:flex;
-      height:100vh;
-      margin:0;
+      background: #f4f6fa;
+      display: flex;
+      height: 100vh;
+      margin: 0;
     }
-    .sidebar, .rightbar {
-      width:280px;
-      background:white;
-      border:1px solid #ddd;
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      box-shadow:2px 0 6px rgba(0,0,0,0.05);
-      overflow:auto;
+
+    .sidebar {
+      width: 260px;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+      overflow: auto;
     }
-    .rightbar { border-left:1px solid #ddd; }
+
+    .rightbar {
+      width: 420px;  /* more space for videos */
+      background: white;
+      border: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+      overflow: auto;
+    }
+
     .sidebar img {
-      width:160px;
-      align-self:center;
+      width: 160px;
+      align-self: center;
     }
+
     .info-box {
-      border:1px solid #ddd;
-      padding:8px;
-      border-radius:6px;
-      background:#fafafa;
-      font-size:0.9rem;
+      border: 1px solid #ddd;
+      padding: 8px;
+      border-radius: 6px;
+      background: #fafafa;
+      font-size: 0.9rem;
     }
-    label { font-size:0.9rem; margin-top:8px; }
-    input[type="date"], select {
-      width:100%;
-      padding:6px;
-      border-radius:4px;
-      border:1px solid #ccc;
-      font-family:monospace;
+
+    label {
+      font-size: 0.9rem;
+      margin-top: 8px;
     }
-    input[type="range"] { width:100%; }
+
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-family: monospace;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
     button {
-      padding:10px;
-      border:none;
-      border-radius:6px;
-      color:white;
-      font-size:0.9rem;
-      cursor:pointer;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
     }
-    #saveButton { background:#28a745; }
-    #backButton { background:#007bff; }
-    #runButton { background:#d9534f; }
-    #stopButton { background:#6c757d; }
+
+    #saveButton {
+      background: #28a745;
+    }
+
+    #backButton {
+      background: #007bff;
+    }
+
+    #runButton {
+      background: #d9534f;
+    }
+
+    #stopButton {
+      background: #6c757d;
+    }
+
     .map-container {
-      flex:1;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:12px;
+      flex: 1;
+      display: flex;
+      padding: 6px;  /* less padding -> less grey margin */
     }
+
     .map-card {
-      background:white;
-      border-radius:12px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.1);
-      width:80vmin;
-      height:80vmin;
-      position:relative;
-      overflow:hidden;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      width: 100%;     /* fill the available central width */
+      height: 100%;    /* fill vertically */
+      position: relative;
+      overflow: hidden;
     }
-    #map { width:100%; height:100%; border-radius:12px; }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+    }
+
     #terminal {
-      background:#000;
-      color:#0f0;
-      height:200px;
-      overflow:auto;
-      border-radius:6px;
-      padding:8px;
-      font-size:0.85rem;
+      background: #000;
+      color: #0f0;
+      height: 200px;
+      overflow: auto;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.85rem;
     }
+
     .progress-bar {
-      width:100%;
-      background:#333;
-      border-radius:4px;
-      height:12px;
-      margin-top:6px;
+      width: 100%;
+      background: #333;
+      border-radius: 4px;
+      height: 12px;
+      margin-top: 6px;
     }
+
     .progress {
-      height:100%;
-      width:0%;
-      background:#00ff00;
-      border-radius:4px;
+      height: 100%;
+      width: 0%;
+      background: #00ff00;
+      border-radius: 4px;
+    }
+
+    .results-box {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
+
+    .results-title {
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .sim-controls {
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .sim-controls button {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-size: 0.85rem;
+      background: #ffffff;
+      color: #333333;
+    }
+
+    .sim-controls button:hover {
+      filter: brightness(0.95);
+    }
+
+    #sim-videos {
+      margin-top: 8px;
+    }
+
+    .sim-video {
+      width: 100%;
+      max-height: 320px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: #000000;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -131,14 +227,40 @@
       <option value="WRF LOTOS-EUROS">WRF LOTOS-EUROS</option>
     </select>
 
-    <label for="nodes">Computation Nodes: <span id="nodes-value">4</span></label>
+    <label for="nodes">
+      Computation Nodes:
+      <span id="nodes-value">4</span>
+    </label>
     <input type="range" id="nodes" min="1" max="64" value="4" step="1">
 
     <button id="runButton">RUN SIMULATION</button>
     <button id="stopButton">STOP SIMULATION</button>
 
     <div id="terminal">Waiting for simulation...</div>
-    <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- Results box: appears after simulation ends -->
+    <div id="results-box" class="results-box hidden">
+      <div class="results-title">Simulation results</div>
+      <div class="sim-controls">
+        <button id="sim1Button">Simulation #1</button>
+        <button id="sim2Button">Simulation #2</button>
+      </div>
+
+      <div id="sim-videos">
+        <video id="video-sim1" class="sim-video hidden" controls>
+          <source src="LE_nst_MAC_SPAIN_2021_002_conc-sfc_2021060.mp4" type="video/mp4">
+          Your browser requires video support.
+        </video>
+
+        <video id="video-sim2" class="sim-video hidden" controls>
+          <source src="LE_nst_MAC_SPAIN_2021_001_conc-sfc_2021060.mp4" type="video/mp4">
+          Your browser requires video support.
+        </video>
+      </div>
+    </div>
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -148,49 +270,82 @@
     if (!token) window.location.href = "auth.html";
 
     const map = L.map('map', {center:[20,0], zoom:2});
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:8}).addTo(map);
-    const drawnItems = new L.FeatureGroup(); map.addLayer(drawnItems);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:8
+    }).addTo(map);
+
+    const drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
     map.addControl(new L.Control.Draw({
-      draw:{polygon:false,circle:false,marker:false,polyline:false,circlemarker:false,rectangle:true},
+      draw:{
+        polygon:false,
+        circle:false,
+        marker:false,
+        polyline:false,
+        circlemarker:false,
+        rectangle:true
+      },
       edit:{featureGroup:drawnItems}
     }));
 
     let bounds=null;
+
     map.on(L.Draw.Event.CREATED, e=>{
-      drawnItems.clearLayers(); drawnItems.addLayer(e.layer);
+      drawnItems.clearLayers();
+      drawnItems.addLayer(e.layer);
       bounds=e.layer.getBounds();
-      const n=bounds.getNorth().toFixed(2), s=bounds.getSouth().toFixed(2),
-            e_=bounds.getEast().toFixed(2), w=bounds.getWest().toFixed(2);
+      const n=bounds.getNorth().toFixed(2);
+      const s=bounds.getSouth().toFixed(2);
+      const e_=bounds.getEast().toFixed(2);
+      const w=bounds.getWest().toFixed(2);
       document.getElementById("domain-info").textContent=`N:${n} S:${s} E:${e_} W:${w}`;
     });
 
-    // Update node label
+    // Slider de nodos
     const nodeSlider=document.getElementById("nodes");
     nodeSlider.oninput=()=>document.getElementById("nodes-value").textContent=nodeSlider.value;
 
+    // Guardar dominio
     document.getElementById("saveButton").addEventListener("click", async ()=>{
-      if(!bounds){alert("Select a rectangle first.");return;}
-      const north=bounds.getNorth(), south=bounds.getSouth(),
-            east=bounds.getEast(), west=bounds.getWest();
+      if(!bounds){
+        alert("Select a rectangle first.");
+        return;
+      }
+      const north=bounds.getNorth();
+      const south=bounds.getSouth();
+      const east=bounds.getEast();
+      const west=bounds.getWest();
       const init=document.getElementById("init-date").value;
       const end=document.getElementById("end-date").value;
-      if(!init||!end){alert("Select both start and end dates.");return;}
+      if(!init||!end){
+        alert("Select both start and end dates.");
+        return;
+      }
 
       const form=new URLSearchParams();
       form.append("token",token);
-      form.append("north",north); form.append("south",south);
-      form.append("east",east); form.append("west",west);
-      form.append("init_date",init); form.append("end_date",end);
+      form.append("north",north);
+      form.append("south",south);
+      form.append("east",east);
+      form.append("west",west);
+      form.append("init_date",init);
+      form.append("end_date",end);
+
       await fetch("https://luwa-consultancy.duckdns.org/save_domain",{
-        method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:form
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body:form
       });
+
       alert("Domain and dates saved successfully!");
     });
 
-    // -------- Simulation mimic --------
+    // Fake simulation
     let running=false, intervalId=null, progress=0;
     const term=document.getElementById("terminal");
     const bar=document.getElementById("progress");
+    const resultsBox=document.getElementById("results-box");
 
     function log(line){
       term.textContent+=`\n${line}`;
@@ -198,14 +353,27 @@
     }
 
     document.getElementById("runButton").addEventListener("click",()=>{
-      if(!bounds){alert("Define a domain first.");return;}
-      if(running){return;}
-      running=true; progress=0; bar.style.width="0%";
+      if(!bounds){
+        alert("Define a domain first.");
+        return;
+      }
+      if(running){
+        return;
+      }
+      running=true;
+      progress=0;
+      bar.style.width="0%";
       term.textContent="Initializing simulation...\n";
+
+      // Hide results from previous runs
+      resultsBox.classList.add("hidden");
+
       const model=document.getElementById("model-select").value;
       const nodes=nodeSlider.value;
-      const n=bounds.getNorth().toFixed(2), s=bounds.getSouth().toFixed(2),
-            e_=bounds.getEast().toFixed(2), w=bounds.getWest().toFixed(2);
+      const n=bounds.getNorth().toFixed(2);
+      const s=bounds.getSouth().toFixed(2);
+      const e_=bounds.getEast().toFixed(2);
+      const w=bounds.getWest().toFixed(2);
 
       log(`Good morning user.`);
       log(`Model selected: ${model}`);
@@ -217,11 +385,15 @@
       intervalId=setInterval(()=>{
         if(progress>=100){
           log("Simulation complete. Output saved to AWS bucket /results.");
-          clearInterval(intervalId); running=false;
+          clearInterval(intervalId);
+          running=false;
+          resultsBox.classList.remove("hidden");
         }else{
           progress+=2;
           bar.style.width=progress+"%";
-          if(progress%10===0) log(`Progress: ${progress}%`);
+          if(progress%10===0){
+            log(`Progress: ${progress}%`);
+          }
         }
       },200);
     });
@@ -233,6 +405,31 @@
         log("Simulation aborted by user.");
       }
     });
+
+    // Simulation videos
+    function setupSimulationVideos() {
+      const btnSim1 = document.getElementById("sim1Button");
+      const btnSim2 = document.getElementById("sim2Button");
+      const videoSim1 = document.getElementById("video-sim1");
+      const videoSim2 = document.getElementById("video-sim2");
+      const videos = [videoSim1, videoSim2];
+
+      function showVideo(index) {
+        videos.forEach(v => {
+          v.classList.add("hidden");
+          v.pause();
+          v.currentTime = 0;
+        });
+        const v = videos[index];
+        v.classList.remove("hidden");
+        v.play();
+      }
+
+      btnSim1.addEventListener("click", () => showVideo(0));
+      btnSim2.addEventListener("click", () => showVideo(1));
+    }
+
+    setupSimulationVideos();
 
     document.getElementById("backButton").addEventListener("click",()=>window.location.href="cloud.html");
   </script>

@@ -28,7 +28,7 @@
     }
 
     .rightbar {
-      width: 420px;  /* more space for videos */
+      width: 420px;
       background: white;
       border: 1px solid #ddd;
       border-left: 1px solid #ddd;
@@ -96,18 +96,23 @@
       background: #6c757d;
     }
 
+    /* MACC preset button */
+    #maccButton {
+      background: #17a2b8;
+    }
+
     .map-container {
       flex: 1;
       display: flex;
-      padding: 6px;  /* less padding -> less grey margin */
+      padding: 6px;
     }
 
     .map-card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      width: 100%;     /* fill the available central width */
-      height: 100%;    /* fill vertically */
+      width: 100%;
+      height: 100%;
       position: relative;
       overflow: hidden;
     }
@@ -207,6 +212,10 @@
     <input type="date" id="init-date">
     <label for="end-date">End date:</label>
     <input type="date" id="end-date">
+
+    <!-- MACC domain preset button -->
+    <button id="maccButton">MACC grid</button>
+
     <button id="saveButton">Save Domain</button>
     <button id="backButton">Back</button>
   </div>
@@ -301,6 +310,40 @@
       const w=bounds.getWest().toFixed(2);
       document.getElementById("domain-info").textContent=`N:${n} S:${s} E:${e_} W:${w}`;
     });
+
+    // MACC grid preset
+    function setMACCDomain() {
+      const west = -15.0;
+      const south = 35.0;
+      const dlon = 0.50;
+      const dlat = 0.25;
+      const nx = 100;
+      const ny = 140;
+      const east = west + dlon * nx;   // -15 + 0.5*100 = 35
+      const north = south + dlat * ny; // 35 + 0.25*140 = 70
+
+      drawnItems.clearLayers();
+      const rect = L.rectangle([[south, west], [north, east]], {
+        color: '#ff7800',
+        weight: 1
+      });
+      drawnItems.addLayer(rect);
+      bounds = rect.getBounds();
+
+      const n = bounds.getNorth().toFixed(2);
+      const s = bounds.getSouth().toFixed(2);
+      const e_ = bounds.getEast().toFixed(2);
+      const w = bounds.getWest().toFixed(2);
+      document.getElementById("domain-info").textContent = `N:${n} S:${s} E:${e_} W:${w}`;
+
+      map.fitBounds(bounds);
+
+      // Date range from 2024-08-13 00:00:00 to 2024-08-14 00:00:00
+      document.getElementById("init-date").value = "2024-08-13";
+      document.getElementById("end-date").value = "2024-08-14";
+    }
+
+    document.getElementById("maccButton").addEventListener("click", setMACCDomain);
 
     // Slider de nodos
     const nodeSlider=document.getElementById("nodes");
