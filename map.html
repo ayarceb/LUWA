@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUWA Cloud – Domain & Simulation</title>
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css"/>
-
   <style>
     body {
       font-family: monospace;
@@ -26,7 +24,20 @@
       flex-direction: column;
       gap: 12px;
       box-shadow: 2px 0 6px rgba(0,0,0,0.05);
-      overflow-y: auto;
+      overflow: auto;
+    }
+
+    .rightbar {
+      width: 420px;
+      background: white;
+      border: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+      overflow: auto;
     }
 
     .sidebar img {
@@ -34,33 +45,76 @@
       align-self: center;
     }
 
+    .info-box {
+      border: 1px solid #ddd;
+      padding: 8px;
+      border-radius: 6px;
+      background: #fafafa;
+      font-size: 0.9rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-family: monospace;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
     button {
       padding: 10px;
       border: none;
       border-radius: 6px;
       color: white;
-      cursor: pointer;
       font-size: 0.9rem;
+      cursor: pointer;
     }
 
-    #maccButton { background: #6f42c1; }
-    #saveButton { background: #28a745; }
-    #runButton  { background: #d9534f; }
-    #stopButton { background: #6c757d; }
-    #backButton { background: #007bff; }
+    #saveButton {
+      background: #28a745;
+    }
 
-    .rightbar {
-      width: 420px;
-      background: white;
-      padding: 16px;
-      border-left: 1px solid #ddd;
-      overflow-y: auto;
-      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+    #backButton {
+      background: #007bff;
+    }
+
+    #runButton {
+      background: #d9534f;
+    }
+
+    #stopButton {
+      background: #6c757d;
+    }
+
+    /* Botón preset MACC */
+    #maccButton {
+      background: #17a2b8;
     }
 
     .map-container {
       flex: 1;
+      display: flex;
       padding: 6px;
+    }
+
+    .map-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
     #map {
@@ -72,217 +126,414 @@
     #terminal {
       background: #000;
       color: #0f0;
-      padding: 8px;
-      height: 220px;
-      overflow-y: auto;
-      font-size: 0.85rem;
+      height: 200px;
+      overflow: auto;
       border-radius: 6px;
+      padding: 8px;
+      font-size: 0.85rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background: #333;
+      border-radius: 4px;
+      height: 12px;
+      margin-top: 6px;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #00ff00;
+      border-radius: 4px;
+    }
+
+    .results-box {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
+
+    .results-title {
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .sim-controls {
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .sim-controls button {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-size: 0.85rem;
+      background: #ffffff;
+      color: #333333;
+    }
+
+    .sim-controls button:hover {
+      filter: brightness(0.95);
+    }
+
+    #sim-videos {
+      margin-top: 8px;
+    }
+
+    .sim-video {
+      width: 100%;
+      max-height: 320px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: #000000;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
-
 </head>
 <body>
+  <!-- Left Panel -->
+  <div class="sidebar">
+    <img src="LOGO.png" alt="LUWA Logo">
+    <div class="info-box">
+      <strong>Selected Domain:</strong>
+      <div id="domain-info">None</div>
+    </div>
+    <label for="init-date">Start date:</label>
+    <input type="date" id="init-date">
+    <label for="end-date">End date:</label>
+    <input type="date" id="end-date">
 
-<!-- SIDEBAR -->
-<div class="sidebar">
+    <!-- Botón dominio MACC -->
+    <button id="maccButton">Dominio MACC</button>
 
-  <img src="LOGO.png" alt="LUWA Logo">
+    <button id="saveButton">Save Domain</button>
+    <button id="backButton">Back</button>
+  </div>
 
-  <div><strong>Selected Domain:</strong> <div id="domain-info">None</div></div>
+  <!-- Map -->
+  <div class="map-container">
+    <div class="map-card">
+      <div id="map"></div>
+    </div>
+  </div>
 
-  <label>Start date:</label>
-  <input type="date" id="init-date">
+  <!-- Right Panel -->
+  <div class="rightbar">
+    <label for="model-select">Model Name:</label>
+    <select id="model-select">
+      <option value="WRF">WRF</option>
+      <option value="ECMWF LOTOS-EUROS">ECMWF LOTOS-EUROS</option>
+      <option value="WRF LOTOS-EUROS">WRF LOTOS-EUROS</option>
+    </select>
 
-  <label>End date:</label>
-  <input type="date" id="end-date">
+    <label for="nodes">
+      Computation Nodes:
+      <span id="nodes-value">4</span>
+    </label>
+    <input type="range" id="nodes" min="1" max="64" value="4" step="1">
 
-  <!-- NEW BUTTON -->
-  <button id="maccButton">MACC GRID</button>
+    <button id="runButton">RUN SIMULATION</button>
+    <button id="stopButton">STOP SIMULATION</button>
 
-  <button id="saveButton">Save Domain</button>
-  <button id="backButton">Back</button>
+    <div id="terminal">Waiting for simulation...</div>
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
 
-</div>
+    <!-- Results box: appears after simulation ends -->
+    <div id="results-box" class="results-box hidden">
+      <div class="results-title">Simulation results</div>
+      <div class="sim-controls">
+        <button id="sim1Button">Simulation #1</button>
+        <button id="sim2Button">Simulation #2</button>
+      </div>
 
+      <div id="sim-videos">
+        <video id="video-sim1" class="sim-video hidden" controls>
+          <source src="LE_nst_MAC_SPAIN_2021_002_conc-sfc_2021060.mp4" type="video/mp4">
+          Your browser requires video support.
+        </video>
 
-<!-- MAP -->
-<div class="map-container">
-  <div id="map"></div>
-</div>
+        <video id="video-sim2" class="sim-video hidden" controls>
+          <source src="LE_nst_MAC_SPAIN_2021_001_conc-sfc_2021060.mp4" type="video/mp4">
+          Your browser requires video support.
+        </video>
+      </div>
+    </div>
+  </div>
 
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script>
+    const token = localStorage.getItem("luwa_token");
+    if (!token) window.location.href = "auth.html";
 
-<!-- RIGHT PANEL -->
-<div class="rightbar">
+    const map = L.map('map', {center:[20,0], zoom:2});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:8
+    }).addTo(map);
 
-  <label>Model:</label>
-  <select id="model-select">
-    <option value="LOTOS">LOTOS-EUROS</option>
-    <option value="WRF">WRF</option>
-  </select>
+    const drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
 
-  <label>Nodes <span id="nodes-value">4</span></label>
-  <input type="range" id="nodes" min="1" max="64" value="4">
+    map.addControl(new L.Control.Draw({
+      draw:{
+        polygon:false,
+        circle:false,
+        marker:false,
+        polyline:false,
+        circlemarker:false,
+        rectangle:true
+      },
+      edit:{featureGroup:drawnItems}
+    }));
 
-  <button id="runButton">RUN SIMULATION</button>
-  <button id="stopButton">STOP SIMULATION</button>
+    let bounds = null;
+    let currentPreset = "manual";   // "manual" o "MACC"
 
-  <div id="terminal">Waiting for simulation…</div>
+    map.on(L.Draw.Event.CREATED, e=>{
+      drawnItems.clearLayers();
+      drawnItems.addLayer(e.layer);
+      bounds = e.layer.getBounds();
+      const n = bounds.getNorth().toFixed(2);
+      const s = bounds.getSouth().toFixed(2);
+      const e_ = bounds.getEast().toFixed(2);
+      const w = bounds.getWest().toFixed(2);
+      document.getElementById("domain-info").textContent = `N:${n} S:${s} E:${e_} W:${w}`;
+      currentPreset = "manual";
+    });
 
-</div>
+    // MACC grid preset
+    function setMACCDomain() {
+      const west = -15.0;
+      const south = 35.0;
+      const dlon = 0.50;
+      const dlat = 0.25;
+      const nx = 100;
+      const ny = 140;
+      const east = west + dlon * nx;   // -15 + 0.5*100 = 35
+      const north = south + dlat * ny; // 35 + 0.25*140 = 70
 
+      drawnItems.clearLayers();
+      const rect = L.rectangle([[south, west], [north, east]], {
+        color: '#ff7800',
+        weight: 1
+      });
+      drawnItems.addLayer(rect);
+      bounds = rect.getBounds();
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+      const n = bounds.getNorth().toFixed(2);
+      const s = bounds.getSouth().toFixed(2);
+      const e_ = bounds.getEast().toFixed(2);
+      const w = bounds.getWest().toFixed(2);
+      document.getElementById("domain-info").textContent = `N:${n} S:${s} E:${e_} W:${w}`;
 
-<script>
+      map.fitBounds(bounds);
 
-const API = "https://luwa-consultancy.duckdns.org";  
-let bounds = null;
-let currentJob = null;
-let polling = null;
+      // Rango de fechas MACC
+      document.getElementById("init-date").value = "2024-08-13";
+      document.getElementById("end-date").value  = "2024-08-14";
 
-const token = localStorage.getItem("luwa_token");
-if (!token) window.location.href = "auth.html";
-
-
-// ---------------- MAP SETUP ----------------
-
-const map = L.map('map', { center:[20,0], zoom:3 });
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-const drawn = new L.FeatureGroup();
-map.addLayer(drawn);
-
-map.addControl(new L.Control.Draw({
-  draw:{ polygon:false, polyline:false, circle:false, marker:false, circlemarker:false, rectangle:true },
-  edit:{ featureGroup: drawn }
-}));
-
-map.on(L.Draw.Event.CREATED, e => {
-  drawn.clearLayers();
-  drawn.addLayer(e.layer);
-  bounds = e.layer.getBounds();
-
-  updateDomainInfo();
-});
-
-function updateDomainInfo() {
-  if (!bounds) return;
-
-  document.getElementById("domain-info").textContent =
-    `N:${bounds.getNorth().toFixed(2)} ` +
-    `S:${bounds.getSouth().toFixed(2)} ` +
-    `E:${bounds.getEast().toFixed(2)} ` +
-    `W:${bounds.getWest().toFixed(2)}`;
-}
-
-
-// ---------------- MACC GRID BUTTON ----------------
-
-document.getElementById("maccButton").onclick = () => {
-
-  const MACC = {
-    west: -15,
-    south: 35,
-    east: 35,
-    north: 70
-  };
-
-  // draw rectangle
-  const rect = L.rectangle([
-    [MACC.south, MACC.west],
-    [MACC.north, MACC.east]
-  ]);
-
-  drawn.clearLayers();
-  drawn.addLayer(rect);
-  bounds = rect.getBounds();
-  updateDomainInfo();
-
-  // set dates
-  document.getElementById("init-date").value = "2024-08-13";
-  document.getElementById("end-date").value  = "2024-08-14";
-};
-
-
-// ---------------- SAVE DOMAIN ----------------
-
-document.getElementById("saveButton").onclick = async () => {
-  if (!bounds) return alert("Select domain first.");
-
-  const fd = new URLSearchParams();
-  fd.append("token", token);
-  fd.append("north", bounds.getNorth());
-  fd.append("south", bounds.getSouth());
-  fd.append("east", bounds.getEast());
-  fd.append("west", bounds.getWest());
-  fd.append("init_date", document.getElementById("init-date").value);
-  fd.append("end_date", document.getElementById("end-date").value);
-  fd.append("model", document.getElementById("model-select").value);
-  fd.append("nodes", document.getElementById("nodes").value);
-
-  await fetch(`${API}/save_domain`, {
-    method:"POST",
-    headers:{ "Content-Type":"application/x-www-form-urlencoded" },
-    body: fd
-  });
-
-  alert("Domain saved.");
-};
-
-
-// ---------------- RUN SIMULATION (MACC) ----------------
-
-document.getElementById("runButton").onclick = async () => {
-  const terminal = document.getElementById("terminal");
-  terminal.textContent = "Launching LOTOS on AWS…";
-
-  const res = await fetch(`${API}/run_macc_simulation`, { method:"POST" });
-  const data = await res.json();
-
-  currentJob = data.job_id;
-
-  terminal.textContent = `Job launched: ${currentJob}\nWaiting for LOTOS…`;
-
-  startPolling();
-};
-
-
-// ---------------- POLLING JOB STATUS ----------------
-
-function startPolling() {
-  const term = document.getElementById("terminal");
-
-  polling = setInterval(async () => {
-    if (!currentJob) return;
-
-    const res = await fetch(`${API}/job_status?job_id=${currentJob}`);
-    const data = await res.json();
-
-    term.textContent = data.log;
-
-    if (data.status === "finished") {
-      term.textContent += "\n\n[Simulation finished]";
-      clearInterval(polling);
+      currentPreset = "MACC";
     }
 
-  }, 3000);
-}
+    document.getElementById("maccButton").addEventListener("click", setMACCDomain);
 
+    // Slider de nodos
+    const nodeSlider = document.getElementById("nodes");
+    nodeSlider.oninput = () => document.getElementById("nodes-value").textContent = nodeSlider.value;
 
-// ---------------- STOP SIMULATION ----------------
+    // Guardar dominio
+    document.getElementById("saveButton").addEventListener("click", async ()=>{
+      if (!bounds) {
+        alert("Select a rectangle first.");
+        return;
+      }
+      const north = bounds.getNorth();
+      const south = bounds.getSouth();
+      const east  = bounds.getEast();
+      const west  = bounds.getWest();
+      const init  = document.getElementById("init-date").value;
+      const end   = document.getElementById("end-date").value;
+      if (!init || !end) {
+        alert("Select both start and end dates.");
+        return;
+      }
 
-document.getElementById("stopButton").onclick = () => {
-  alert("Stopping manually is not implemented yet.");
-};
+      const form = new URLSearchParams();
+      form.append("token", token);
+      form.append("north", north);
+      form.append("south", south);
+      form.append("east",  east);
+      form.append("west",  west);
+      form.append("init_date", init);
+      form.append("end_date", end);
 
+      await fetch("https://luwa-consultancy.duckdns.org/save_domain",{
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body:form
+      });
 
-// ---------------- BACK BUTTON ----------------
+      alert("Domain and dates saved successfully!");
+    });
 
-document.getElementById("backButton").onclick = () =>
-  window.location.href = "cloud.html";
+    // Fake + real simulation
+    let running    = false;
+    let intervalId = null;
+    let progress   = 0;
+    const term       = document.getElementById("terminal");
+    const bar        = document.getElementById("progress");
+    const resultsBox = document.getElementById("results-box");
 
-</script>
+    function log(line){
+      term.textContent += `\n${line}`;
+      term.scrollTop = term.scrollHeight;
+    }
 
+    // Simulación real MACC: consume stream desde backend
+    async function runMACCSimulation() {
+      term.textContent = "Connecting to MACC LOTOS-EUROS launcher...\n";
+      bar.style.width  = "0%";
+
+      try {
+        const response = await fetch("https://luwa-consultancy.duckdns.org/run_macc_simulation", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        const reader  = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+
+        async function readChunk() {
+          const {done, value} = await reader.read();
+          if (done) {
+            progress = 100;
+            bar.style.width = "100%";
+            log("Simulation stream ended.");
+            resultsBox.classList.remove("hidden");
+            running = false;
+            return;
+          }
+
+          const text = decoder.decode(value, {stream:true});
+          term.textContent += text;
+          term.scrollTop = term.scrollHeight;
+
+          // Heurística simple de progreso
+          progress = Math.min(progress + 1, 95);
+          bar.style.width = progress + "%";
+
+          await readChunk();
+        }
+
+        await readChunk();
+      } catch (err) {
+        log("Error while running MACC simulation.");
+        running = false;
+      }
+    }
+
+    document.getElementById("runButton").addEventListener("click", ()=>{
+      if (!bounds) {
+        alert("Define a domain first.");
+        return;
+      }
+      if (running) {
+        return;
+      }
+
+      running = true;
+      progress = 0;
+      bar.style.width = "0%";
+      resultsBox.classList.add("hidden");
+
+      const model = document.getElementById("model-select").value;
+      const nodes = nodeSlider.value;
+      const n = bounds.getNorth().toFixed(2);
+      const s = bounds.getSouth().toFixed(2);
+      const e_ = bounds.getEast().toFixed(2);
+      const w = bounds.getWest().toFixed(2);
+
+      log(`Good morning user.`);
+      log(`Model selected: ${model}`);
+      log(`Running with ${nodes} computation nodes.`);
+      log(`Region coordinates -> N:${n} S:${s} E:${e_} W:${w}`);
+
+      // Dominio MACC -> simulación real vía SSH
+      if (currentPreset === "MACC") {
+        log("Launching MACC LOTOS-EUROS job through remote launcher...");
+        runMACCSimulation();
+        return;
+      }
+
+      // Simulación falsa para dominios manuales
+      log("Authenticating with AWS cluster...");
+      log("Compiling model components...");
+
+      intervalId = setInterval(()=>{
+        if (progress >= 100) {
+          log("Simulation complete. Output saved to AWS bucket /results.");
+          clearInterval(intervalId);
+          running = false;
+          resultsBox.classList.remove("hidden");
+        } else {
+          progress += 2;
+          bar.style.width = progress + "%";
+          if (progress % 10 === 0) {
+            log(`Progress: ${progress}%`);
+          }
+        }
+      }, 200);
+    });
+
+    document.getElementById("stopButton").addEventListener("click", ()=>{
+      if (running && intervalId) {
+        clearInterval(intervalId);
+        running = false;
+        log("Simulation aborted by user.");
+      }
+    });
+
+    // Simulation videos
+    function setupSimulationVideos() {
+      const btnSim1 = document.getElementById("sim1Button");
+      const btnSim2 = document.getElementById("sim2Button");
+      const videoSim1 = document.getElementById("video-sim1");
+      const videoSim2 = document.getElementById("video-sim2");
+      const videos = [videoSim1, videoSim2];
+
+      function showVideo(index) {
+        videos.forEach(v => {
+          v.classList.add("hidden");
+          v.pause();
+          v.currentTime = 0;
+        });
+        const v = videos[index];
+        v.classList.remove("hidden");
+        v.play();
+      }
+
+      btnSim1.addEventListener("click", () => showVideo(0));
+      btnSim2.addEventListener("click", () => showVideo(1));
+    }
+
+    setupSimulationVideos();
+
+    document.getElementById("backButton").addEventListener("click",()=>window.location.href="cloud.html");
+  </script>
 </body>
 </html>
+
