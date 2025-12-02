@@ -96,7 +96,7 @@
       background: #6c757d;
     }
 
-    /* MACC preset button */
+    /* Botón preset MACC */
     #maccButton {
       background: #17a2b8;
     }
@@ -213,8 +213,8 @@
     <label for="end-date">End date:</label>
     <input type="date" id="end-date">
 
-    <!-- MACC domain preset button -->
-    <button id="maccButton">MACC grid</button>
+    <!-- Botón dominio MACC -->
+    <button id="maccButton">Dominio MACC</button>
 
     <button id="saveButton">Save Domain</button>
     <button id="backButton">Back</button>
@@ -298,17 +298,19 @@
       edit:{featureGroup:drawnItems}
     }));
 
-    let bounds=null;
+    let bounds = null;
+    let currentPreset = "manual";   // "manual" o "MACC"
 
     map.on(L.Draw.Event.CREATED, e=>{
       drawnItems.clearLayers();
       drawnItems.addLayer(e.layer);
-      bounds=e.layer.getBounds();
-      const n=bounds.getNorth().toFixed(2);
-      const s=bounds.getSouth().toFixed(2);
-      const e_=bounds.getEast().toFixed(2);
-      const w=bounds.getWest().toFixed(2);
-      document.getElementById("domain-info").textContent=`N:${n} S:${s} E:${e_} W:${w}`;
+      bounds = e.layer.getBounds();
+      const n = bounds.getNorth().toFixed(2);
+      const s = bounds.getSouth().toFixed(2);
+      const e_ = bounds.getEast().toFixed(2);
+      const w = bounds.getWest().toFixed(2);
+      document.getElementById("domain-info").textContent = `N:${n} S:${s} E:${e_} W:${w}`;
+      currentPreset = "manual";
     });
 
     // MACC grid preset
@@ -338,42 +340,44 @@
 
       map.fitBounds(bounds);
 
-      // Date range from 2024-08-13 00:00:00 to 2024-08-14 00:00:00
+      // Rango de fechas MACC
       document.getElementById("init-date").value = "2024-08-13";
-      document.getElementById("end-date").value = "2024-08-14";
+      document.getElementById("end-date").value  = "2024-08-14";
+
+      currentPreset = "MACC";
     }
 
     document.getElementById("maccButton").addEventListener("click", setMACCDomain);
 
     // Slider de nodos
-    const nodeSlider=document.getElementById("nodes");
-    nodeSlider.oninput=()=>document.getElementById("nodes-value").textContent=nodeSlider.value;
+    const nodeSlider = document.getElementById("nodes");
+    nodeSlider.oninput = () => document.getElementById("nodes-value").textContent = nodeSlider.value;
 
     // Guardar dominio
     document.getElementById("saveButton").addEventListener("click", async ()=>{
-      if(!bounds){
+      if (!bounds) {
         alert("Select a rectangle first.");
         return;
       }
-      const north=bounds.getNorth();
-      const south=bounds.getSouth();
-      const east=bounds.getEast();
-      const west=bounds.getWest();
-      const init=document.getElementById("init-date").value;
-      const end=document.getElementById("end-date").value;
-      if(!init||!end){
+      const north = bounds.getNorth();
+      const south = bounds.getSouth();
+      const east  = bounds.getEast();
+      const west  = bounds.getWest();
+      const init  = document.getElementById("init-date").value;
+      const end   = document.getElementById("end-date").value;
+      if (!init || !end) {
         alert("Select both start and end dates.");
         return;
       }
 
-      const form=new URLSearchParams();
-      form.append("token",token);
-      form.append("north",north);
-      form.append("south",south);
-      form.append("east",east);
-      form.append("west",west);
-      form.append("init_date",init);
-      form.append("end_date",end);
+      const form = new URLSearchParams();
+      form.append("token", token);
+      form.append("north", north);
+      form.append("south", south);
+      form.append("east",  east);
+      form.append("west",  west);
+      form.append("init_date", init);
+      form.append("end_date", end);
 
       await fetch("https://luwa-consultancy.duckdns.org/save_domain",{
         method:"POST",
@@ -384,67 +388,121 @@
       alert("Domain and dates saved successfully!");
     });
 
-    // Fake simulation
-    let running=false, intervalId=null, progress=0;
-    const term=document.getElementById("terminal");
-    const bar=document.getElementById("progress");
-    const resultsBox=document.getElementById("results-box");
+    // Fake + real simulation
+    let running    = false;
+    let intervalId = null;
+    let progress   = 0;
+    const term       = document.getElementById("terminal");
+    const bar        = document.getElementById("progress");
+    const resultsBox = document.getElementById("results-box");
 
     function log(line){
-      term.textContent+=`\n${line}`;
-      term.scrollTop=term.scrollHeight;
+      term.textContent += `\n${line}`;
+      term.scrollTop = term.scrollHeight;
     }
 
-    document.getElementById("runButton").addEventListener("click",()=>{
-      if(!bounds){
+    // Simulación real MACC: consume stream desde backend
+    async function runMACCSimulation() {
+      term.textContent = "Connecting to MACC LOTOS-EUROS launcher...\n";
+      bar.style.width  = "0%";
+
+      try {
+        const response = await fetch("https://luwa-consultancy.duckdns.org/run_macc_simulation", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        const reader  = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+
+        async function readChunk() {
+          const {done, value} = await reader.read();
+          if (done) {
+            progress = 100;
+            bar.style.width = "100%";
+            log("Simulation stream ended.");
+            resultsBox.classList.remove("hidden");
+            running = false;
+            return;
+          }
+
+          const text = decoder.decode(value, {stream:true});
+          term.textContent += text;
+          term.scrollTop = term.scrollHeight;
+
+          // Heurística simple de progreso
+          progress = Math.min(progress + 1, 95);
+          bar.style.width = progress + "%";
+
+          await readChunk();
+        }
+
+        await readChunk();
+      } catch (err) {
+        log("Error while running MACC simulation.");
+        running = false;
+      }
+    }
+
+    document.getElementById("runButton").addEventListener("click", ()=>{
+      if (!bounds) {
         alert("Define a domain first.");
         return;
       }
-      if(running){
+      if (running) {
         return;
       }
-      running=true;
-      progress=0;
-      bar.style.width="0%";
-      term.textContent="Initializing simulation...\n";
 
-      // Hide results from previous runs
+      running = true;
+      progress = 0;
+      bar.style.width = "0%";
       resultsBox.classList.add("hidden");
 
-      const model=document.getElementById("model-select").value;
-      const nodes=nodeSlider.value;
-      const n=bounds.getNorth().toFixed(2);
-      const s=bounds.getSouth().toFixed(2);
-      const e_=bounds.getEast().toFixed(2);
-      const w=bounds.getWest().toFixed(2);
+      const model = document.getElementById("model-select").value;
+      const nodes = nodeSlider.value;
+      const n = bounds.getNorth().toFixed(2);
+      const s = bounds.getSouth().toFixed(2);
+      const e_ = bounds.getEast().toFixed(2);
+      const w = bounds.getWest().toFixed(2);
 
       log(`Good morning user.`);
       log(`Model selected: ${model}`);
       log(`Running with ${nodes} computation nodes.`);
       log(`Region coordinates -> N:${n} S:${s} E:${e_} W:${w}`);
-      log(`Authenticating with AWS cluster...`);
-      log(`Compiling model components...`);
 
-      intervalId=setInterval(()=>{
-        if(progress>=100){
+      // Dominio MACC -> simulación real vía SSH
+      if (currentPreset === "MACC") {
+        log("Launching MACC LOTOS-EUROS job through remote launcher...");
+        runMACCSimulation();
+        return;
+      }
+
+      // Simulación falsa para dominios manuales
+      log("Authenticating with AWS cluster...");
+      log("Compiling model components...");
+
+      intervalId = setInterval(()=>{
+        if (progress >= 100) {
           log("Simulation complete. Output saved to AWS bucket /results.");
           clearInterval(intervalId);
-          running=false;
+          running = false;
           resultsBox.classList.remove("hidden");
-        }else{
-          progress+=2;
-          bar.style.width=progress+"%";
-          if(progress%10===0){
+        } else {
+          progress += 2;
+          bar.style.width = progress + "%";
+          if (progress % 10 === 0) {
             log(`Progress: ${progress}%`);
           }
         }
-      },200);
+      }, 200);
     });
 
-    document.getElementById("stopButton").addEventListener("click",()=>{
-      if(running){
+    document.getElementById("stopButton").addEventListener("click", ()=>{
+      if (running && intervalId) {
         clearInterval(intervalId);
-        running=false;
+        running = false;
         log("Simulation aborted by user.");
       }
     });
@@ -478,3 +536,4 @@
   </script>
 </body>
 </html>
+
