@@ -100,6 +100,16 @@
     #maccButton {
       background: #17a2b8;
     }
+    
+    /* New buttons */
+    #downloadButton {
+      background: #424242; /* Darker tone */
+    }
+    
+    #prepareGifButton {
+      background: #ffc107; /* Yellow/Orange tone */
+    }
+
 
     .map-container {
       flex: 1;
@@ -244,7 +254,6 @@
   </style>
 </head>
 <body>
-  <!-- Left Panel -->
   <div class="sidebar">
     <img src="LOGO.png" alt="LUWA Logo">
     <div class="info-box">
@@ -257,17 +266,14 @@
     <label for="end-date">End date:</label>
     <input type="date" id="end-date">
 
-    <!-- Botón dominio MACC -->
     <button id="maccButton">Dominio MACC</button>
 
-    <!-- Output configuration -->
     <div class="section-title">Output type</div>
     <select id="output-type">
       <option value="conc">Concentrations</option>
       <option value="emis">Emissions</option>
-    </select>
+      <option value="depo">Deposition</option> </select>
 
-    <!-- Concentration options -->
     <div id="conc-options">
       <div class="section-title">Concentration dimension</div>
       <div class="segmented-control" id="dim-control">
@@ -332,7 +338,6 @@
       <div class="hint-text">Use Ctrl/⌘ for multi-selection.</div>
     </div>
 
-    <!-- Emission options -->
     <div id="emis-options" class="hidden">
       <div class="section-title">Emission variables</div>
       <select id="emis-vars" class="variable-select" multiple>
@@ -352,19 +357,39 @@
       </select>
       <div class="hint-text">Use Ctrl/⌘ for multi-selection.</div>
     </div>
-
+    
+    <div id="depo-options" class="hidden">
+      <div class="section-title">Deposition type</div>
+      <div class="segmented-control" id="depo-dim-control">
+        <button type="button" data-depo="dry" class="depo-dim-btn active">Dry</button>
+        <button type="button" data-depo="wet" class="depo-dim-btn">Wet</button>
+      </div>
+      
+      <label for="depo-vars">Deposition variables</label>
+      <select id="depo-vars" class="variable-select" multiple>
+        <option value="so2d">SO2 Dry Deposition</option>
+        <option value="hno3d">HNO3 Dry Deposition</option>
+        <option value="nh3d">NH3 Dry Deposition</option>
+        <option value="so4w">SO4 Wet Deposition</option>
+        <option value="no3w">NO3 Wet Deposition</option>
+        <option value="nh4w">NH4 Wet Deposition</option>
+        <option value="pm10d">PM10 Dry Deposition</option>
+      </select>
+      <div class="hint-text">Use Ctrl/⌘ for multi-selection.</div>
+    </div>
     <button id="saveButton">Save Domain</button>
     <button id="backButton">Back</button>
-  </div>
+    
+    <button id="downloadButton">Download .nc files</button>
+    <button id="prepareGifButton">Prepare .gif</button>
+    </div>
 
-  <!-- Map -->
   <div class="map-container">
     <div class="map-card">
       <div id="map"></div>
     </div>
   </div>
 
-  <!-- Right Panel -->
   <div class="rightbar">
     <label for="model-select">Model Name:</label>
     <select id="model-select">
@@ -387,7 +412,6 @@
       <div class="progress" id="progress"></div>
     </div>
 
-    <!-- Results box: appears after simulation ends -->
     <div id="results-box" class="results-box hidden">
       <div class="results-title">Simulation results</div>
       <div class="sim-controls">
@@ -489,6 +513,15 @@
     // Slider de nodos
     const nodeSlider = document.getElementById("nodes");
     nodeSlider.oninput = () => document.getElementById("nodes-value").textContent = nodeSlider.value;
+    
+    // Placeholder function for new buttons
+    document.getElementById("downloadButton").addEventListener("click", () => {
+      alert("Downloading .nc files...");
+    });
+    
+    document.getElementById("prepareGifButton").addEventListener("click", () => {
+      alert("Preparing .gif animation...");
+    });
 
     // Guardar dominio
     document.getElementById("saveButton").addEventListener("click", async ()=>{
@@ -529,30 +562,54 @@
     const outputTypeSelect = document.getElementById("output-type");
     const concOptionsBox   = document.getElementById("conc-options");
     const emisOptionsBox   = document.getElementById("emis-options");
+    const depoOptionsBox   = document.getElementById("depo-options"); // NEW
+
     const dimControl       = document.getElementById("dim-control");
     const dimButtons       = Array.from(document.querySelectorAll(".dim-btn"));
+    const depoDimControl   = document.getElementById("depo-dim-control"); // NEW
+    const depoDimButtons   = Array.from(document.querySelectorAll(".depo-dim-btn")); // NEW
+
     const concVarsSelect   = document.getElementById("conc-vars");
     const emisVarsSelect   = document.getElementById("emis-vars");
+    const depoVarsSelect   = document.getElementById("depo-vars"); // NEW
 
     let selectedDim        = "sfc";   // "sfc" o "3d"
-    let selectedOutputType = "conc";  // "conc" o "emis"
+    let selectedDepoDim    = "dry";   // "dry" o "wet" // NEW
+    let selectedOutputType = "conc";  // "conc", "emis" o "depo" // UPDATED
 
     outputTypeSelect.addEventListener("change", () => {
       selectedOutputType = outputTypeSelect.value;
+      
+      // Hide all options first
+      concOptionsBox.classList.add("hidden");
+      emisOptionsBox.classList.add("hidden");
+      depoOptionsBox.classList.add("hidden"); // NEW
+      
+      // Show the selected options
       if (selectedOutputType === "conc") {
         concOptionsBox.classList.remove("hidden");
-        emisOptionsBox.classList.add("hidden");
-      } else {
-        concOptionsBox.classList.add("hidden");
+      } else if (selectedOutputType === "emis") {
         emisOptionsBox.classList.remove("hidden");
+      } else if (selectedOutputType === "depo") { // NEW
+        depoOptionsBox.classList.remove("hidden");
       }
     });
 
+    // Concentration dimension selection
     dimButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         dimButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         selectedDim = btn.getAttribute("data-dim");
+      });
+    });
+    
+    // Deposition dimension selection (NEW)
+    depoDimButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        depoDimButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedDepoDim = btn.getAttribute("data-depo");
       });
     });
 
@@ -575,61 +632,15 @@
 
     // Simulación real MACC: consume stream desde backend
     async function runMACCSimulation() {
-      term.textContent = "Connecting to MACC LOTOS-EUROS launcher...
-";
+      term.textContent = "Connecting to MACC LOTOS-EUROS launcher...\n";
       bar.style.width  = "0%";
-      running = true;
 
       try {
         const response = await fetch("https://luwa-consultancy.duckdns.org/run_macc_simulation", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({})
-        });
-
-        if (!response.ok) {
-          const txt = await response.text();
-          log(`Server error ${response.status}: ${txt}`);
-          running = false;
-          return;
-        }
-
-        // Si el backend NO hace streaming, esto será JSON y se termina rápido.
-        const ct = response.headers.get("content-type") || "";
-        if (ct.includes("application/json")) {
-          const data = await response.json();
-          log(`Launcher response: ${JSON.stringify(data)}`);
-          bar.style.width = "100%";
-          running = false;
-          return;
-        }
-
-        // Si el backend sí hace streaming (text/event-stream o text/plain chunked)
-        const reader  = response.body.getReader();
-        const decoder = new TextDecoder("utf-8");
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          term.textContent += decoder.decode(value, { stream: true });
-          term.scrollTop = term.scrollHeight;
-          progress = Math.min(progress + 1, 95);
-          bar.style.width = progress + "%";
-        }
-
-        bar.style.width = "100%";
-        log("Simulation stream ended.");
-        resultsBox.classList.remove("hidden");
-        running = false;
-
-      } catch (e) {
-        log(`Error while running MACC simulation: ${e}`);
-        running = false;
-      }
-    }
+            "Authorization": `Bearer ${token}`
+          }
         });
 
         const reader  = response.body.getReader();
@@ -687,18 +698,24 @@
 
       const concVarsSelected = getSelectedValues(concVarsSelect);
       const emisVarsSelected = getSelectedValues(emisVarsSelect);
+      const depoVarsSelected = getSelectedValues(depoVarsSelect); // NEW
 
       log(`Good morning user.`);
       log(`Model selected: ${model}`);
       log(`Running with ${nodes} computation nodes.`);
       log(`Region coordinates -> N:${n} S:${s} E:${e_} W:${w}`);
       log(`Output type: ${selectedOutputType}`);
+      
       if (selectedOutputType === "conc") {
         log(`Concentration dimension: ${selectedDim}`);
         log(`Concentration variables: ${concVarsSelected.join(", ") || "none selected"}`);
-      } else {
+      } else if (selectedOutputType === "emis") {
         log(`Emission variables: ${emisVarsSelected.join(", ") || "none selected"}`);
+      } else if (selectedOutputType === "depo") { // NEW
+        log(`Deposition type: ${selectedDepoDim}`);
+        log(`Deposition variables: ${depoVarsSelected.join(", ") || "none selected"}`);
       }
+
 
       // Dominio MACC -> simulación real vía SSH
       if (currentPreset === "MACC") {
