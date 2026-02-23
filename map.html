@@ -873,7 +873,9 @@
           srcMexico.setAttribute("src", nextSrc);
           vMexico.load();
         }
-        vMexico.play();
+        // Do not autoplay; user will press play.
+        vMexico.pause();
+        vMexico.currentTime = 0;
       }
 
       document.getElementById("mxNo2Button").addEventListener("click", () => showMexicoVideo("no2"));
@@ -909,9 +911,18 @@
         vSim1.pause(); vSim1.currentTime = 0;
         vSim2.pause(); vSim2.currentTime = 0;
 
-        // Default Mexico video: NO2
-        mexicoVideoAPI.showMexicoVideo("no2");
-      }
+        // Show variable buttons; video appears only after user selects a variable.
+        mxControls.classList.remove("hidden");
+        vMexico.classList.add("hidden");
+        vMexico.pause();
+        vMexico.currentTime = 0;
+        // Preload default source (NO2) without displaying it.
+        const srcMexico = document.getElementById("source-mexico");
+        if (srcMexico && srcMexico.getAttribute("src") !== "LE_model_conc-3d_20240702_no2.mp4") {
+          srcMexico.setAttribute("src", "LE_model_conc-3d_20240702_no2.mp4");
+          vMexico.load();
+        }
+}
     }
 
     document.getElementById("backButton").addEventListener("click",()=>window.location.href="cloud.html");
