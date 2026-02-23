@@ -100,11 +100,6 @@
     #maccButton {
       background: #17a2b8;
     }
-
-    /* Botón preset Mexico */
-    #mexicoButton {
-      background: #20c997;
-    }
     
     /* New buttons */
     #downloadButton {
@@ -273,8 +268,6 @@
 
     <button id="maccButton">Dominio MACC</button>
 
-    <button id="mexicoButton">Mexico domain</button>
-
     <div class="section-title">Output type</div>
     <select id="output-type">
       <option value="conc">Concentrations</option>
@@ -436,19 +429,6 @@
           <source src="LE_nst_MAC_SPAIN_2021_001_conc-sfc_2021060.mp4" type="video/mp4">
           Your browser requires video support.
         </video>
-
-        <!-- Mexico domain: variable-driven video -->
-        <div id="mexico-controls" class="sim-controls hidden" style="margin-top:8px;">
-          <button id="mxNo2Button">NO2</button>
-          <button id="mxO3Button">O3</button>
-          <button id="mxSo2Button">SO2</button>
-          <button id="mxTpm25Button">TPM25</button>
-        </div>
-
-        <video id="video-mexico" class="sim-video hidden" controls>
-          <source id="source-mexico" src="LE_model_conc-3d_20240702_no2.mp4" type="video/mp4">
-          Your browser requires video support.
-        </video>
       </div>
     </div>
   </div>
@@ -528,43 +508,7 @@
       currentPreset = "MACC";
     }
 
-    
     document.getElementById("maccButton").addEventListener("click", setMACCDomain);
-
-    // Mexico grid preset
-    function setMexicoDomain() {
-      // domain : [-101,-89] x [16,23]
-      // resolution : 0.2 x 0.2
-      // size : 60 x 35
-      const west = -101.0;
-      const south = 16.0;
-      const dlon = 0.20;
-      const dlat = 0.20;
-      const nx = 60;
-      const ny = 35;
-      const east = west + dlon * nx;   // -89
-      const north = south + dlat * ny; // 23
-
-      drawnItems.clearLayers();
-      const rect = L.rectangle([[south, west], [north, east]], {
-        color: '#20c997',
-        weight: 1
-      });
-      drawnItems.addLayer(rect);
-      bounds = rect.getBounds();
-
-      const n = bounds.getNorth().toFixed(2);
-      const s = bounds.getSouth().toFixed(2);
-      const e_ = bounds.getEast().toFixed(2);
-      const w = bounds.getWest().toFixed(2);
-      document.getElementById("domain-info").textContent = `N:${n} S:${s} E:${e_} W:${w}`;
-
-      map.fitBounds(bounds);
-
-      currentPreset = "Mexico";
-    }
-
-    document.getElementById("mexicoButton").addEventListener("click", setMexicoDomain);
 
     // Slider de nodos
     const nodeSlider = document.getElementById("nodes");
@@ -709,7 +653,6 @@
             bar.style.width = "100%";
             log("Simulation stream ended.");
             resultsBox.classList.remove("hidden");
-            updateResultsUIForPreset();
             running = false;
             return;
           }
@@ -818,16 +761,6 @@
       const videos = [videoSim1, videoSim2];
 
       function showVideo(index) {
-        // Hide Mexico video if present
-        const mxControls = document.getElementById("mexico-controls");
-        const vMexico = document.getElementById("video-mexico");
-        if (mxControls && vMexico) {
-          mxControls.classList.add("hidden");
-          vMexico.classList.add("hidden");
-          vMexico.pause();
-          vMexico.currentTime = 0;
-        }
-
         videos.forEach(v => {
           v.classList.add("hidden");
           v.pause();
@@ -843,76 +776,6 @@
     }
 
     setupSimulationVideos();
-
-    // Mexico: variable-driven video switching
-    function setupMexicoVideos() {
-      const mxControls = document.getElementById("mexico-controls");
-      const vMexico = document.getElementById("video-mexico");
-      const srcMexico = document.getElementById("source-mexico");
-
-      const mapping = {
-        "no2": "LE_model_conc-3d_20240702_no2.mp4",
-        "o3": "LE_model_conc-3d_20240702_o3.mp4",
-        "so2": "LE_model_conc-3d_20240702_so2.mp4",
-        "tpm25": "LE_model_conc-3d_20240702_tpm25.mp4"
-      };
-
-      function showMexicoVideo(varname) {
-        // Hide Spain sim videos
-        document.getElementById("video-sim1").classList.add("hidden");
-        document.getElementById("video-sim2").classList.add("hidden");
-        document.getElementById("video-sim1").pause();
-        document.getElementById("video-sim2").pause();
-
-        // Show mexico controls + video
-        mxControls.classList.remove("hidden");
-        vMexico.classList.remove("hidden");
-
-        const nextSrc = mapping[varname] || "LE_model_conc-3d_20240702.mp4";
-        if (srcMexico.getAttribute("src") !== nextSrc) {
-          srcMexico.setAttribute("src", nextSrc);
-          vMexico.load();
-        }
-        vMexico.play();
-      }
-
-      document.getElementById("mxNo2Button").addEventListener("click", () => showMexicoVideo("no2"));
-      document.getElementById("mxO3Button").addEventListener("click", () => showMexicoVideo("o3"));
-      document.getElementById("mxSo2Button").addEventListener("click", () => showMexicoVideo("so2"));
-      document.getElementById("mxTpm25Button").addEventListener("click", () => showMexicoVideo("tpm25"));
-
-      // Public helper to set defaults when results appear
-      return { showMexicoVideo };
-    }
-
-    const mexicoVideoAPI = setupMexicoVideos();
-
-    // Toggle which results UI to show depending on preset
-    function updateResultsUIForPreset() {
-      const simControls = document.querySelector("#results-box .sim-controls");
-      const vSim1 = document.getElementById("video-sim1");
-      const vSim2 = document.getElementById("video-sim2");
-      const mxControls = document.getElementById("mexico-controls");
-      const vMexico = document.getElementById("video-mexico");
-
-      // Reset all
-      simControls.classList.remove("hidden");
-      mxControls.classList.add("hidden");
-      vMexico.classList.add("hidden");
-      vMexico.pause();
-      vMexico.currentTime = 0;
-
-      if (currentPreset === "Mexico") {
-        simControls.classList.add("hidden");
-        vSim1.classList.add("hidden");
-        vSim2.classList.add("hidden");
-        vSim1.pause(); vSim1.currentTime = 0;
-        vSim2.pause(); vSim2.currentTime = 0;
-
-        // Default Mexico video: NO2
-        mexicoVideoAPI.showMexicoVideo("no2");
-      }
-    }
 
     document.getElementById("backButton").addEventListener("click",()=>window.location.href="cloud.html");
   </script>
