@@ -709,6 +709,10 @@
             bar.style.width = "100%";
             log("Simulation stream ended.");
             resultsBox.classList.remove("hidden");
+          // Ensure results UI matches the active preset (e.g., Mexico shows variable buttons)
+          if (typeof updateResultsUIForPreset === "function") {
+            updateResultsUIForPreset();
+          }
             updateResultsUIForPreset();
             running = false;
             return;
@@ -743,6 +747,17 @@
 
       running = true;
       progress = 0;
+      // Stop any currently playing result videos before a new run
+      (function(){
+        const vids = [
+          document.getElementById("video-sim1"),
+          document.getElementById("video-sim2"),
+          document.getElementById("video-mexico")
+        ].filter(Boolean);
+        vids.forEach(v=>{ try{ v.pause(); v.currentTime = 0; v.classList.add("hidden"); }catch(e){} });
+        const mxControls = document.getElementById("mexico-controls");
+        if (mxControls) mxControls.classList.add("hidden");
+      })();
       bar.style.width = "0%";
       resultsBox.classList.add("hidden");
 
@@ -791,6 +806,10 @@
           clearInterval(intervalId);
           running = false;
           resultsBox.classList.remove("hidden");
+          // Ensure results UI matches the active preset (e.g., Mexico shows variable buttons)
+          if (typeof updateResultsUIForPreset === "function") {
+            updateResultsUIForPreset();
+          }
         } else {
           progress += 2;
           bar.style.width = progress + "%";
