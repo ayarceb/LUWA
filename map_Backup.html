@@ -256,44 +256,6 @@
       color: #666;
       margin-top: 2px;
     }
-  
-    /* Map legend */
-    .map-legend {
-      background: rgba(255,255,255,0.95);
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 0.8rem;
-      line-height: 1.2;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
-    .map-legend .legend-title {
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
-    .map-legend .legend-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 4px 0;
-      white-space: nowrap;
-    }
-    .map-legend .swatch {
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-      border: 1px solid rgba(0,0,0,0.25);
-      flex: 0 0 14px;
-    }
-    .map-legend .swatch-circle {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.35);
-      background: rgba(220,53,69,0.75);
-      flex: 0 0 12px;
-    }
-
   </style>
 </head>
 <body>
@@ -518,123 +480,6 @@
     let bounds = null;
     let currentPreset = "manual";   // "manual", "MACC" o "Mexico"
 
-    // ------------------------------------------------------------------
-    // Power plants overlay (Mexico) — Datasette JSON endpoint
-    // ------------------------------------------------------------------
-    const powerPlants = {
-      raw: null,
-      layer: L.layerGroup(),
-      markers: [],
-      loaded: false
-    };
-    powerPlants.layer.addTo(map);
-
-    async function fetchDatasetteMexicoPowerPlants() {
-      // Datasette: global-power-plants/global-power-plants.json
-      // We request a manageable subset (top by estimated_generation_gwh)
-      const base = "https://datasette.io/global-power-plants/global-power-plants.json";
-      const url = base + "?" + new URLSearchParams({
-        "_facet_size": "max",
-        "_sort": "estimated_generation_gwh",
-        "country_long": "Mexico",
-        "_size": "1000"   // increase if needed; Datasette still paginates beyond this
-      }).toString();
-
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(`Datasette fetch failed: ${res.status} ${res.statusText}`);
-      }
-      return await res.json();
-    }
-
-    function rowsToObjects(ds) {
-      const cols = ds.columns || [];
-      return (ds.rows || []).map(row => {
-        const obj = {};
-        for (let i = 0; i < cols.length; i++) obj[cols[i]] = row[i];
-        return obj;
-      });
-    }
-
-    function clearPowerPlants() {
-      powerPlants.layer.clearLayers();
-      powerPlants.markers = [];
-      powerPlants.loaded = false;
-      powerPlants.raw = null;
-    }
-
-    function addPowerPlantsToMap(ds) {
-      powerPlants.layer.clearLayers();
-      powerPlants.markers = [];
-
-      const items = rowsToObjects(ds);
-      items.forEach(p => {
-        const lat = Number(p.latitude);
-        const lon = Number(p.longitude);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
-
-        const name = p.name || "Unknown";
-        const fuel = p.primary_fuel || "Unknown";
-        const cap  = (p.capacity_mw != null) ? `${p.capacity_mw} MW` : "n/a";
-        const gen  = (p.estimated_generation_gwh != null) ? `${Number(p.estimated_generation_gwh).toFixed(2)} GWh` : "n/a";
-        const owner = p.owner || "n/a";
-
-        const marker = L.circleMarker([lat, lon], {
-          radius: 5,
-          color: "rgba(220,53,69,0.9)",
-          weight: 1,
-          fillColor: "rgba(220,53,69,0.75)",
-          fillOpacity: 0.8
-        });
-
-        const safeUrl = (p.url && typeof p.url === "string") ? p.url : null;
-        const link = safeUrl ? `<div style="margin-top:6px;"><a href="${safeUrl}" target="_blank" rel="noopener">Source</a></div>` : "";
-
-        marker.bindPopup(
-          `<div style="font-family: monospace; font-size: 12px; line-height: 1.2;">
-            <div style="font-weight:bold; margin-bottom:4px;">${name}</div>
-            <div><strong>Fuel:</strong> ${fuel}</div>
-            <div><strong>Capacity:</strong> ${cap}</div>
-            <div><strong>Est. gen:</strong> ${gen}</div>
-            <div><strong>Owner:</strong> ${owner}</div>
-            ${link}
-          </div>`
-        );
-
-        marker.addTo(powerPlants.layer);
-        powerPlants.markers.push(marker);
-      });
-    }
-
-    async function ensureMexicoPowerPlantsLoaded() {
-      if (powerPlants.loaded) return;
-      // Keep UI responsive: show a short status line in the terminal if available
-      try { log("Loading Mexico power plants (Datasette)..."); } catch(e) {}
-
-      const ds = await fetchDatasetteMexicoPowerPlants();
-      powerPlants.raw = ds;
-      addPowerPlantsToMap(ds);
-      powerPlants.loaded = true;
-
-      try { log(`Loaded ${powerPlants.markers.length} power plants (Mexico).`); } catch(e) {}
-    }
-
-    // ------------------------------------------------------------------
-    // Map legend
-    // ------------------------------------------------------------------
-    const legend = L.control({ position: "bottomleft" });
-    legend.onAdd = function() {
-      const div = L.DomUtil.create("div", "map-legend");
-      div.innerHTML = `
-        <div class="legend-title">Legend</div>
-        <div class="legend-row"><span class="swatch" style="background:#ff7800;"></span><span>MACC domain</span></div>
-        <div class="legend-row"><span class="swatch" style="background:#20c997;"></span><span>Mexico domain</span></div>
-        <div class="legend-row"><span class="swatch-circle"></span><span>Power plant</span></div>
-      `;
-      return div;
-    };
-    legend.addTo(map);
-
     map.on(L.Draw.Event.CREATED, e=>{
       drawnItems.clearLayers();
       drawnItems.addLayer(e.layer);
@@ -712,12 +557,6 @@
       document.getElementById("end-date").value  = "2024-07-03";
 
       currentPreset = "Mexico";
-
-      // Option 1: overlay power plants from Datasette
-      ensureMexicoPowerPlantsLoaded().catch(err => {
-        console.error(err);
-        try { log("Power plants load error."); } catch(e) {}
-      });
     }
 
 
