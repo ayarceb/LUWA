@@ -532,52 +532,45 @@
     powerPlants.layer.addTo(map);
 
     async function fetchDatasetteMexicoPowerPlants() {
-      const base = "https://datasette.io/global-power-plants/global-power-plants.json";
-      const url = base + "?" + new URLSearchParams({
-        "_facet_size": "max",
-        "_sort": "estimated_generation_gwh",
-        "country_long": "Mexico",
-        "_size": "1000"
-      }).toString();
+      const url = "https://luwa-consultancy.duckdns.org/mexico_power_plants";
 
-      console.log("Fetching Mexico power plants from:", url);
-      try { log("Requesting Mexico power plants from Datasette..."); } catch(e) {}
+      console.log("Fetching Mexico power plants from backend:", url);
+      try { log("Requesting Mexico power plants from backend..."); } catch(e) {}
 
       let res;
       try {
         res = await fetch(url, {
-          method: "GET",
-          mode: "cors"
+          method: "GET"
         });
       } catch (err) {
-        throw new Error(`Network error while fetching Datasette: ${err?.message || err}`);
+        throw new Error(`Network error while fetching backend endpoint: ${err?.message || err}`);
       }
 
       if (!res.ok) {
-        throw new Error(`Datasette fetch failed: ${res.status} ${res.statusText}`);
+        throw new Error(`Backend power plants fetch failed: ${res.status} ${res.statusText}`);
       }
 
       let data;
       try {
         data = await res.json();
       } catch (err) {
-        throw new Error(`Datasette JSON parse failed: ${err?.message || err}`);
+        throw new Error(`Backend JSON parse failed: ${err?.message || err}`);
       }
 
       if (!data || !Array.isArray(data.columns) || !Array.isArray(data.rows)) {
-        throw new Error("Datasette response does not contain expected 'columns' and 'rows' arrays.");
+        throw new Error("Backend response does not contain expected 'columns' and 'rows' arrays.");
       }
 
-      console.log("Datasette columns:", data.columns);
-      console.log("Datasette rows:", data.rows.length);
-      try { log(`Datasette response received: ${data.rows.length} rows.`); } catch(e) {}
+      console.log("Backend columns:", data.columns);
+      console.log("Backend rows:", data.rows.length);
+      try { log(`Backend response received: ${data.rows.length} rows.`); } catch(e) {}
 
       return data;
     }
 
     function rowsToObjects(ds) {
       if (!ds || !Array.isArray(ds.columns) || !Array.isArray(ds.rows)) {
-        throw new Error("Invalid Datasette payload passed to rowsToObjects().");
+        throw new Error("Invalid backend payload passed to rowsToObjects().");
       }
 
       const cols = ds.columns;
@@ -605,12 +598,12 @@
 
       const items = rowsToObjects(ds);
       if (!items.length) {
-        throw new Error("Datasette returned zero power plants for Mexico.");
+        throw new Error("Backend returned zero power plants for Mexico.");
       }
 
       let skipped = 0;
 
-      items.forEach((p) => {
+      items.forEach((p, idx) => {
         const lat = Number(p.latitude);
         const lon = Number(p.longitude);
         if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
@@ -634,7 +627,7 @@
           fillOpacity: 0.75
         });
 
-        const safeUrl = (typeof p.url === "string" && p.url.trim()) ? p.url : null;
+        const safeUrl = (p.url && typeof p.url === "string") ? p.url : null;
         const link = safeUrl ? `<div style="margin-top:6px;"><a href="${safeUrl}" target="_blank" rel="noopener">Source</a></div>` : "";
 
         marker.bindPopup(
@@ -653,11 +646,11 @@
       });
 
       console.log(`Power plants added: ${powerPlants.markers.length}, skipped: ${skipped}`);
-      if (!powerPlants.markers.length) {
-        throw new Error("No valid Mexico power plant coordinates were found in the Datasette response.");
-      }
-
       try { log(`Power plants added to map: ${powerPlants.markers.length}. Skipped: ${skipped}.`); } catch(e) {}
+
+      if (!powerPlants.markers.length) {
+        throw new Error("No valid Mexico power plant coordinates were found in the backend response.");
+      }
     }
 
     async function ensureMexicoPowerPlantsLoaded() {
