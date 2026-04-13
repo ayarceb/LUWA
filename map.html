@@ -278,6 +278,8 @@
       margin: 4px 0;
       white-space: nowrap;
     }
+
+    .legend-subtitle{font-weight:600;font-size:11px;margin:6px 0 4px 0;}
     .map-legend .swatch {
       width: 14px;
       height: 14px;
@@ -579,12 +581,14 @@
         const gen  = (p.estimated_generation_gwh != null) ? `${Number(p.estimated_generation_gwh).toFixed(2)} GWh` : "n/a";
         const owner = p.owner || "n/a";
 
+        const c = colorForFuel(fuel);
         const marker = L.circleMarker([lat, lon], {
           radius: 5,
-          color: "rgba(220,53,69,0.9)",
-          weight: 1,
-          fillColor: "rgba(220,53,69,0.75)",
-          fillOpacity: 0.8
+          color: c,
+          weight: 1.2,
+          opacity: 0.95,
+          fillColor: c,
+          fillOpacity: 0.75
         });
 
         const safeUrl = (p.url && typeof p.url === "string") ? p.url : null;
@@ -619,6 +623,30 @@
       try { log(`Loaded ${powerPlants.markers.length} power plants (Mexico).`); } catch(e) {}
     }
 
+
+    // ------------------------------------------------------------------
+    // Power plant styling
+    // ------------------------------------------------------------------
+    const FUEL_COLORS = {
+      "Solar": "#f1c40f",
+      "Wind": "#3498db",
+      "Hydro": "#1abc9c",
+      "Gas": "#e67e22",
+      "Oil": "#7f8c8d",
+      "Coal": "#2c3e50",
+      "Biomass": "#27ae60",
+      "Geothermal": "#9b59b6",
+      "Nuclear": "#e84393",
+      "Unknown": "#bdc3c7"
+    };
+
+    function colorForFuel(fuel) {
+      if (!fuel) return FUEL_COLORS["Unknown"];
+      const key = String(fuel).trim();
+      return FUEL_COLORS[key] || FUEL_COLORS["Unknown"];
+    }
+
+
     // ------------------------------------------------------------------
     // Map legend
     // ------------------------------------------------------------------
@@ -626,10 +654,22 @@
     legend.onAdd = function() {
       const div = L.DomUtil.create("div", "map-legend");
       div.innerHTML = `
+
         <div class="legend-title">Legend</div>
         <div class="legend-row"><span class="swatch" style="background:#ff7800;"></span><span>MACC domain</span></div>
         <div class="legend-row"><span class="swatch" style="background:#20c997;"></span><span>Mexico domain</span></div>
-        <div class="legend-row"><span class="swatch-circle"></span><span>Power plant</span></div>
+        <div class="legend-subtitle">Power plants (fuel)</div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#f1c40f;"></span><span>Solar</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#3498db;"></span><span>Wind</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#1abc9c;"></span><span>Hydro</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#e67e22;"></span><span>Gas</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#7f8c8d;"></span><span>Oil</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#2c3e50;"></span><span>Coal</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#27ae60;"></span><span>Biomass</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#9b59b6;"></span><span>Geothermal</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#e84393;"></span><span>Nuclear</span></div>
+        <div class="legend-row"><span class="swatch-circle" style="background:#bdc3c7;"></span><span>Unknown</span></div>
+
       `;
       return div;
     };
