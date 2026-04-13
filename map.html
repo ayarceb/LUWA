@@ -532,26 +532,60 @@
     powerPlants.layer.addTo(map);
 
     async function fetchDatasetteMexicoPowerPlants() {
-      // Datasette: global-power-plants/global-power-plants.json
-      // We request a manageable subset (top by estimated_generation_gwh)
       const base = "https://datasette.io/global-power-plants/global-power-plants.json";
       const url = base + "?" + new URLSearchParams({
         "_facet_size": "max",
         "_sort": "estimated_generation_gwh",
         "country_long": "Mexico",
-        "_size": "1000"   // increase if needed; Datasette still paginates beyond this
+        "_size": "1000"
       }).toString();
 
-      const res = await fetch(url);
+      console.log("Fetching Mexico power plants from:", url);
+      try { log("Requesting Mexico power plants from Datasette..."); } catch(e) {}
+
+      let res;
+      try {
+        res = await fetch(url, {
+          method: "GET",
+          mode: "cors"
+        });
+      } catch (err) {
+        throw new Error(`Network error while fetching Datasette: ${err?.message || err}`);
+      }
+
       if (!res.ok) {
         throw new Error(`Datasette fetch failed: ${res.status} ${res.statusText}`);
       }
-      return await res.json();
+
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        throw new Error(`Datasette JSON parse failed: ${err?.message || err}`);
+      }
+
+      if (!data || !Array.isArray(data.columns) || !Array.isArray(data.rows)) {
+        throw new Error("Datasette response does not contain expected 'columns' and 'rows' arrays.");
+      }
+
+      console.log("Datasette columns:", data.columns);
+      console.log("Datasette rows:", data.rows.length);
+      try { log(`Datasette response received: ${data.rows.length} rows.`); } catch(e) {}
+
+      return data;
     }
 
     function rowsToObjects(ds) {
-      const cols = ds.columns || [];
-      return (ds.rows || []).map(row => {
+      if (!ds || !Array.isArray(ds.columns) || !Array.isArray(ds.rows)) {
+        throw new Error("Invalid Datasette payload passed to rowsToObjects().");
+      }
+
+      const cols = ds.columns;
+      return ds.rows.map((row, idx) => {
+        if (!Array.isArray(row)) {
+          throw new Error(`Row ${idx} is not an array.`);
+        }
+
         const obj = {};
         for (let i = 0; i < cols.length; i++) obj[cols[i]] = row[i];
         return obj;
@@ -570,10 +604,19 @@
       powerPlants.markers = [];
 
       const items = rowsToObjects(ds);
-      items.forEach(p => {
+      if (!items.length) {
+        throw new Error("Datasette returned zero power plants for Mexico.");
+      }
+
+      let skipped = 0;
+
+      items.forEach((p) => {
         const lat = Number(p.latitude);
         const lon = Number(p.longitude);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+          skipped += 1;
+          return;
+        }
 
         const name = p.name || "Unknown";
         const fuel = p.primary_fuel || "Unknown";
@@ -591,7 +634,7 @@
           fillOpacity: 0.75
         });
 
-        const safeUrl = (p.url && typeof p.url === "string") ? p.url : null;
+        const safeUrl = (typeof p.url === "string" && p.url.trim()) ? p.url : null;
         const link = safeUrl ? `<div style="margin-top:6px;"><a href="${safeUrl}" target="_blank" rel="noopener">Source</a></div>` : "";
 
         marker.bindPopup(
@@ -608,6 +651,13 @@
         marker.addTo(powerPlants.layer);
         powerPlants.markers.push(marker);
       });
+
+      console.log(`Power plants added: ${powerPlants.markers.length}, skipped: ${skipped}`);
+      if (!powerPlants.markers.length) {
+        throw new Error("No valid Mexico power plant coordinates were found in the Datasette response.");
+      }
+
+      try { log(`Power plants added to map: ${powerPlants.markers.length}. Skipped: ${skipped}.`); } catch(e) {}
     }
 
     async function ensureMexicoPowerPlantsLoaded() {
@@ -755,8 +805,8 @@
 
       // Option 1: overlay power plants from Datasette
       ensureMexicoPowerPlantsLoaded().catch(err => {
-        console.error(err);
-        try { log("Power plants load error."); } catch(e) {}
+        console.error("Mexico power plants load error:", err);
+        try { log(`Power plants load error: ${err?.message || err}`); } catch(e) {}
       });
     }
 
