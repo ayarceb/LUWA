@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data & Methods - LUWA Consulting</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    main {
+      margin-top: 120px;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .intro {
+      max-width: 850px;
+      margin: 0 auto 2rem auto;
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .methods-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .method-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 310px;
+      padding: 1.5rem;
+      text-align: left;
+      transition: transform 0.3s ease;
+    }
+
+    .method-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .method-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .method-card h2 {
+      font-size: 1.2rem;
+      color: #1a73e8;
+      margin-bottom: 0.7rem;
+    }
+
+    .method-card p {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .btn-row {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #555;
+      transform: translateY(-2px);
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="LOGO.png" alt="Logo" class="logo">
+    <h1>Data & Methods</h1>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="consultancy-services.html">Consultancy Services</a>
+      <a href="data-methods.html" class="active">Data & Methods</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="intro">
+      LUWA integrates satellite observations, atmospheric transport modelling and lightweight
+      emission-estimation methods. The workflow combines TROPOMI-based products, meteorological
+      data, data assimilation and LOTOS-EUROS simulations to support source-level environmental
+      analysis.
+    </p>
+
+    <section class="methods-grid">
+      <div class="method-card">
+        <img src="Data_Asimm_system.png" alt="Data Assimilation System">
+        <h2>Data Assimilation</h2>
+        <p>
+          Integration of observations and model outputs to improve the representation of
+          atmospheric composition, transport and source influence.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <img src="preview_observations_Colombia.png" alt="Satellite Observations">
+        <h2>Satellite Observations</h2>
+        <p>
+          Use of satellite products, including TROPOMI-based observations, to detect spatial
+          patterns of NO<sub>2</sub>, SO<sub>2</sub>, NH<sub>3</sub> and related atmospheric signals.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <img src="preview_prior_emissions_Colombia.png" alt="Prior Emissions">
+        <h2>Emission Estimation</h2>
+        <p>
+          Application of lightweight methods and inverse-modelling concepts to estimate emissions
+          from point sources, industrial areas and agricultural systems.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <h2>LOTOS-EUROS on AWS</h2>
+        <p>
+          Atmospheric chemistry-transport simulations using LOTOS-EUROS workflows deployed in
+          cloud infrastructure for controlled environmental scenarios.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <h2>Plume Diagnostics</h2>
+        <p>
+          Analysis of plume direction, dispersion, source attribution and meteorological drivers
+          using satellite data and wind fields.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <h2>Computational Planning</h2>
+        <p>
+          Estimation of simulation domain size, CPU needs and operational feasibility for
+          cloud-based atmospheric modelling experiments.
+        </p>
+      </div>
+    </section>
+
+    <div class="btn-row">
+      <a href="https://lotos-euros.tno.nl/" target="_blank" class="btn">TNO LOTOS-EUROS</a>
+      <a href="https://carboninversion.com/" target="_blank" class="btn">IMI System</a>
+      <button class="btn" onclick="window.open('leaflet_hpc_estimate.html','_blank')">
+        Calculate Simulation Domain & CPU Time
+      </button>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 LUWA - Satellite Data & Environmental Monitoring
+  </footer>
+</body>
+</html>

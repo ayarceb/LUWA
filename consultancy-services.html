@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultancy Services - LUWA Consulting</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    main {
+      margin-top: 120px;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .intro {
+      max-width: 850px;
+      margin: 0 auto 2rem auto;
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .services-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .service-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 310px;
+      padding: 1.5rem;
+      text-align: left;
+      transition: transform 0.3s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .service-card h2 {
+      font-size: 1.2rem;
+      color: #1a73e8;
+      margin-bottom: 0.7rem;
+    }
+
+    .service-card p {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="LOGO.png" alt="Logo" class="logo">
+    <h1>Consultancy Services</h1>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="consultancy-services.html" class="active">Consultancy Services</a>
+      <a href="data-methods.html">Data & Methods</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="intro">
+      LUWA provides environmental consultancy services based on satellite observations,
+      atmospheric modelling, emission estimation and decision-oriented air-quality analysis.
+      The service focuses on industrial, agricultural and urban emission sources where spatial
+      monitoring is needed to understand plume transport, deposition and exposure patterns.
+    </p>
+
+    <section class="services-grid">
+      <div class="service-card">
+        <h2>Industrial Source Monitoring</h2>
+        <p>
+          Monitoring of refineries, power plants and large industrial facilities using
+          satellite observations, meteorological information and atmospheric transport analysis.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h2>Agricultural Emissions</h2>
+        <p>
+          Assessment of emissions related to pig farms, chicken farms and nitrogen-intensive
+          activities, with attention to NH<sub>3</sub>, NOx and deposition impacts.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h2>Plume Transport Analysis</h2>
+        <p>
+          Identification of pollution plumes, transport pathways and meteorological conditions
+          controlling dispersion, accumulation and source influence.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h2>Air-Quality Impact Assessment</h2>
+        <p>
+          Evaluation of surface concentration patterns, nitrogen impacts and air-quality
+          behaviour using integrated observational and modelling approaches.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h2>Sensor Networks</h2>
+        <p>
+          Design and interpretation of low-cost sensor networks supported by data assimilation
+          and atmospheric modelling workflows.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <h2>Technical Reports</h2>
+        <p>
+          Preparation of technical reports, visual diagnostics and decision-support material
+          for environmental management, permitting and policy discussions.
+        </p>
+      </div>
+    </section>
+
+    <div style="text-align:center;">
+      <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 LUWA - Satellite Data & Environmental Monitoring
+  </footer>
+</body>
+</html>
