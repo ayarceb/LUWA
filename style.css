@@ -539,3 +539,10 @@ footer {
   box-shadow: 0 4px 14px rgba(255, 215, 0, 0.6);
   background: linear-gradient(135deg, #FFE082, #FFD54F);
 }
+
+header img.logo {
+  height: 90px;
+  position: absolute;
+  left: 20px;
+  top: 12px;
+}
