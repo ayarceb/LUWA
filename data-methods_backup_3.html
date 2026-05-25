@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data & Methods - LUWA Consulting</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    main {
+      margin-top: 120px;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .intro {
+      max-width: 850px;
+      margin: 0 auto 2rem auto;
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .methods-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .method-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 310px;
+      padding: 1.5rem;
+      text-align: left;
+      transition: transform 0.3s ease;
+    }
+
+    .method-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .method-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .method-card h2 {
+      font-size: 1.2rem;
+      color: #1a73e8;
+      margin-bottom: 0.7rem;
+    }
+
+    .method-card p {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .btn-row {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #555;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0069d9, #004a99);
+      box-shadow: 0 4px 12px rgba(0,123,255,0.25);
+    }
+
+    .inputs-panel {
+      display: none;
+      max-width: 1180px;
+      margin: 2.5rem auto 0 auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+      text-align: left;
+      overflow: hidden;
+      border: 1px solid #e8edf5;
+    }
+
+    .inputs-panel.is-visible {
+      display: block;
+      animation: fadeIn 0.25s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .inputs-header {
+      padding: 1.7rem 1.8rem;
+      background: linear-gradient(135deg, #f4f8ff, #ffffff);
+      border-bottom: 1px solid #e8edf5;
+    }
+
+    .inputs-header h2 {
+      margin: 0 0 0.5rem 0;
+      color: #003c8f;
+      font-size: 1.35rem;
+    }
+
+    .inputs-header p {
+      margin: 0;
+      color: #555;
+      line-height: 1.6;
+      font-size: 0.98rem;
+    }
+
+    .plain-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      padding: 1.4rem 1.8rem;
+      background: #fbfcff;
+      border-bottom: 1px solid #e8edf5;
+    }
+
+    .plain-card {
+      background: #fff;
+      border: 1px solid #e4eaf2;
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .plain-card h3 {
+      margin: 0 0 0.45rem 0;
+      color: #1a73e8;
+      font-size: 1rem;
+    }
+
+    .plain-card p {
+      margin: 0;
+      color: #555;
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+
+    .domain-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      padding: 1.4rem 1.8rem;
+      background: #fff;
+      border-bottom: 1px solid #e8edf5;
+    }
+
+    .domain-card {
+      background: #fbfcff;
+      border: 1px solid #e4eaf2;
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .domain-card h3 {
+      margin: 0 0 0.45rem 0;
+      color: #003c8f;
+      font-size: 1rem;
+    }
+
+    .domain-card p {
+      margin: 0.25rem 0;
+      color: #555;
+      line-height: 1.45;
+      font-size: 0.93rem;
+    }
+
+    .table-note {
+      padding: 1rem 1.8rem 1.2rem 1.8rem;
+      color: #555;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      background: #fbfcff;
+      border-bottom: 1px solid #e8edf5;
+    }
+
+    .input-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      background: #fff;
+    }
+
+    .input-table {
+      width: 100%;
+      min-width: 1050px;
+      border-collapse: collapse;
+      font-size: 0.89rem;
+      color: #333;
+    }
+
+    .input-table th {
+      background: #003c8f;
+      color: #fff;
+      padding: 0.85rem;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .input-table td {
+      padding: 0.85rem;
+      border-bottom: 1px solid #e8edf5;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    .input-table tbody tr:nth-child(even) {
+      background: #f8fbff;
+    }
+
+    .input-table tbody tr:hover {
+      background: #eef5ff;
+    }
+
+    .category-cell {
+      font-weight: 700;
+      color: #003c8f;
+      width: 16%;
+    }
+
+    .status-pill {
+      display: inline-block;
+      margin-top: 0.4rem;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      background: #eaf2ff;
+      color: #0056b3;
+      font-size: 0.77rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-warning {
+      background: #fff4dd;
+      color: #8a5a00;
+    }
+
+    .status-confirmed {
+      background: #e9f7ef;
+      color: #196f3d;
+    }
+
+    details {
+      margin-top: 0.45rem;
+      padding: 0.45rem 0.55rem;
+      border-radius: 8px;
+      background: #f4f8ff;
+      border: 1px solid #e3ecfb;
+    }
+
+    summary {
+      cursor: pointer;
+      color: #0056b3;
+      font-weight: 700;
+      font-size: 0.84rem;
+    }
+
+    details p {
+      margin: 0.45rem 0 0 0;
+      color: #555;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .inputs-footer {
+      padding: 1rem 1.8rem 1.4rem 1.8rem;
+      background: #fbfcff;
+      color: #555;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .inputs-footer strong {
+      color: #003c8f;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+    }
+
+    @media (max-width: 900px) {
+      .plain-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      main {
+        margin-top: 140px;
+      }
+
+      .plain-summary,
+      .domain-summary {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+
+      .inputs-header,
+      .table-note,
+      .inputs-footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .input-table {
+        font-size: 0.82rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="LOGO.png" alt="Logo" class="logo">
+    <h1>Data & Methods</h1>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="consultancy-services.html">Consultancy Services</a>
+      <a href="data-methods.html" class="active">Data & Methods</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="intro">
+      LUWA integrates satellite observations, atmospheric transport modelling and lightweight
+      emission-estimation methods. The workflow combines TROPOMI-based products, meteorological
+      data, data assimilation and LOTOS-EUROS simulations to support source-level environmental
+      analysis.
+    </p>
+
+    <section class="methods-grid">
+      <div class="method-card">
+        <img src="Data_Asimm_system.png" alt="Data Assimilation System">
+        <h2>Data Assimilation</h2>
+        <p>
+          Integration of observations and model outputs to improve the representation of
+          atmospheric composition, transport and source influence.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <img src="preview_observations_Colombia.png" alt="Satellite Observations">
+        <h2>Satellite Observations</h2>
+        <p>
+          Use of satellite products, including TROPOMI-based observations, to detect spatial
+          patterns of NO<sub>2</sub>, SO<sub>2</sub>, NH<sub>3</sub> and related atmospheric signals.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <img src="preview_prior_emissions_Colombia.png" alt="Prior Emissions">
+        <h2>Emission Estimation</h2>
+        <p>
+          Application of lightweight methods and inverse-modelling concepts to estimate emissions
+          from point sources, industrial areas and agricultural systems.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <h2>LOTOS-EUROS on AWS</h2>
+        <p>
+          Atmospheric chemistry-transport simulations using LOTOS-EUROS workflows deployed in
+          cloud infrastructure for controlled environmental scenarios.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <h2>Plume Diagnostics</h2>
+        <p>
+          Analysis of plume direction, dispersion, source attribution and meteorological drivers
+          using satellite data and wind fields.
+        </p>
+      </div>
+
+      <div class="method-card">
+        <h2>Computational Planning</h2>
+        <p>
+          Estimation of simulation domain size, CPU needs and operational feasibility for
+          cloud-based atmospheric modelling experiments.
+        </p>
+      </div>
+    </section>
+
+    <div class="btn-row">
+      <a href="https://lotos-euros.tno.nl/" target="_blank" class="btn">TNO LOTOS-EUROS</a>
+      <a href="https://carboninversion.com/" target="_blank" class="btn">IMI System</a>
+      <button class="btn" onclick="window.open('leaflet_hpc_estimate.html','_blank')">
+        Calculate Simulation Domain & CPU Time
+      </button>
+      <button
+        id="inputsTableButton"
+        class="btn btn-primary"
+        type="button"
+        aria-expanded="false"
+        aria-controls="lotosInputsPanel"
+        onclick="toggleInputsTable()">
+        View model input checklist
+      </button>
+    </div>
+
+    <section id="lotosInputsPanel" class="inputs-panel" aria-label="LOTOS-EUROS model input checklist">
+      <div class="inputs-header">
+        <h2>What goes into a LOTOS-EUROS simulation?</h2>
+        <p>
+          A LOTOS-EUROS run is built from several families of data: weather, emissions,
+          land surface, boundary conditions, chemistry and satellite checks. The table below
+          explains these inputs in client-facing language and keeps the technical detail available
+          in expandable notes.
+        </p>
+      </div>
+
+      <div class="plain-summary">
+        <article class="plain-card">
+          <h3>Weather</h3>
+          <p>Wind, temperature, clouds, rain and boundary-layer height define where a plume moves and how fast it disperses.</p>
+        </article>
+        <article class="plain-card">
+          <h3>Emissions</h3>
+          <p>Industrial, transport, agricultural, natural and fire sources define what enters the atmosphere.</p>
+        </article>
+        <article class="plain-card">
+          <h3>Surface</h3>
+          <p>Land cover, terrain, soil and coastline information control deposition, turbulence, dust and sea-salt influence.</p>
+        </article>
+        <article class="plain-card">
+          <h3>Boundaries</h3>
+          <p>Global or larger-domain chemistry provides the background air entering the simulation area.</p>
+        </article>
+      </div>
+
+      <div class="domain-summary">
+        <article class="domain-card">
+          <h3>Europe / MACC domain</h3>
+          <p><strong>Simulation window:</strong> 2024-08-12 to 2024-08-22.</p>
+          <p><strong>Setup:</strong> European MACC / LOTOS-EUROS domain with MACC/TNO-CAMS emissions as the standard European inventory.</p>
+          <p><strong>Use:</strong> short-period simulation for air-quality and source-influence analysis with documented inputs.</p>
+        </article>
+
+        <article class="domain-card">
+          <h3>Mexico domain</h3>
+          <p><strong>Simulation window:</strong> 2024-07-01 to 2024-07-27.</p>
+          <p><strong>Setup:</strong> Mexico-focused domain using global meteorology, global boundary conditions and non-European land-cover data.</p>
+          <p><strong>Use:</strong> feasibility and input-readiness assessment before defining a production run.</p>
+        </article>
+      </div>
+
+      <p class="table-note">
+        <strong>How to read this table:</strong> the “Europe” column describes the standard MACC-domain setup.
+        The “Mexico” column separates what can be reused from the global LOTOS-EUROS workflow from the items
+        that must be confirmed before the run, especially the anthropogenic emission inventory, final domain box,
+        grid resolution and spin-up period.
+      </p>
+
+      <div class="input-table-wrap">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Input</th>
+              <th>What it means for the client</th>
+              <th>What LUWA checks before launch</th>
+              <th>Europe / MACC<br><small>2024-08-12 to 2024-08-22</small></th>
+              <th>Mexico<br><small>2024-07-01 to 2024-07-27</small></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td class="category-cell">Simulation period and outputs</td>
+              <td>
+                Defines the days to simulate, the pollutants to deliver and how often results are stored.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Start date, end date, output interval, pollutant list, restart or spin-up option, output grid and domain name.</p>
+                </details>
+              </td>
+              <td>Coverage of all input files for the full period, output interval, storage volume and deliverable format.</td>
+              <td>Run window fixed: 2024-08-12 to 2024-08-22. <span class="status-pill status-confirmed">confirmed</span></td>
+              <td>Run window fixed: 2024-07-01 to 2024-07-27. <span class="status-pill status-confirmed">confirmed</span></td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Model area and resolution</td>
+              <td>
+                Defines the map covered by the model and the level of spatial detail. Larger or finer domains increase cost.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Longitude and latitude boundaries, grid resolution, vertical-layer structure, model top and output grid.</p>
+                </details>
+              </td>
+              <td>Domain boundaries, overlap with meteorology, overlap with emissions, boundary placement and CPU estimate.</td>
+              <td>European MACC domain. A standard LOTOS-EUROS European grid can be used unless a finer zoom is selected.</td>
+              <td>Mexico-specific domain. Final bounding box and grid resolution need confirmation. <span class="status-pill status-warning">confirm</span></td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Meteorology</td>
+              <td>
+                Weather drives plume direction, vertical mixing, rainfall removal and chemical transformation.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Pressure, temperature, U/V winds, humidity, cloud cover, cloud liquid and ice water, boundary-layer height, 10 m wind, 2 m temperature and dewpoint, heat fluxes, friction velocity, solar radiation, precipitation, snow, sea-surface temperature, sea ice and soil water.</p>
+                </details>
+              </td>
+              <td>Hourly or 3-hourly coverage, interpolation to the LOTOS-EUROS grid, vertical levels, units and missing-time checks.</td>
+              <td>ECMWF/CAMS-compatible meteorology clipped or interpolated to the MACC domain for August 2024.</td>
+              <td>Global ECMWF/CAMS-compatible meteorology clipped or interpolated to Mexico for July 2024.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Boundary conditions</td>
+              <td>
+                Provides the background pollution entering the domain from outside the map. This prevents the run from starting with an empty atmosphere.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Western, eastern, southern, northern and top boundaries for reactive gases and aerosols; possible sources include CAMS/MACC, climatologies, EMEP, TM5 or a parent LOTOS-EUROS run.</p>
+                </details>
+              </td>
+              <td>Tracer availability, date coverage, vertical consistency, temporal frequency and priority order among boundary sources.</td>
+              <td>CAMS/MACC global or regional boundary products are the standard option for the MACC-domain run.</td>
+              <td>CAMS global boundary products are the practical default for Mexico; exact product/version should be confirmed. <span class="status-pill status-warning">confirm product</span></td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Anthropogenic emissions</td>
+              <td>
+                Represents human activities: power generation, industry, traffic, shipping, agriculture, solvents and waste.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>NO<sub>x</sub>, SO<sub>x</sub>, NMVOC, NH<sub>3</sub>, CO, CH<sub>4</sub>, PM<sub>2.5</sub>, PM<sub>10</sub>, sector codes, country allocation, point sources and gridded area sources.</p>
+                </details>
+              </td>
+              <td>Inventory year, sector mapping, pollutant coverage, units, temporal profiles, point-source metadata and compatibility with LOTOS-EUROS tracers.</td>
+              <td>Use MACC/TNO-CAMS European emissions, including sector categories and chemical speciation.</td>
+              <td>Use a Mexico-ready inventory converted to LOTOS-EUROS format, such as a national inventory, EDGAR or HTAP. <span class="status-pill status-warning">confirm inventory</span></td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Emission timing and plume height</td>
+              <td>
+                Converts annual or monthly emissions into hourly releases and places emissions near the surface or aloft.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Monthly, weekday/weekend and hourly profiles; local-time factors; road-transport cold-start factors; vertical emission profiles; stack height, diameter, exit velocity, exit temperature and flow rate where available.</p>
+                </details>
+              </td>
+              <td>Time zone handling, sector profiles, vertical allocation and availability of stack data for large point sources.</td>
+              <td>Use European sector profiles and standard vertical allocation; plume rise can be used for point sources with stack parameters.</td>
+              <td>Use Mexico-specific temporal profiles when available. Default profiles can be applied with a transparent uncertainty note.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Land cover and vegetation</td>
+              <td>
+                Tells the model whether each area behaves like city, forest, cropland, grassland, water, desert or wetland.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>CORINE/Smiatek and optional CORINE 2018 for Europe; Global Land Cover 2000 outside Europe; conversion to DEPAC land-use classes for deposition.</p>
+                </details>
+              </td>
+              <td>Land-cover availability, class conversion, grid aggregation and consistency with deposition and biogenic-emission modules.</td>
+              <td>Use CORINE/Smiatek or CORINE 2018-enhanced land cover over Europe.</td>
+              <td>Use Global Land Cover 2000 or an equivalent global land-cover product translated to LOTOS-EUROS classes.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Terrain, coastline and soil</td>
+              <td>
+                Terrain and coastline affect winds, turbulence, coastal aerosol and dust potential.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Orography, soil type, land-sea mask, sea fraction, roughness length, inland water versus ocean/sea and preferential dust-source fraction.</p>
+                </details>
+              </td>
+              <td>Topography, land-sea classification, soil maps, coastal treatment and roughness-length consistency.</td>
+              <td>European terrain and land-sea classification, including Atlantic, Mediterranean and inland-water distinctions.</td>
+              <td>Mexico terrain and coastline treatment, including Pacific coast, Gulf of Mexico, Caribbean coast and inland water bodies.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Natural emissions</td>
+              <td>
+                Adds natural sources that can influence PM, ozone chemistry and background NO<sub>x</sub>.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Biogenic VOCs through European tree-species maps or MEGAN; soil NO; sea-salt generation from 10 m wind and sea-surface temperature; wind-blown dust from soil, moisture and friction velocity.</p>
+                </details>
+              </td>
+              <td>Module activation, input maps, meteorological drivers and relevance of each natural source for the selected period.</td>
+              <td>European tree-species maps or MEGAN for biogenic emissions; sea salt, soil NO and dust modules as needed.</td>
+              <td>MEGAN is the practical option for vegetation emissions. Dust and sea salt may be important depending on region and season.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Fire emissions</td>
+              <td>
+                Identifies wildfire or biomass-burning influence so that smoke plumes are not confused with industrial emissions.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>CAMS-GFAS or compatible fire inventory, daily fire emissions, emitted gases and aerosols, plume-bottom height, mean injection height and plume-top height when available.</p>
+                </details>
+              </td>
+              <td>Fire activity during the run window, injection height, affected species and whether fire influence is central or auxiliary.</td>
+              <td>Screen GFAS fire activity for the August 2024 MACC-domain period.</td>
+              <td>Screen GFAS fire activity for July 2024 over Mexico because fire events can dominate aerosol and CO signals.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Deposition and removal</td>
+              <td>
+                Describes how gases and particles leave the atmosphere through surfaces and rain.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>DEPAC dry deposition, particle dry deposition, aerodynamic resistance, stomatal resistance, cuticular resistance, soil resistance, in-cloud scavenging, below-cloud scavenging, cloud water, rain intensity and particle size.</p>
+                </details>
+              </td>
+              <td>Land-use classes, meteorological fields, cloud/rain fields and species-specific deposition settings.</td>
+              <td>Computed from European land cover, meteorology and chemistry fields.</td>
+              <td>Computed from Mexico land cover, meteorology and chemistry fields.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Chemistry and aerosols</td>
+              <td>
+                Converts emissions into atmospheric concentrations and deposition products, including ozone and particulate matter.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>CBM-IV oxidant chemistry, NO<sub>x</sub>, O<sub>3</sub>, VOC tracers, SO<sub>2</sub>/SO<sub>4</sub>, NH<sub>3</sub>, HNO<sub>3</sub>, nitrate, ammonium, primary PM, sea salt, dust and optional secondary organic aerosol/VBS.</p>
+                </details>
+              </td>
+              <td>Selected tracer groups, aerosol modules, chemistry options and consistency between emissions, boundaries and outputs.</td>
+              <td>Standard LOTOS-EUROS chemistry modules for the MACC-domain run.</td>
+              <td>Same chemistry modules can be used once emissions and boundary conditions are mapped to LOTOS-EUROS tracers.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Satellite check</td>
+              <td>
+                Provides an independent view of plume location, source influence and model plausibility.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>TROPOMI NO<sub>2</sub>, SO<sub>2</sub>, NH<sub>3</sub> or aerosol-related products, depending on the question, cloud screening and data quality.</p>
+                </details>
+              </td>
+              <td>Satellite availability, cloud filtering, overpass time, spatial overlap and comparison metrics.</td>
+              <td>TROPOMI screening over the European MACC domain for August 2024.</td>
+              <td>TROPOMI screening over Mexico for July 2024.</td>
+            </tr>
+
+            <tr>
+              <td class="category-cell">Run QA/QC</td>
+              <td>
+                Final technical review before sharing outputs with a client.
+                <details>
+                  <summary>Technical fields</summary>
+                  <p>Missing-file checks, domain overlap, units, vertical levels, tracer availability, inventory year, time-zone profiles, restart/spin-up status and output integrity.</p>
+                </details>
+              </td>
+              <td>Input completeness, consistency checks, log review, output inspection and reproducible configuration record.</td>
+              <td>Run-control check for all MACC-domain files between 2024-08-12 and 2024-08-22.</td>
+              <td>Run-control check for all Mexico-domain files between 2024-07-01 and 2024-07-27.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inputs-footer">
+        <p>
+          <strong>Technical basis:</strong> LOTOS-EUROS Reference Guide v2.3.000, TNO, December 2023.
+          The table keeps the scientific content visible while presenting it as an input checklist for decision-making.
+        </p>
+        <p>
+          <strong>Items to confirm before client delivery:</strong> Mexico anthropogenic inventory,
+          Mexico bounding box and resolution, spin-up period, exact meteorological product,
+          boundary-condition product, emission inventory year and whether fire or dust modules
+          should be interpreted as central or auxiliary.
+        </p>
+      </div>
+    </section>
+
+    <div style="text-align:center;">
+      <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 LUWA - Satellite Data & Environmental Monitoring
+  </footer>
+
+  <script>
+    function toggleInputsTable() {
+      const panel = document.getElementById('lotosInputsPanel');
+      const button = document.getElementById('inputsTableButton');
+      const isVisible = panel.classList.toggle('is-visible');
+
+      button.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
+      button.textContent = isVisible
+        ? 'Hide model input checklist'
+        : 'View model input checklist';
+
+      if (isVisible) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  </script>
+</body>
+</html>
