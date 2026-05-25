@@ -504,18 +504,15 @@
         aria-expanded="false"
         aria-controls="lotosInputsPanel"
         onclick="toggleInputsTable()">
-        View LUWA input-output table
+        View LOTOS-EUROS input-output table
       </button>
     </div>
 
-    <section id="lotosInputsPanel" class="inputs-panel" aria-label="LUWA input-output table for Humath">
+    <section id="lotosInputsPanel" class="inputs-panel" aria-label="LOTOS-EUROS input-output table for Humath">
       <div class="inputs-header">
-        <h2>LUWA simulation capability: input → output table</h2>
+        <h2>LOTOS-EUROS simulation: input → output table</h2>
         <p>
-          This section explains the simulation as a controlled transformation: <strong>data enters LUWA</strong>,
-          LOTOS-EUROS performs transport, chemistry and deposition calculations, and <strong>Humath receives usable outputs</strong>
-          through files, reports, dashboards or API-ready products. For both available domains, the <strong>finest spatial
-          resolution available is 1 km grid spacing</strong>, subject to input-data availability and computing budget.
+          This section explains the simulation workflow from the client request to the delivered products. <strong>Humath provides the domain, grid resolution, species of interest, output type and output cadence, then sends the simulation request</strong>. LOTOS-EUROS uses meteorology, emissions, boundary conditions, land cover and surface data as model inputs, computes atmospheric transport, chemistry and deposition, and returns structured outputs through LUWA. For both available domains, the <strong>finest spatial resolution available is 1 km grid spacing</strong>, subject to input-data availability.
         </p>
       </div>
 
@@ -523,36 +520,36 @@
         <h3>What it means for Humath</h3>
         <div class="humath-grid">
           <article class="humath-card">
-            <h4>Clear data flow</h4>
-            <p><strong>Inputs</strong> are documented before the run, and <strong>outputs</strong> are delivered with metadata, dates, domain and resolution.</p>
+            <h4>Domain selection</h4>
+            <p>Humath selects the <strong>simulation domain</strong>: Europe / MACC domain or Mexico pilot box.</p>
           </article>
           <article class="humath-card">
-            <h4>Decision-ready products</h4>
-            <p>Humath receives <strong>maps, time series, model fields, diagnostics and run summaries</strong>, not raw internal model complexity.</p>
+            <h4>Resolution and period</h4>
+            <p>Humath selects the <strong>grid resolution</strong>, simulation dates and output cadence: <strong>hourly</strong> or <strong>3-hourly</strong>.</p>
           </article>
           <article class="humath-card">
-            <h4>Protected LUWA backend</h4>
-            <p>Humath consumes results without access to <strong>source code, credentials, containers, model internals or proprietary configuration</strong>.</p>
+            <h4>Species of interest</h4>
+            <p>Humath selects the <strong>pollutants and diagnostics</strong> required for the client: gases, aerosols, deposition or plume products.</p>
           </article>
           <article class="humath-card">
-            <h4>Configurable delivery</h4>
-            <p>Outputs can be <strong>hourly</strong> or <strong>3-hourly</strong>, depending on the analysis need, storage volume and API cadence.</p>
+            <h4>Output type and launch</h4>
+            <p>Humath selects the <strong>output format</strong> and sends the simulation request. LUWA returns files, maps, summaries or API-ready layers.</p>
           </article>
         </div>
       </div>
 
       <div class="io-summary">
         <article class="io-card">
-          <h3>1. What feeds LUWA</h3>
+          <h3>1. What Humath configures</h3>
+          <p><strong>Domain, resolution, simulation period, species of interest, output type and output cadence.</strong></p>
+        </article>
+        <article class="io-card">
+          <h3>2. LOTOS-EUROS input</h3>
           <p><strong>Meteorology, emissions, boundaries, land cover, topography, soil, sea mask, fires and chemistry settings.</strong></p>
         </article>
         <article class="io-card">
-          <h3>2. What LUWA computes</h3>
-          <p><strong>Transport, chemical transformation, aerosol partitioning, dry deposition, wet removal and source influence.</strong></p>
-        </article>
-        <article class="io-card">
-          <h3>3. What Humath receives</h3>
-          <p><strong>Model outputs, maps, NetCDF/CSV/GeoJSON products, QA/QC summaries and API-ready datasets.</strong></p>
+          <h3>3. LOTOS-EUROS output</h3>
+          <p><strong>Concentration fields, deposition fields, maps, NetCDF/CSV/GeoJSON products, QA/QC summaries and API-ready datasets.</strong></p>
         </article>
       </div>
 
@@ -574,7 +571,7 @@
           <p><strong>Simulation window:</strong> 2024-07-01 to 2024-07-27.</p>
           <ul>
             <li><strong>Provided pilot box:</strong> North 24.0°N, South 23.0°N, West 103.0°W, East 102.0°W.</li>
-            <li><strong>Grid:</strong> selected according to input availability and cost target, up to <strong>1 km</strong> grid spacing.</li>
+            <li><strong>Grid:</strong> selected according to the Humath request and input availability, up to <strong>1 km</strong> grid spacing.</li>
             <li><strong>Setup:</strong> non-European domain using global meteorology, global boundaries and global land-cover support.</li>
             <li><strong>Output cadence:</strong> hourly or 3-hourly.</li>
           </ul>
@@ -582,9 +579,8 @@
       </div>
 
       <p class="table-note">
-        <strong>How to read this table:</strong> each row links an input package to a concrete LUWA output.
-        The goal is to show what the simulation needs, what it produces and how Humath can use the result
-        in a SaaS/API workflow. This section focuses on <strong>model simulation capability</strong>, not on satellite validation.
+        <strong>How to read this table:</strong> each row links a LOTOS-EUROS input package to a model output packaged by LUWA.
+        The goal is to show what Humath configures, what enters LOTOS-EUROS, what the model produces and how the result can be used in a SaaS/API workflow. This section focuses on <strong>model simulation capability</strong>, not on satellite validation.
       </p>
 
       <div class="input-table-wrap">
@@ -592,9 +588,9 @@
           <thead>
             <tr>
               <th>Simulation component</th>
-              <th>What feeds LUWA</th>
-              <th>What LUWA produces</th>
-              <th>How Humath can use it</th>
+              <th>LOTOS-EUROS input</th>
+              <th>LOTOS-EUROS output</th>
+              <th>Humath request / use</th>
               <th>Europe / MACC<br><small>2024-08-12 to 2024-08-22</small></th>
               <th>Mexico pilot box<br><small>2024-07-01 to 2024-07-27</small></th>
             </tr>
@@ -604,13 +600,13 @@
             <tr>
               <td class="category-cell">Run configuration</td>
               <td>
-                <strong>Domain, dates, resolution, output cadence, pollutant list and active modules.</strong>
+                <strong>Humath request:</strong> domain, dates, grid resolution, species of interest, output type, output cadence and active modules.
               </td>
               <td>
-                <strong>Executable run package</strong> with domain metadata, grid definition, output schedule, logs and reproducible configuration record.
+                <strong>Executable LOTOS-EUROS run package</strong> with domain metadata, grid definition, output schedule, logs and reproducible configuration record.
               </td>
               <td>
-                Defines cost, delivery time, storage volume and API cadence before launching the simulation.
+                Sets the simulation configuration before launch and determines the structure of the delivered outputs.
               </td>
               <td>
                 MACC domain, 2024-08-12 to 2024-08-22, hourly or 3-hourly output, preset grid 0.50° × 0.25° or high-resolution option up to <strong>1 km</strong>.
@@ -700,7 +696,7 @@
                 <strong>Gridded and point-source emissions</strong> by pollutant, sector, time step and vertical allocation; sector totals and source-attribution-ready input layers.
               </td>
               <td>
-                Shows which sectors feed the simulation and supports source-level interpretation for clients.
+                Shows which sectors enter the simulation and supports source-level interpretation for clients.
               </td>
               <td><strong>TNO-MACCIII / TNO-CAMS European emissions</strong>, including area emissions and point sources.</td>
               <td>Mexico inventory to be selected and converted to LOTOS-EUROS format; global or national inventory can be mapped to the same model structure.</td>
@@ -849,7 +845,7 @@
             </tr>
 
             <tr>
-              <td class="category-cell">LUWA delivery layer</td>
+              <td class="category-cell">Delivery layer</td>
               <td>
                 <strong>Completed LOTOS-EUROS outputs</strong>, metadata, logs and selected post-processing rules.
               </td>
@@ -883,14 +879,10 @@
 
       <div class="inputs-footer">
         <p>
-          <strong>Output principle:</strong> LUWA does not only launch a model run. It packages the complete input-output chain:
-          <strong>documented inputs</strong>, <strong>model-computed atmospheric fields</strong>, <strong>interpretable diagnostics</strong>
-          and <strong>delivery-ready products</strong> for Humath.
+          <strong>Output principle:</strong> LOTOS-EUROS performs the atmospheric simulation. LUWA packages the complete input-output chain: <strong>documented LOTOS-EUROS inputs</strong>, <strong>model-computed atmospheric fields</strong>, <strong>interpretable diagnostics</strong> and <strong>delivery-ready products</strong> for Humath.
         </p>
         <p>
-          <strong>Items to define before production launch:</strong> selected grid resolution within the available range up to <strong>1 km</strong>,
-          Mexico anthropogenic inventory, inventory year, boundary-condition product/version, spin-up or restart strategy, output cadence,
-          active natural-emission modules and whether fire/dust influence should be treated as a central result or as context.
+          <strong>Items to configure before production launch:</strong> selected grid resolution within the available range up to <strong>1 km</strong>, species of interest, output type, output cadence, Mexico anthropogenic inventory, inventory year, boundary-condition product/version, spin-up or restart strategy, active natural-emission modules and whether fire/dust influence should be treated as a central result or as context.
         </p>
       </div>
     </section>
@@ -912,8 +904,8 @@
 
       button.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
       button.textContent = isVisible
-        ? 'Hide LUWA input-output table'
-        : 'View LUWA input-output table';
+        ? 'Hide LOTOS-EUROS input-output table'
+        : 'View LOTOS-EUROS input-output table';
 
       if (isVisible) {
         panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
