@@ -330,90 +330,6 @@
       color: #003c8f;
     }
 
-    .resolution-callout {
-      padding: 1.2rem 2rem;
-      background: #f7fbff;
-      border-bottom: 1px solid #e8edf5;
-      color: #444;
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-
-    .resolution-callout strong {
-      color: #003c8f;
-    }
-
-    .resolution-review {
-      padding: 1.4rem 2rem;
-      background: #fff;
-      border-bottom: 1px solid #e8edf5;
-    }
-
-    .resolution-review h3 {
-      margin: 0 0 0.5rem 0;
-      color: #003c8f;
-      font-size: 1.15rem;
-    }
-
-    .resolution-review p {
-      margin: 0 0 1rem 0;
-      color: #555;
-      line-height: 1.55;
-      font-size: 0.92rem;
-    }
-
-    .resolution-table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      border: 1px solid #e8edf5;
-      border-radius: 12px;
-    }
-
-    .resolution-table {
-      width: 100%;
-      min-width: 1180px;
-      border-collapse: collapse;
-      font-size: 0.84rem;
-      color: #333;
-    }
-
-    .resolution-table th {
-      background: #eef5ff;
-      color: #003c8f;
-      padding: 0.8rem;
-      text-align: left;
-      vertical-align: top;
-      line-height: 1.35;
-      font-weight: 700;
-      border-bottom: 1px solid #dbe8fb;
-    }
-
-    .resolution-table td {
-      padding: 0.8rem;
-      border-bottom: 1px solid #e8edf5;
-      vertical-align: top;
-      line-height: 1.45;
-    }
-
-    .resolution-table tbody tr:nth-child(even) {
-      background: #f8fbff;
-    }
-
-    .resolution-table a,
-    .inputs-footer a,
-    .table-note a {
-      color: #0056b3;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .resolution-table a:hover,
-    .inputs-footer a:hover,
-    .table-note a:hover {
-      text-decoration: underline;
-    }
-
-
     .back-btn {
       display: inline-block;
       margin-top: 2rem;
@@ -487,8 +403,6 @@
 
       .inputs-header,
       .humath-box,
-      .resolution-callout,
-      .resolution-review,
       .table-note,
       .inputs-footer {
         padding-left: 1rem;
@@ -571,8 +485,8 @@
       <div class="method-card">
         <h2>Computational Planning</h2>
         <p>
-          Configuration of simulation domain size, grid resolution, simulation period and output cadence
-          for cloud-based atmospheric modelling experiments.
+          Estimation of simulation domain size, CPU needs and operational feasibility for
+          cloud-based atmospheric modelling experiments.
         </p>
       </div>
     </section>
@@ -581,7 +495,7 @@
       <a href="https://lotos-euros.tno.nl/" target="_blank" class="btn">TNO LOTOS-EUROS</a>
       <a href="https://carboninversion.com/" target="_blank" class="btn">IMI System</a>
       <button class="btn" onclick="window.open('leaflet_hpc_estimate.html','_blank')">
-        Configure Simulation Domain
+        Calculate Simulation Domain & CPU Time
       </button>
       <button
         id="inputsTableButton"
@@ -598,12 +512,8 @@
       <div class="inputs-header">
         <h2>LOTOS-EUROS simulation: input → output table</h2>
         <p>
-          This section explains the simulation workflow from the client request to the delivered products. <strong>Humath provides the domain, grid resolution, species of interest, output type and output cadence, then sends the simulation request</strong>. LOTOS-EUROS uses meteorology, emissions, boundary conditions, land cover and surface data as model inputs, computes atmospheric transport, chemistry and deposition, and returns structured outputs through LUWA. For both available domains, the <strong>output grid is configurable up to 1 km grid spacing</strong>. The input datasets have their own native spatial resolution and temporal variability; they are documented and mapped to the selected model grid for each run.
+          This section explains the simulation workflow from the client request to the delivered products. <strong>Humath provides the domain, grid resolution, species of interest, output type and output cadence, then sends the simulation request</strong>. LOTOS-EUROS uses meteorology, emissions, boundary conditions, land cover and surface data as model inputs, computes atmospheric transport, chemistry and deposition, and returns structured outputs through LUWA. For both available domains, the <strong>finest spatial resolution available is 1 km grid spacing</strong>, subject to input-data availability.
         </p>
-      </div>
-
-      <div class="resolution-callout">
-        <strong>Resolution rule for Humath:</strong> the LOTOS-EUROS <strong>output resolution</strong> is configurable up to <strong>1 km</strong> in both available domains. This does not mean that every input layer is native 1 km. Meteorology, boundary conditions, emissions, land cover, fires and surface fields enter with different native resolutions and update frequencies. The run package should therefore report both: <strong>the configured output grid</strong> and <strong>the native resolution of each input field</strong>.
       </div>
 
       <div class="humath-box">
@@ -651,7 +561,7 @@
             <li><strong>Preset:</strong> MACC / default LOTOS-EUROS European domain.</li>
             <li><strong>Bounds:</strong> West 15.0°W, East 35.0°E, South 35.0°N, North 70.0°N.</li>
             <li><strong>Preset grid:</strong> 0.50° longitude × 0.25° latitude; <strong>100 × 140</strong> cells.</li>
-            <li><strong>Configurable output resolution:</strong> up to <strong>1 km</strong> grid spacing.</li>
+            <li><strong>Finest available resolution:</strong> <strong>1 km</strong> grid spacing, when selected for a high-resolution run.</li>
             <li><strong>Output cadence:</strong> hourly or 3-hourly.</li>
           </ul>
         </article>
@@ -661,120 +571,16 @@
           <p><strong>Simulation window:</strong> 2024-07-01 to 2024-07-27.</p>
           <ul>
             <li><strong>Provided pilot box:</strong> North 24.0°N, South 23.0°N, West 103.0°W, East 102.0°W.</li>
-            <li><strong>Configurable output resolution:</strong> selected by Humath, up to <strong>1 km</strong> grid spacing.</li>
+            <li><strong>Grid:</strong> selected according to the Humath request and input availability, up to <strong>1 km</strong> grid spacing.</li>
             <li><strong>Setup:</strong> non-European domain using global meteorology, global boundaries and global land-cover support.</li>
             <li><strong>Output cadence:</strong> hourly or 3-hourly.</li>
           </ul>
         </article>
       </div>
 
-
-
-      <div class="resolution-review">
-        <h3>Input-field resolution and variability review</h3>
-        <p>
-          The table below separates the <strong>configured LOTOS-EUROS output grid</strong> from the <strong>native resolution of the input fields</strong>. It gives the client a practical way to verify where each input comes from, how often it changes and which official reference should be consulted.
-        </p>
-        <div class="resolution-table-wrap">
-          <table class="resolution-table">
-            <thead>
-              <tr>
-                <th>Input or output layer</th>
-                <th>Official source / where to check</th>
-                <th>Typical native spatial resolution</th>
-                <th>Temporal variability</th>
-                <th>How it enters the run</th>
-                <th>Domain relevance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Configured LOTOS-EUROS output grid</strong></td>
-                <td><a href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">TNO LOTOS-EUROS overview</a></td>
-                <td><strong>Configurable up to 1 km</strong> for both available domains. Europe also has the MACC preset: <strong>0.50° × 0.25°</strong>, <strong>100 × 140</strong> cells.</td>
-                <td>Humath selects <strong>hourly</strong> or <strong>3-hourly</strong> output. LOTOS-EUROS may use shorter internal time steps for numerical stability.</td>
-                <td>This is the model product grid: concentrations, deposition and diagnostics are written on this grid.</td>
-                <td><strong>Europe / MACC</strong> and <strong>Mexico pilot box</strong>.</td>
-              </tr>
-              <tr>
-                <td><strong>Meteorology: ECMWF / IFS / ERA5-compatible fields</strong></td>
-                <td><a href="https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels" target="_blank" rel="noopener">ERA5 single levels</a> · <a href="https://atmosphere.copernicus.eu/sites/default/files/2023-06/LOTOS-EUROS%20Fact%20sheet.pdf" target="_blank" rel="noopener">LOTOS-EUROS fact sheet</a></td>
-                <td>Depends on product. ERA5 is commonly consulted at <strong>0.25°</strong>; operational LOTOS-EUROS forcing may use meteorology retrieved at about <strong>15 km</strong>.</td>
-                <td>Weather fields vary strongly. Surface fields can be hourly; multi-level fields can be 3-hourly depending on product and setup.</td>
-                <td>Fields include wind, temperature, humidity, clouds, precipitation, PBL height, radiation, soil water, SST, snow and orography. They are mapped to LOTOS-EUROS centres, edges and vertical levels.</td>
-                <td>Core input for both domains. It controls transport, mixing, wet removal, dry deposition and chemistry.</td>
-              </tr>
-              <tr>
-                <td><strong>Boundary and initial conditions: CAMS global atmospheric composition</strong></td>
-                <td><a href="https://ads.atmosphere.copernicus.eu/datasets/cams-global-atmospheric-composition-forecasts" target="_blank" rel="noopener">CAMS global atmospheric composition forecasts</a></td>
-                <td><strong>0.4° × 0.4°</strong> global grid for the CAMS global forecast product.</td>
-                <td><strong>1-hourly</strong> single-level fields and <strong>3-hourly</strong> multi-level fields. Forecast-system upgrades can change variables or resolution.</td>
-                <td>Provides gases and aerosols entering through the west, east, south, north and top boundaries, plus initial atmospheric state when selected.</td>
-                <td>Europe can use CAMS/MACC-compatible products. Mexico uses CAMS global boundaries as the practical default.</td>
-              </tr>
-              <tr>
-                <td><strong>European anthropogenic emissions: CAMS-REG / TNO-CAMS</strong></td>
-                <td><a href="https://atmosphere.copernicus.eu/anthropogenic-and-natural-emissions" target="_blank" rel="noopener">CAMS emissions documentation</a> · <a href="https://essd.copernicus.org/articles/14/491/2022/" target="_blank" rel="noopener">CAMS-REG-v4 paper</a></td>
-                <td>Recent CAMS-REG products are commonly documented at <strong>0.05° × 0.1°</strong> / <strong>0.1° × 0.05°</strong>, with GNFR sectors.</td>
-                <td>Usually annual inventory totals distributed with monthly, day-of-week and hourly profiles; point sources and sector profiles can add variability.</td>
-                <td>Emissions are mapped to LOTOS-EUROS tracers and vertical allocation, including NOx, SOx, NMVOC, NH3, CO, PM2.5 and PM10-2.5.</td>
-                <td>Default family for the Europe / MACC run.</td>
-              </tr>
-              <tr>
-                <td><strong>Mexico anthropogenic emissions</strong></td>
-                <td><a href="https://edgar.jrc.ec.europa.eu/" target="_blank" rel="noopener">EDGAR global emissions</a> · national inventory source if selected</td>
-                <td>Product-dependent. EDGAR provides global grid maps at <strong>0.1° × 0.1°</strong>; a national or sectoral inventory can replace or complement this if available.</td>
-                <td>Depends on inventory. EDGAR provides yearly, monthly and up to hourly products; national inventories may need temporal profiles.</td>
-                <td>Before launch, the selected Mexico inventory must be mapped to LOTOS-EUROS species, sectors, units, time profiles and vertical allocation.</td>
-                <td>Required for Mexico pilot box production runs.</td>
-              </tr>
-              <tr>
-                <td><strong>Land cover, surface classes and roughness</strong></td>
-                <td><a href="https://land.copernicus.eu/en/products/corine-land-cover/clc2018" target="_blank" rel="noopener">CORINE Land Cover 2018</a> · <a href="https://forobs.jrc.ec.europa.eu/glc2000" target="_blank" rel="noopener">Global Land Cover 2000</a></td>
-                <td><strong>CORINE 2018:</strong> 100 m raster / 25 ha mapping unit for Europe. <strong>GLC2000:</strong> approximately 1 km global land-cover support.</td>
-                <td>Mostly static or slowly updated. Snow, wetness and meteorological state add short-term variability to deposition and dust behavior.</td>
-                <td>Translated into LOTOS-EUROS land-use classes and DEPAC classes for deposition, roughness, vegetation and surface processes.</td>
-                <td>CORINE/Smiatek or CORINE 2018 for Europe; Global Land Cover 2000 or equivalent global support for Mexico.</td>
-              </tr>
-              <tr>
-                <td><strong>Biogenic emissions: MEGAN and tree-species approach</strong></td>
-                <td><a href="https://bai.ess.uci.edu/megan" target="_blank" rel="noopener">MEGAN data and code</a> · <a href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">LOTOS-EUROS documentation</a></td>
-                <td>Depends on implementation and input maps. LOTOS-EUROS documentation describes MEGAN support using plant functional types, LAI and emission-factor maps.</td>
-                <td>Strongly dynamic: temperature, radiation and LAI control isoprene and terpene emissions; seasonality and vegetation class matter.</td>
-                <td>Produces vegetation-driven VOC emissions for ozone and secondary organic aerosol chemistry.</td>
-                <td>European tree-species database where available; MEGAN is the practical non-European option for Mexico.</td>
-              </tr>
-              <tr>
-                <td><strong>Fire emissions: CAMS-GFAS</strong></td>
-                <td><a href="https://ads.atmosphere.copernicus.eu/datasets/cams-global-fire-emissions-gfas" target="_blank" rel="noopener">CAMS-GFAS fire emissions</a></td>
-                <td><strong>0.1° × 0.1°</strong> global grid for GFAS v1.2 archive.</td>
-                <td><strong>Daily averages</strong>. Fire emissions are episodic and can change sharply from day to day.</td>
-                <td>Provides biomass-burning emissions and plume-injection-height variables that can be mapped to model tracers.</td>
-                <td>Screened for both selected periods: Europe in August 2024 and Mexico in July 2024.</td>
-              </tr>
-              <tr>
-                <td><strong>Online natural sources and removal: dust, sea salt, soil NO, deposition</strong></td>
-                <td><a href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">LOTOS-EUROS model processes</a></td>
-                <td>Computed on the selected LOTOS-EUROS grid after land, meteorology and soil inputs are mapped. Output can be written up to <strong>1 km</strong>.</td>
-                <td>Wind, soil moisture, precipitation, snow, sea-surface temperature and land cover introduce strong short-term variability.</td>
-                <td>Includes sea salt, wind-blown dust, traffic resuspension, agricultural dust, soil NO, dry deposition and wet scavenging.</td>
-                <td>Relevant in coastal, arid, agricultural or fire-influenced episodes in both domains.</td>
-              </tr>
-              <tr>
-                <td><strong>Run manifest and QA/QC</strong></td>
-                <td>Delivered with the LUWA run package</td>
-                <td>Documents native input grids, configured output grid, interpolation/regridding, coordinate system and vertical levels.</td>
-                <td>Checks missing hours, file continuity, unit consistency, product versions, inventory year and selected output cadence.</td>
-                <td>Provides the technical audit trail needed before the results are shared outside the pilot.</td>
-                <td>Mandatory for Europe / MACC and Mexico pilot runs.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
       <p class="table-note">
-        <strong>How to read this table:</strong> the resolution review above explains the native input grids and temporal variability. The input-output table below explains what enters LOTOS-EUROS, what the model produces and how Humath can request or consume the result. This section focuses on <strong>model simulation capability</strong> and <strong>documented LOTOS-EUROS inputs</strong>.
+        <strong>How to read this table:</strong> each row links a LOTOS-EUROS input package to a model output packaged by LUWA.
+        The goal is to show what Humath configures, what enters LOTOS-EUROS, what the model produces and how the result can be used in a SaaS/API workflow. This section focuses on <strong>model simulation capability</strong>, not on satellite validation.
       </p>
 
       <div class="input-table-wrap">
@@ -1076,7 +882,7 @@
           <strong>Output principle:</strong> LOTOS-EUROS performs the atmospheric simulation. LUWA packages the complete input-output chain: <strong>documented LOTOS-EUROS inputs</strong>, <strong>model-computed atmospheric fields</strong>, <strong>interpretable diagnostics</strong> and <strong>delivery-ready products</strong> for Humath.
         </p>
         <p>
-          <strong>Items to configure before production launch:</strong> output grid resolution up to <strong>1 km</strong>, species of interest, output type, output cadence, Mexico anthropogenic inventory, inventory year, boundary-condition product/version, spin-up or restart strategy, active natural-emission modules, fire/dust treatment and the <strong>native-resolution manifest</strong> for every input product.
+          <strong>Items to configure before production launch:</strong> selected grid resolution within the available range up to <strong>1 km</strong>, species of interest, output type, output cadence, Mexico anthropogenic inventory, inventory year, boundary-condition product/version, spin-up or restart strategy, active natural-emission modules and whether fire/dust influence should be treated as a central result or as context.
         </p>
       </div>
     </section>
