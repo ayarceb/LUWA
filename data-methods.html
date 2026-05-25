@@ -277,11 +277,6 @@
       white-space: nowrap;
     }
 
-    .status-warning {
-      background: #fff4dd;
-      color: #8a5a00;
-    }
-
     .status-confirmed {
       background: #e9f7ef;
       color: #196f3d;
@@ -539,7 +534,7 @@
         </article>
 
         <article class="domain-card">
-          <h3>LUWA Mexico domain</h3>
+          <h3>Mexico pilot box</h3>
           <p><strong>Simulation window:</strong> 2024-07-01 to 2024-07-27.</p>
           <ul>
             <li><strong>Provided pilot box:</strong> North 24.0°N, South 23.0°N, West 103.0°W, East 102.0°W.</li>
@@ -576,7 +571,7 @@
                 Defines the delivery window and the temporal detail of the output files.
                 <details>
                   <summary>Decision note</summary>
-                  <p><strong>Hourly</strong> output supports plume evolution and operational diagnostics. <strong>3-hourly</strong> output reduces storage and transfer cost while preserving synoptic evolution.</p>
+                  <p><strong>Hourly</strong> output supports plume evolution and operational diagnostics. <strong>3-hourly</strong> output reduces storage and transfer cost.</p>
                 </details>
               </td>
               <td><strong>Start/end date</strong>, output interval, pollutant list, NetCDF output, restart/spin-up option, domain name and grid metadata.</td>
@@ -588,14 +583,10 @@
               <td class="category-cell">Domain and grid</td>
               <td>
                 Defines the map simulated by LUWA. It is the strongest cost driver together with resolution and simulation length.
-                <details>
-                  <summary>Technical detail</summary>
-                  <p>LOTOS-EUROS can interpolate input data to the model grid. Standard European resolution is <strong>0.50° × 0.25°</strong>; finer zooms are possible when input data support them.</p>
-                </details>
               </td>
               <td><strong>west</strong>, <strong>east</strong>, <strong>south</strong>, <strong>north</strong>, <strong>dlon</strong>, <strong>dlat</strong>, <strong>nx</strong>, <strong>ny</strong>, vertical structure and model top.</td>
               <td><strong>MACC preset:</strong> west −15.0, south 35.0, dlon 0.50, dlat 0.25, nx 100, ny 140; east 35.0, north 70.0.</td>
-              <td><strong>LUWA Mexico pilot box:</strong> west −103.0, east −102.0, south 23.0, north 24.0. Resolution and nx/ny are selected before launch. <span class="status-pill status-warning">set grid</span></td>
+              <td><strong>Mexico pilot box:</strong> west −103.0, east −102.0, south 23.0, north 24.0. Resolution and nx/ny are selected before launch.</td>
             </tr>
 
             <tr>
@@ -612,7 +603,7 @@
               </td>
               <td><strong>ECMWF Operational Data</strong> or compatible meteorology in NetCDF format; interpolation to cell centres, edges, full levels or half levels.</td>
               <td>ECMWF/CAMS-compatible meteorology clipped or interpolated to the MACC grid for August 2024.</td>
-              <td>Global ECMWF/CAMS-compatible meteorology clipped or interpolated to the LUWA Mexico domain for July 2024.</td>
+              <td>Global ECMWF/CAMS-compatible meteorology clipped or interpolated to the Mexico pilot box for July 2024.</td>
             </tr>
 
             <tr>
@@ -640,7 +631,7 @@
               </td>
               <td>Tracer availability, 3D/4D coverage, vertical interpolation, temporal frequency, source priority and initial-condition strategy.</td>
               <td><strong>CAMS/MACC boundary conditions</strong> for reactive gases and aerosols are the standard option for the European domain.</td>
-              <td><strong>CAMS global boundary conditions</strong> are the practical default. Exact product/version is selected in the run package. <span class="status-pill status-warning">select product</span></td>
+              <td><strong>CAMS global boundary conditions</strong> are the practical default. Exact product/version is selected in the run package.</td>
             </tr>
 
             <tr>
@@ -664,7 +655,7 @@
               </td>
               <td><strong>TNO-MACCIII</strong> or <strong>TNO-CAMS</strong> inventories; area emissions, point sources, country allocation, sector mapping, pollutant totals and chemical speciation.</td>
               <td><strong>MACC/TNO-CAMS European emissions</strong>, including gridded area sources and point sources. <span class="status-pill status-ready">standard</span></td>
-              <td>Use a Mexico-ready inventory converted to LOTOS-EUROS format, for example <strong>national inventory</strong>, <strong>EDGAR</strong> or <strong>HTAP</strong>. <span class="status-pill status-warning">confirm inventory</span></td>
+              <td>Use a Mexico-ready inventory converted to LOTOS-EUROS format, for example <strong>national inventory</strong>, <strong>EDGAR</strong> or <strong>HTAP</strong>.</td>
             </tr>
 
             <tr>
@@ -678,7 +669,7 @@
               </td>
               <td><strong>NOx</strong>, <strong>SOx</strong>, <strong>NMVOC</strong>, <strong>NH3</strong>, <strong>CO</strong>, <strong>CH4</strong>, <strong>PM2.5</strong>, <strong>PM10-2.5</strong>, EC, OC/POM, Na and primary PM.</td>
               <td>Use European inventory speciation tables and LOTOS-EUROS tracer mapping.</td>
-              <td>Apply the same tracer mapping after the Mexico inventory is harmonized. <span class="status-pill status-warning">map species</span></td>
+              <td>Apply the same tracer mapping after the Mexico inventory is harmonized.</td>
             </tr>
 
             <tr>
@@ -774,7 +765,7 @@
               </td>
               <td>Daily fire emissions, species mapping, injection height metadata, fire activity during the selected dates and whether fire is central or auxiliary.</td>
               <td>Screen <strong>CAMS-GFAS</strong> fire activity for the August 2024 MACC-domain period.</td>
-              <td>Screen <strong>CAMS-GFAS</strong> fire activity for July 2024 over the LUWA Mexico domain.</td>
+              <td>Screen <strong>CAMS-GFAS</strong> fire activity for July 2024 over the Mexico pilot box.</td>
             </tr>
 
             <tr>
