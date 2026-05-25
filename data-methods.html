@@ -414,6 +414,31 @@
     }
 
 
+    .source-url {
+      display: inline-block;
+      margin-top: 0.25rem;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.78rem;
+      color: #0056b3;
+      font-weight: 700;
+    }
+
+    .source-label {
+      display: block;
+      color: #003c8f;
+      font-weight: 700;
+      margin-top: 0.45rem;
+    }
+
+    .verified-note {
+      margin-top: 0.75rem;
+      color: #555;
+      font-size: 0.88rem;
+    }
+
+
     .back-btn {
       display: inline-block;
       margin-top: 2rem;
@@ -673,14 +698,17 @@
       <div class="resolution-review">
         <h3>Input-field resolution and variability review</h3>
         <p>
-          The table below separates the <strong>configured LOTOS-EUROS output grid</strong> from the <strong>native resolution of the input fields</strong>. It gives the client a practical way to verify where each input comes from, how often it changes and which official reference should be consulted.
+          The table below separates the <strong>configured LOTOS-EUROS output grid</strong> from the <strong>native resolution of the input fields</strong>. The source column now shows the <strong>verified URL as the visible hyperlink</strong>, so the client can open the official reference directly from the page.
+        </p>
+        <p class="verified-note">
+          <strong>Verified reference links:</strong> each URL in this table was checked against official data-provider pages. The URLs are shown as clickable text to support external review by Humath and its client.
         </p>
         <div class="resolution-table-wrap">
           <table class="resolution-table">
             <thead>
               <tr>
                 <th>Input or output layer</th>
-                <th>Official source / where to check</th>
+                <th>Verified URL / where to check</th>
                 <th>Typical native spatial resolution</th>
                 <th>Temporal variability</th>
                 <th>How it enters the run</th>
@@ -690,7 +718,10 @@
             <tbody>
               <tr>
                 <td><strong>Configured LOTOS-EUROS output grid</strong></td>
-                <td><a href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">TNO LOTOS-EUROS overview</a></td>
+                <td>
+                  <span class="source-label">TNO LOTOS-EUROS model page</span>
+                  <a class="source-url" href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">https://airqualitymodeling.tno.nl/lotos-euros/</a>
+                </td>
                 <td><strong>Configurable up to 1 km</strong> for both available domains. Europe also has the MACC preset: <strong>0.50° × 0.25°</strong>, <strong>100 × 140</strong> cells.</td>
                 <td>Humath selects <strong>hourly</strong> or <strong>3-hourly</strong> output. LOTOS-EUROS may use shorter internal time steps for numerical stability.</td>
                 <td>This is the model product grid: concentrations, deposition and diagnostics are written on this grid.</td>
@@ -698,31 +729,51 @@
               </tr>
               <tr>
                 <td><strong>Meteorology: ECMWF / IFS / ERA5-compatible fields</strong></td>
-                <td><a href="https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels" target="_blank" rel="noopener">ERA5 single levels</a> · <a href="https://atmosphere.copernicus.eu/sites/default/files/2023-06/LOTOS-EUROS%20Fact%20sheet.pdf" target="_blank" rel="noopener">LOTOS-EUROS fact sheet</a></td>
-                <td>Depends on product. ERA5 is commonly consulted at <strong>0.25°</strong>; operational LOTOS-EUROS forcing may use meteorology retrieved at about <strong>15 km</strong>.</td>
-                <td>Weather fields vary strongly. Surface fields can be hourly; multi-level fields can be 3-hourly depending on product and setup.</td>
-                <td>Fields include wind, temperature, humidity, clouds, precipitation, PBL height, radiation, soil water, SST, snow and orography. They are mapped to LOTOS-EUROS centres, edges and vertical levels.</td>
+                <td>
+                  <span class="source-label">ERA5 single-level meteorology</span>
+                  <a class="source-url" href="https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels" target="_blank" rel="noopener">https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels</a>
+                  <span class="source-label">LOTOS-EUROS model reference</span>
+                  <a class="source-url" href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">https://airqualitymodeling.tno.nl/lotos-euros/</a>
+                </td>
+                <td>Depends on product. ERA5 single-level data are commonly distributed at <strong>0.25° × 0.25°</strong>. LOTOS-EUROS maps meteorological input to the selected model grid and vertical structure.</td>
+                <td>Weather fields vary strongly. ERA5 single-level products are <strong>hourly</strong>; multi-level or operational products can be used at hourly or 3-hourly cadence depending on setup.</td>
+                <td>Fields include wind, temperature, humidity, clouds, precipitation, boundary-layer height, radiation, soil water, sea-surface temperature, snow and orography. They are mapped to LOTOS-EUROS centres, edges and vertical levels.</td>
                 <td>Core input for both domains. It controls transport, mixing, wet removal, dry deposition and chemistry.</td>
               </tr>
               <tr>
                 <td><strong>Boundary and initial conditions: CAMS global atmospheric composition</strong></td>
-                <td><a href="https://ads.atmosphere.copernicus.eu/datasets/cams-global-atmospheric-composition-forecasts" target="_blank" rel="noopener">CAMS global atmospheric composition forecasts</a></td>
-                <td><strong>0.4° × 0.4°</strong> global grid for the CAMS global forecast product.</td>
-                <td><strong>1-hourly</strong> single-level fields and <strong>3-hourly</strong> multi-level fields. Forecast-system upgrades can change variables or resolution.</td>
+                <td>
+                  <span class="source-label">CAMS global atmospheric composition forecasts</span>
+                  <a class="source-url" href="https://ads.atmosphere.copernicus.eu/datasets/cams-global-atmospheric-composition-forecasts" target="_blank" rel="noopener">https://ads.atmosphere.copernicus.eu/datasets/cams-global-atmospheric-composition-forecasts</a>
+                  <span class="source-label">CAMS global reanalysis EAC4</span>
+                  <a class="source-url" href="https://ads.atmosphere.copernicus.eu/datasets/cams-global-reanalysis-eac4" target="_blank" rel="noopener">https://ads.atmosphere.copernicus.eu/datasets/cams-global-reanalysis-eac4</a>
+                </td>
+                <td><strong>0.4° × 0.4°</strong> for CAMS global forecasts. <strong>0.75° × 0.75°</strong> for CAMS global reanalysis EAC4.</td>
+                <td>CAMS global forecasts: <strong>1-hourly</strong> single-level fields and <strong>3-hourly</strong> multi-level fields. EAC4 reanalysis: <strong>3-hourly</strong>.</td>
                 <td>Provides gases and aerosols entering through the west, east, south, north and top boundaries, plus initial atmospheric state when selected.</td>
-                <td>Europe can use CAMS/MACC-compatible products. Mexico uses CAMS global boundaries as the practical default.</td>
+                <td>Europe can use CAMS/MACC-compatible products. Mexico uses global CAMS boundary support as the practical default.</td>
               </tr>
               <tr>
                 <td><strong>European anthropogenic emissions: CAMS-REG / TNO-CAMS</strong></td>
-                <td><a href="https://atmosphere.copernicus.eu/anthropogenic-and-natural-emissions" target="_blank" rel="noopener">CAMS emissions documentation</a> · <a href="https://essd.copernicus.org/articles/14/491/2022/" target="_blank" rel="noopener">CAMS-REG-v4 paper</a></td>
-                <td>Recent CAMS-REG products are commonly documented at <strong>0.05° × 0.1°</strong> / <strong>0.1° × 0.05°</strong>, with GNFR sectors.</td>
-                <td>Usually annual inventory totals distributed with monthly, day-of-week and hourly profiles; point sources and sector profiles can add variability.</td>
+                <td>
+                  <span class="source-label">CAMS emissions documentation</span>
+                  <a class="source-url" href="https://atmosphere.copernicus.eu/anthropogenic-and-natural-emissions" target="_blank" rel="noopener">https://atmosphere.copernicus.eu/anthropogenic-and-natural-emissions</a>
+                  <span class="source-label">CAMS-REG-v4 peer-reviewed inventory paper</span>
+                  <a class="source-url" href="https://essd.copernicus.org/articles/14/491/2022/" target="_blank" rel="noopener">https://essd.copernicus.org/articles/14/491/2022/</a>
+                </td>
+                <td>CAMS-REG-v4 is documented at <strong>0.05° × 0.1°</strong> for the European domain, with GNFR sector classification.</td>
+                <td>Annual inventory totals are distributed with monthly, day-of-week and hourly profiles. Point sources, sector proxies and temporal profiles add variability.</td>
                 <td>Emissions are mapped to LOTOS-EUROS tracers and vertical allocation, including NOx, SOx, NMVOC, NH3, CO, PM2.5 and PM10-2.5.</td>
                 <td>Default family for the Europe / MACC run.</td>
               </tr>
               <tr>
                 <td><strong>Mexico anthropogenic emissions</strong></td>
-                <td><a href="https://edgar.jrc.ec.europa.eu/" target="_blank" rel="noopener">EDGAR global emissions</a> · national inventory source if selected</td>
+                <td>
+                  <span class="source-label">EDGAR global emissions</span>
+                  <a class="source-url" href="https://edgar.jrc.ec.europa.eu/" target="_blank" rel="noopener">https://edgar.jrc.ec.europa.eu/</a>
+                  <span class="source-label">Alternative</span>
+                  National inventory source, if selected by the project.
+                </td>
                 <td>Product-dependent. EDGAR provides global grid maps at <strong>0.1° × 0.1°</strong>; a national or sectoral inventory can replace or complement this if available.</td>
                 <td>Depends on inventory. EDGAR provides yearly, monthly and up to hourly products; national inventories may need temporal profiles.</td>
                 <td>Before launch, the selected Mexico inventory must be mapped to LOTOS-EUROS species, sectors, units, time profiles and vertical allocation.</td>
@@ -730,15 +781,25 @@
               </tr>
               <tr>
                 <td><strong>Land cover, surface classes and roughness</strong></td>
-                <td><a href="https://land.copernicus.eu/en/products/corine-land-cover/clc2018" target="_blank" rel="noopener">CORINE Land Cover 2018</a> · <a href="https://forobs.jrc.ec.europa.eu/glc2000" target="_blank" rel="noopener">Global Land Cover 2000</a></td>
-                <td><strong>CORINE 2018:</strong> 100 m raster / 25 ha mapping unit for Europe. <strong>GLC2000:</strong> approximately 1 km global land-cover support.</td>
+                <td>
+                  <span class="source-label">CORINE Land Cover 2018</span>
+                  <a class="source-url" href="https://land.copernicus.eu/en/products/corine-land-cover/clc2018" target="_blank" rel="noopener">https://land.copernicus.eu/en/products/corine-land-cover/clc2018</a>
+                  <span class="source-label">Global Land Cover 2000</span>
+                  <a class="source-url" href="https://forobs.jrc.ec.europa.eu/glc2000" target="_blank" rel="noopener">https://forobs.jrc.ec.europa.eu/glc2000</a>
+                </td>
+                <td><strong>CORINE 2018:</strong> 100 m raster / 25 ha mapping unit for Europe. <strong>GLC2000:</strong> global land-cover support based on SPOT-VEGETATION products.</td>
                 <td>Mostly static or slowly updated. Snow, wetness and meteorological state add short-term variability to deposition and dust behavior.</td>
                 <td>Translated into LOTOS-EUROS land-use classes and DEPAC classes for deposition, roughness, vegetation and surface processes.</td>
                 <td>CORINE/Smiatek or CORINE 2018 for Europe; Global Land Cover 2000 or equivalent global support for Mexico.</td>
               </tr>
               <tr>
                 <td><strong>Biogenic emissions: MEGAN and tree-species approach</strong></td>
-                <td><a href="https://bai.ess.uci.edu/megan" target="_blank" rel="noopener">MEGAN data and code</a> · <a href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">LOTOS-EUROS documentation</a></td>
+                <td>
+                  <span class="source-label">MEGAN model page</span>
+                  <a class="source-url" href="https://bai.ess.uci.edu/megan" target="_blank" rel="noopener">https://bai.ess.uci.edu/megan</a>
+                  <span class="source-label">LOTOS-EUROS model reference</span>
+                  <a class="source-url" href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">https://airqualitymodeling.tno.nl/lotos-euros/</a>
+                </td>
                 <td>Depends on implementation and input maps. LOTOS-EUROS documentation describes MEGAN support using plant functional types, LAI and emission-factor maps.</td>
                 <td>Strongly dynamic: temperature, radiation and LAI control isoprene and terpene emissions; seasonality and vegetation class matter.</td>
                 <td>Produces vegetation-driven VOC emissions for ozone and secondary organic aerosol chemistry.</td>
@@ -746,7 +807,10 @@
               </tr>
               <tr>
                 <td><strong>Fire emissions: CAMS-GFAS</strong></td>
-                <td><a href="https://ads.atmosphere.copernicus.eu/datasets/cams-global-fire-emissions-gfas" target="_blank" rel="noopener">CAMS-GFAS fire emissions</a></td>
+                <td>
+                  <span class="source-label">CAMS-GFAS fire emissions</span>
+                  <a class="source-url" href="https://ads.atmosphere.copernicus.eu/datasets/cams-global-fire-emissions-gfas" target="_blank" rel="noopener">https://ads.atmosphere.copernicus.eu/datasets/cams-global-fire-emissions-gfas</a>
+                </td>
                 <td><strong>0.1° × 0.1°</strong> global grid for GFAS v1.2 archive.</td>
                 <td><strong>Daily averages</strong>. Fire emissions are episodic and can change sharply from day to day.</td>
                 <td>Provides biomass-burning emissions and plume-injection-height variables that can be mapped to model tracers.</td>
@@ -754,7 +818,10 @@
               </tr>
               <tr>
                 <td><strong>Online natural sources and removal: dust, sea salt, soil NO, deposition</strong></td>
-                <td><a href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">LOTOS-EUROS model processes</a></td>
+                <td>
+                  <span class="source-label">LOTOS-EUROS model processes</span>
+                  <a class="source-url" href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">https://airqualitymodeling.tno.nl/lotos-euros/</a>
+                </td>
                 <td>Computed on the selected LOTOS-EUROS grid after land, meteorology and soil inputs are mapped. Output can be written up to <strong>1 km</strong>.</td>
                 <td>Wind, soil moisture, precipitation, snow, sea-surface temperature and land cover introduce strong short-term variability.</td>
                 <td>Includes sea salt, wind-blown dust, traffic resuspension, agricultural dust, soil NO, dry deposition and wet scavenging.</td>
@@ -762,7 +829,10 @@
               </tr>
               <tr>
                 <td><strong>Run manifest and QA/QC</strong></td>
-                <td>Delivered with the LUWA run package</td>
+                <td>
+                  <span class="source-label">Delivered with each LUWA run package</span>
+                  Internal manifest generated for the requested simulation.
+                </td>
                 <td>Documents native input grids, configured output grid, interpolation/regridding, coordinate system and vertical levels.</td>
                 <td>Checks missing hours, file continuity, unit consistency, product versions, inventory year and selected output cadence.</td>
                 <td>Provides the technical audit trail needed before the results are shared outside the pilot.</td>
