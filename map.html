@@ -115,6 +115,18 @@
       background: #ffc107; /* Yellow/Orange tone */
     }
 
+    #previewNo2Button {
+      background: #6f42c1;
+    }
+
+    #preview-frame {
+      width: 100%;
+      height: 520px;
+      border: 0;
+      border-radius: 6px;
+      background: #000000;
+    }
+
 
     .map-container {
       flex: 1;
@@ -388,6 +400,26 @@
     
     <button id="downloadButton">Download .nc files</button>
     <button id="prepareGifButton">Prepare .gif</button>
+
+    <div class="section-title">NO₂ preview product</div>
+    <select id="preview-product">
+      <option value="no2_surface_resolution_preview">NO₂ surface comparison, four resolutions</option>
+    </select>
+
+    <label for="preview-time-index">Preview time:</label>
+    <select id="preview-time-index">
+      <option value="0">00 UTC</option>
+      <option value="6">06 UTC</option>
+      <option value="12">12 UTC</option>
+      <option value="18">18 UTC</option>
+    </select>
+
+    <div class="info-box">
+      <strong>Preview layer:</strong>
+      <div>NO₂, conc-3d, surface level, level_index = 0</div>
+    </div>
+
+    <button id="previewNo2Button">Generate / load NO₂ preview</button>
     </div>
 
   <div class="map-container">
@@ -448,6 +480,11 @@
           Your browser requires video support.
         </video>
       </div>
+    </div>
+
+    <div id="preview-box" class="results-box hidden">
+      <div class="results-title">NO₂ surface resolution preview</div>
+      <iframe id="preview-frame" title="LUWA NO2 surface resolution preview"></iframe>
     </div>
   </div>
 
@@ -632,6 +669,71 @@
     
     document.getElementById("prepareGifButton").addEventListener("click", () => {
       alert("Preparing .gif animation...");
+    });
+
+    function getStaticNo2PreviewUrl(timeIndex) {
+      const padded = String(timeIndex).padStart(2, "0");
+      return `luwa_no2_surface_20240703_t${padded}.html`;
+    }
+
+    function loadNo2Preview(previewUrl) {
+      const frame = document.getElementById("preview-frame");
+      const box = document.getElementById("preview-box");
+      if (!frame || !box) return;
+
+      const separator = previewUrl.includes("?") ? "&" : "?";
+      frame.src = `${previewUrl}${separator}v=${Date.now()}`;
+      box.classList.remove("hidden");
+    }
+
+    document.getElementById("previewNo2Button").addEventListener("click", async () => {
+      const product = document.getElementById("preview-product").value;
+      const timeIndex = Number(document.getElementById("preview-time-index").value);
+
+      const payload = {
+        case_id: "mexico_20240703_four_resolution",
+        product: product,
+        variable: "no2",
+        dimension: "3d",
+        level_index: 0,
+        time_index: timeIndex,
+        date: "2024-07-03"
+      };
+
+      log("Generating/loading NO2 surface four-resolution preview...");
+
+      try {
+        const response = await fetch(
+          "https://luwa-consultancy.duckdns.org/api/v1/products/no2-surface-resolution-preview",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.preview_url) {
+            loadNo2Preview(data.preview_url);
+            log("NO2 preview loaded from backend product URL.");
+            return;
+          }
+        }
+
+        const localPreviewUrl = getStaticNo2PreviewUrl(timeIndex);
+        loadNo2Preview(localPreviewUrl);
+        log(`Backend product unavailable. Loaded static preview: ${localPreviewUrl}`);
+
+      } catch (err) {
+        const localPreviewUrl = getStaticNo2PreviewUrl(timeIndex);
+        console.warn("Backend preview request failed. Falling back to static preview.", err);
+        loadNo2Preview(localPreviewUrl);
+        log(`Loaded static preview: ${localPreviewUrl}`);
+      }
     });
 
     // Guardar dominio
