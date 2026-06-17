@@ -268,6 +268,52 @@
       color: #666;
       margin-top: 2px;
     }
+
+
+    /* NO2 overlay preview controls */
+    #previewNo2Button {
+      background: #6f42c1;
+    }
+
+    #clearNo2PreviewButton {
+      background: #343a40;
+    }
+
+    .preview-status-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+
+    .preview-status-label {
+      color: #666;
+    }
+
+    .preview-status-value {
+      color: #111;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .no2-legend-bar {
+      height: 10px;
+      border-radius: 4px;
+      background: linear-gradient(to right, #0055ff, #00aaff, #ffffff, #ffaa00, #ff0000);
+      border: 1px solid rgba(0,0,0,0.15);
+      margin-top: 6px;
+    }
+
+    .small-button-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .small-button-row button {
+      flex: 1;
+    }
+
   </style>
 </head>
 <body>
@@ -401,9 +447,9 @@
     <button id="downloadButton">Download .nc files</button>
     <button id="prepareGifButton">Prepare .gif</button>
 
-    <div class="section-title">NO₂ preview product</div>
+    <div class="section-title">NO₂ map overlay product</div>
     <select id="preview-product">
-      <option value="no2_surface_resolution_preview">NO₂ surface comparison, four resolutions</option>
+      <option value="no2_surface_resolution_overlay">NO₂ surface comparison, four resolutions</option>
     </select>
 
     <label for="preview-time-index">Preview time:</label>
@@ -414,12 +460,36 @@
       <option value="18">18 UTC</option>
     </select>
 
+    <label for="preview-resolution">Preview resolution:</label>
+    <select id="preview-resolution">
+      <option value="">Load product first</option>
+    </select>
+
+    <label for="preview-opacity">NO₂ overlay opacity:</label>
+    <input type="range" id="preview-opacity" min="0" max="100" value="78" step="1">
+
     <div class="info-box">
       <strong>Preview layer:</strong>
       <div>NO₂, conc-3d, surface level, level_index = 0</div>
+      <div class="preview-status-row">
+        <span class="preview-status-label">Active:</span>
+        <span class="preview-status-value" id="no2-active-layer">none</span>
+      </div>
+      <div class="preview-status-row">
+        <span class="preview-status-label">Value:</span>
+        <span class="preview-status-value" id="no2-probe-value">move cursor over overlay</span>
+      </div>
+      <div class="preview-status-row">
+        <span class="preview-status-label">Scale:</span>
+        <span class="preview-status-value" id="no2-scale-label">--</span>
+      </div>
+      <div class="no2-legend-bar"></div>
     </div>
 
-    <button id="previewNo2Button">Generate / load NO₂ preview</button>
+    <div class="small-button-row">
+      <button id="previewNo2Button">Load NO₂ overlay</button>
+      <button id="clearNo2PreviewButton">Clear</button>
+    </div>
     </div>
 
   <div class="map-container">
@@ -483,8 +553,19 @@
     </div>
 
     <div id="preview-box" class="results-box hidden">
-      <div class="results-title">NO₂ surface resolution preview</div>
-      <iframe id="preview-frame" title="LUWA NO2 surface resolution preview"></iframe>
+      <div class="results-title">NO₂ surface overlay loaded</div>
+      <div class="preview-status-row">
+        <span class="preview-status-label">Product:</span>
+        <span class="preview-status-value" id="no2-product-status">--</span>
+      </div>
+      <div class="preview-status-row">
+        <span class="preview-status-label">Cursor:</span>
+        <span class="preview-status-value" id="no2-cursor-status">--</span>
+      </div>
+      <div class="preview-status-row">
+        <span class="preview-status-label">NO₂:</span>
+        <span class="preview-status-value" id="no2-value-status">--</span>
+      </div>
     </div>
   </div>
 
@@ -671,36 +752,99 @@
       alert("Preparing .gif animation...");
     });
 
-    function getStaticNo2PreviewUrl(timeIndex) {
+    // NO2 four-resolution overlay product
+    let no2PreviewProduct = null;
+    let no2PreviewOverlay = null;
+    let no2PreviewJsonUrl = null;
+    let no2ActiveLayerName = null;
+
+    function getStaticNo2LayerUrl(timeIndex) {
       const padded = String(timeIndex).padStart(2, "0");
-      return `luwa_no2_surface_20240703_t${padded}.html`;
+      return `luwa_products/no2_surface_20240703/luwa_no2_surface_layers_20240703_t${padded}.json`;
     }
 
-    function loadNo2Preview(previewUrl) {
-      const frame = document.getElementById("preview-frame");
-      const box = document.getElementById("preview-box");
-      if (!frame || !box) return;
+    function resolveProductAssetUrl(assetPath, jsonUrl) {
+      if (!assetPath) return "";
+      if (assetPath.startsWith("data:")) return assetPath;
+      if (assetPath.startsWith("http://") || assetPath.startsWith("https://")) return assetPath;
 
-      const separator = previewUrl.includes("?") ? "&" : "?";
-      frame.src = `${previewUrl}${separator}v=${Date.now()}`;
-      box.classList.remove("hidden");
+      const cleanJsonUrl = jsonUrl.split("?")[0];
+      const lastSlash = cleanJsonUrl.lastIndexOf("/");
+      if (lastSlash < 0) return assetPath;
+      return cleanJsonUrl.slice(0, lastSlash + 1) + assetPath;
     }
 
-    document.getElementById("previewNo2Button").addEventListener("click", async () => {
-      const product = document.getElementById("preview-product").value;
-      const timeIndex = Number(document.getElementById("preview-time-index").value);
+    function populateNo2ResolutionSelector(product) {
+      const selector = document.getElementById("preview-resolution");
+      selector.innerHTML = "";
 
+      Object.keys(product.layers || {}).forEach(layerName => {
+        const opt = document.createElement("option");
+        opt.value = layerName;
+        opt.textContent = layerName;
+        selector.appendChild(opt);
+      });
+    }
+
+    function nearestIndex(values, x) {
+      if (!values || values.length === 0) return -1;
+      let best = 0;
+      let bestDist = Math.abs(values[0] - x);
+      for (let i = 1; i < values.length; i++) {
+        const dist = Math.abs(values[i] - x);
+        if (dist < bestDist) {
+          best = i;
+          bestDist = dist;
+        }
+      }
+      return best;
+    }
+
+    function setNo2Resolution(layerName) {
+      if (!no2PreviewProduct || !no2PreviewProduct.layers) return;
+
+      const layer = no2PreviewProduct.layers[layerName];
+      if (!layer) return;
+
+      if (no2PreviewOverlay) {
+        map.removeLayer(no2PreviewOverlay);
+        no2PreviewOverlay = null;
+      }
+
+      const b = layer.bounds;
+      const overlayBounds = [[b.south, b.west], [b.north, b.east]];
+      const imageUrl = resolveProductAssetUrl(layer.image, no2PreviewJsonUrl);
+      const opacity = Number(document.getElementById("preview-opacity").value) / 100;
+
+      no2PreviewOverlay = L.imageOverlay(imageUrl, overlayBounds, {
+        opacity: opacity,
+        interactive: false
+      }).addTo(map);
+
+      no2ActiveLayerName = layerName;
+      document.getElementById("no2-active-layer").textContent = layerName;
+      document.getElementById("no2-product-status").textContent = `${no2PreviewProduct.variable}, t${String(no2PreviewProduct.time_index).padStart(2, "0")}`;
+
+      const scale = no2PreviewProduct.scale || {};
+      const units = no2PreviewProduct.units || "";
+      if (Number.isFinite(scale.vmin) && Number.isFinite(scale.vmax)) {
+        document.getElementById("no2-scale-label").textContent = `${scale.vmin.toFixed(2)} to ${scale.vmax.toFixed(2)} ${units}`;
+      }
+
+      map.fitBounds(overlayBounds);
+      document.getElementById("preview-box").classList.remove("hidden");
+    }
+
+    async function loadNo2ProductJsonFromBackendOrStatic(timeIndex) {
       const payload = {
         case_id: "mexico_20240703_four_resolution",
-        product: product,
+        product: document.getElementById("preview-product").value,
         variable: "no2",
         dimension: "3d",
         level_index: 0,
-        time_index: timeIndex,
+        time_index: Number(timeIndex),
         date: "2024-07-03"
       };
-
-      log("Generating/loading NO2 surface four-resolution preview...");
 
       try {
         const response = await fetch(
@@ -717,23 +861,131 @@
 
         if (response.ok) {
           const data = await response.json();
-          if (data.preview_url) {
-            loadNo2Preview(data.preview_url);
-            log("NO2 preview loaded from backend product URL.");
-            return;
+          const backendJsonUrl = data.layers_url || data.preview_json_url || data.product_json_url;
+          if (backendJsonUrl) {
+            return backendJsonUrl;
           }
         }
-
-        const localPreviewUrl = getStaticNo2PreviewUrl(timeIndex);
-        loadNo2Preview(localPreviewUrl);
-        log(`Backend product unavailable. Loaded static preview: ${localPreviewUrl}`);
-
       } catch (err) {
-        const localPreviewUrl = getStaticNo2PreviewUrl(timeIndex);
-        console.warn("Backend preview request failed. Falling back to static preview.", err);
-        loadNo2Preview(localPreviewUrl);
-        log(`Loaded static preview: ${localPreviewUrl}`);
+        console.warn("Backend overlay product unavailable. Falling back to static JSON.", err);
       }
+
+      return getStaticNo2LayerUrl(timeIndex);
+    }
+
+    async function loadNo2OverlayProduct() {
+      const timeIndex = Number(document.getElementById("preview-time-index").value);
+      const jsonUrl = await loadNo2ProductJsonFromBackendOrStatic(timeIndex);
+      const separator = jsonUrl.includes("?") ? "&" : "?";
+      const jsonUrlNoCache = `${jsonUrl}${separator}v=${Date.now()}`;
+
+      log(`Loading NO2 overlay product: ${jsonUrl}`);
+
+      const response = await fetch(jsonUrlNoCache);
+      if (!response.ok) {
+        throw new Error(`Could not load NO2 overlay JSON: ${response.status}`);
+      }
+
+      no2PreviewProduct = await response.json();
+      no2PreviewJsonUrl = jsonUrl;
+
+      populateNo2ResolutionSelector(no2PreviewProduct);
+
+      const selector = document.getElementById("preview-resolution");
+      const firstLayer = Object.keys(no2PreviewProduct.layers || {})[0];
+      if (!firstLayer) {
+        throw new Error("NO2 overlay JSON has no layers.");
+      }
+
+      selector.value = firstLayer;
+      setNo2Resolution(firstLayer);
+      log("NO2 overlay loaded on the main LUWA map.");
+    }
+
+    function clearNo2Overlay() {
+      if (no2PreviewOverlay) {
+        map.removeLayer(no2PreviewOverlay);
+      }
+      no2PreviewOverlay = null;
+      no2PreviewProduct = null;
+      no2PreviewJsonUrl = null;
+      no2ActiveLayerName = null;
+
+      document.getElementById("preview-resolution").innerHTML = '<option value="">Load product first</option>';
+      document.getElementById("no2-active-layer").textContent = "none";
+      document.getElementById("no2-probe-value").textContent = "move cursor over overlay";
+      document.getElementById("no2-scale-label").textContent = "--";
+      document.getElementById("no2-product-status").textContent = "--";
+      document.getElementById("no2-cursor-status").textContent = "--";
+      document.getElementById("no2-value-status").textContent = "--";
+      document.getElementById("preview-box").classList.add("hidden");
+      log("NO2 overlay cleared.");
+    }
+
+    function updateNo2Probe(lat, lon) {
+      if (!no2PreviewProduct || !no2ActiveLayerName) return;
+
+      const layer = no2PreviewProduct.layers[no2ActiveLayerName];
+      if (!layer) return;
+
+      document.getElementById("no2-cursor-status").textContent = `Lat ${lat.toFixed(3)}, Lon ${lon.toFixed(3)}`;
+
+      const b = layer.bounds;
+      if (lat < b.south || lat > b.north || lon < b.west || lon > b.east) {
+        document.getElementById("no2-probe-value").textContent = "outside overlay";
+        document.getElementById("no2-value-status").textContent = "outside overlay";
+        return;
+      }
+
+      const i = nearestIndex(layer.lats, lat);
+      const j = nearestIndex(layer.lons, lon);
+
+      if (i < 0 || j < 0 || !layer.values || !layer.values[i]) {
+        document.getElementById("no2-probe-value").textContent = "no data";
+        document.getElementById("no2-value-status").textContent = "no data";
+        return;
+      }
+
+      const value = layer.values[i][j];
+      const units = no2PreviewProduct.units || "";
+
+      if (value === null || value === undefined || Number.isNaN(Number(value))) {
+        document.getElementById("no2-probe-value").textContent = "no data";
+        document.getElementById("no2-value-status").textContent = "no data";
+        return;
+      }
+
+      const text = `${Number(value).toFixed(3)} ${units}`;
+      document.getElementById("no2-probe-value").textContent = text;
+      document.getElementById("no2-value-status").textContent = text;
+    }
+
+    document.getElementById("previewNo2Button").addEventListener("click", async () => {
+      try {
+        await loadNo2OverlayProduct();
+      } catch (err) {
+        console.error(err);
+        log("Error loading NO2 overlay product. Check that the JSON and PNG files are deployed beside map.html.");
+        alert("Could not load NO2 overlay. Run the Python generator and upload the luwa_products folder beside map.html.");
+      }
+    });
+
+    document.getElementById("clearNo2PreviewButton").addEventListener("click", clearNo2Overlay);
+
+    document.getElementById("preview-resolution").addEventListener("change", (event) => {
+      if (event.target.value) {
+        setNo2Resolution(event.target.value);
+      }
+    });
+
+    document.getElementById("preview-opacity").addEventListener("input", (event) => {
+      if (no2PreviewOverlay) {
+        no2PreviewOverlay.setOpacity(Number(event.target.value) / 100);
+      }
+    });
+
+    map.on("mousemove", (event) => {
+      updateNo2Probe(event.latlng.lat, event.latlng.lng);
     });
 
     // Guardar dominio
