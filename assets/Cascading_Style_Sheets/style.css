@@ -4,6 +4,16 @@
    data-methods.html and any other secondary pages.
    ========================================================= */
 
+/* 1. PALETA DE IDENTIDAD LUWA */
+:root {
+  --azul-luwa: #0056b3;
+  --cian-acento: #0ea5e9;
+  --blanco-fondo: #ffffff;
+  --gris-niebla: #f0f4f8;
+  --texto-carbon: #334155;
+  --sombra-suave: rgba(0, 0, 0, 0.05);
+}
+
 /* Basic Reset */
 * {
   margin: 0;
@@ -15,8 +25,8 @@
 /* Body */
 body {
   font-family: Arial, 'Inter', sans-serif;
-  color: #333;
-  background-color: #f8f9fa;
+  color: var(--texto-carbon);
+  background-color: var(--blanco-fondo);
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -27,15 +37,16 @@ body {
    ========================================================= */
 
 header {
-  background-color: #222;
-  color: #fff;
+  background-color: var(--gris-niebla);
+  color: var(--azul-luwa);
   padding: 15px;
   text-align: center;
   position: relative;
   width: 100%;
   min-height: 110px;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-bottom: 2px solid var(--azul-luwa);
 }
 
 header img.logo {
@@ -49,11 +60,12 @@ header img.logo {
 
 header h1 {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   margin: 0.5rem 0;
   padding-left: 130px;
   padding-right: 130px;
   text-align: center;
+  color: var(--azul-luwa);
 }
 
 /* Navigation */
@@ -67,7 +79,7 @@ nav {
 }
 
 nav a {
-  color: #bbb;
+  color: var(--texto-carbon);
   margin: 0 10px;
   text-decoration: none;
   font-size: 14px;
@@ -79,7 +91,8 @@ nav a {
 
 nav a:hover,
 nav a.active {
-  color: #fff;
+  color: var(--azul-luwa);
+  font-weight: bold;
 }
 
 nav a::after {
@@ -89,7 +102,7 @@ nav a::after {
   height: 2px;
   bottom: 0;
   left: 50%;
-  background-color: #007bff;
+  background-color: var(--azul-luwa);
   transition: all 0.3s ease;
   transform: translateX(-50%);
 }
@@ -104,23 +117,23 @@ nav a.active::after {
   position: absolute;
   right: 20px;
   top: 20px;
-  background: linear-gradient(135deg, #FFD700, #FFC107);
-  color: #333;
+  background: var(--azul-luwa);
+  color: #fff;
   border: none;
   padding: 10px 20px;
   border-radius: 30px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
   transition: all 0.3s ease;
   z-index: 2000;
 }
 
 .cloud-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(255, 215, 0, 0.6);
-  background: linear-gradient(135deg, #FFE082, #FFD54F);
+  box-shadow: 0 6px 14px rgba(14, 165, 233, 0.4);
+  background: var(--cian-acento);
 }
 
 /* =========================================================
@@ -152,7 +165,8 @@ section {
 .contact-card {
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px var(--sombra-suave);
+  border: 1px solid #e2e8f0;
   transition: all 0.3s ease;
 }
 
@@ -180,7 +194,7 @@ section {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #1a73e8;
+  color: var(--azul-luwa);
 }
 
 .card p,
@@ -189,7 +203,7 @@ section {
 .method-card p,
 .contact-card p {
   font-size: 1rem;
-  color: #555;
+  color: var(--texto-carbon);
   margin-bottom: 1rem;
 }
 
@@ -209,14 +223,14 @@ section {
 
 /* Announcement Card */
 .card.announce {
-  background-color: #444;
+  background-color: #2a3544;
   color: white;
   padding: 1rem;
   border-radius: 8px;
 }
 
 .card.announce strong {
-  color: white;
+  color: var(--cian-acento);
   font-weight: 600;
 }
 
@@ -235,14 +249,14 @@ section {
   padding: 0.5rem 0;
   position: relative;
   padding-left: 1.5rem;
-  color: #555;
+  color: var(--texto-carbon);
 }
 
 .card li::before {
   content: '→';
   position: absolute;
   left: 0;
-  color: #007bff;
+  color: var(--azul-luwa);
 }
 
 /* =========================================================
@@ -278,7 +292,7 @@ section {
 .intro {
   max-width: 850px;
   margin: 0 auto 2rem auto;
-  color: #555;
+  color: var(--texto-carbon);
   font-size: 1rem;
   line-height: 1.6;
   text-align: center;
@@ -313,22 +327,24 @@ section {
 }
 
 .btn {
-  background: #333;
+  background: var(--azul-luwa);
 }
 
 .btn:hover {
-  background: #555;
+  background: var(--cian-acento);
   transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
 }
 
 .back-btn {
   margin-top: 2rem;
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, var(--azul-luwa), #004a99);
 }
 
 .back-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  background: var(--cian-acento);
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
 }
 
 /* =========================================================
@@ -352,7 +368,7 @@ section {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #333;
+  color: var(--texto-carbon);
 }
 
 .contact-form input,
@@ -368,7 +384,7 @@ section {
 
 .contact-form button {
   width: 100%;
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, var(--azul-luwa), #004a99);
   color: white;
   border: none;
   padding: 12px;
@@ -380,7 +396,8 @@ section {
 
 .contact-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  background: var(--cian-acento);
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
 }
 
 .success-message {
@@ -392,7 +409,7 @@ section {
 
 .sending {
   display: none;
-  color: #007bff;
+  color: var(--azul-luwa);
   font-weight: 500;
   margin-top: 1rem;
 }
@@ -429,7 +446,7 @@ section {
   position: absolute;
   width: 60px;
   height: 60px;
-  background: rgba(0, 123, 255, 0.9);
+  background: rgba(0, 86, 179, 0.9);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -440,7 +457,7 @@ section {
 }
 
 .video-preview:hover .play-button {
-  background: rgba(0, 123, 255, 1);
+  background: var(--cian-acento);
   transform: scale(1.1);
 }
 
@@ -519,12 +536,13 @@ section {
    ========================================================= */
 
 footer {
-  background: #222;
-  color: #ccc;
+  background: var(--gris-niebla);
+  color: var(--texto-carbon);
   text-align: center;
   padding: 10px;
   font-size: 13px;
   margin-top: 3rem;
+  border-top: 2px solid var(--azul-luwa);
 }
 
 .footer-logo {
