@@ -6,39 +6,82 @@
   <title>LUWA Consulting: Environmental Consultancy Branch</title>
   <!-- Lightbox CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+  
   <style>
+    /* 1. Inyectamos la nueva paleta de colores LUWA */
+    :root {
+      --azul-luwa: #0056b3;
+      --cian-acento: #0ea5e9;
+      --blanco-fondo: #ffffff;
+      --gris-niebla: #f0f4f8;
+      --texto-carbon: #334155;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      color: #333;
-      background-color: #fafafa;
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--texto-carbon);
+      background-color: var(--blanco-fondo);
       margin: 0;
       padding: 0;
     }
+    
     header {
-      background-color: #222;
-      color: #fff;
+      background-color: var(--gris-niebla);
       padding: 15px;
       text-align: center;
       position: relative;
+      border-bottom: 2px solid var(--azul-luwa);
     }
+    
     header img.logo {
       height: 90px;
       position: absolute;
       left: 20px;
       top: 12px;
     }
+
+    header h1 {
+      color: var(--azul-luwa);
+      margin-bottom: 5px;
+      font-size: 1.8rem;
+      /* Agregamos padding para que en PC el texto no choque con el logo */
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+    
     nav {
       margin-top: 8px;
     }
+    
     nav a {
-      color: #bbb;
+      color: var(--texto-carbon);
       margin: 0 10px;
       text-decoration: none;
       font-size: 14px;
+      transition: color 0.3s ease;
     }
+    
     nav a:hover {
-      color: #fff;
+      color: var(--azul-luwa);
+      font-weight: bold;
     }
+
+    .cloud-btn {
+      background-color: var(--azul-luwa);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .cloud-btn:hover {
+      background-color: var(--cian-acento);
+    }
+    
     section {
       padding: 15px;
       max-width: 1100px;
@@ -47,49 +90,82 @@
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 15px;
     }
+    
     .card {
-      background-color: #fff;
-      padding: 10px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background-color: var(--blanco-fondo);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
       text-align: center;
+      transition: transform 0.3s ease;
     }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    
+    .card h2 {
+      font-size: 1.15rem;
+      color: var(--azul-luwa);
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--texto-carbon);
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+    
     .card img {
       max-width: 100%;
       border-radius: 5px;
       margin-bottom: 10px;
       cursor: pointer;
     }
+    
     footer {
-      background-color: #222;
-      color: #ccc;
+      background-color: var(--gris-niebla);
+      color: var(--texto-carbon);
       text-align: center;
-      padding: 10px;
+      padding: 15px;
       font-size: 13px;
+      border-top: 2px solid var(--azul-luwa);
+      margin-top: 30px;
     }
+    
     .btn {
-      background-color: #333;
+      background-color: var(--azul-luwa);
       color: white;
       border: none;
       padding: 8px 15px;
       border-radius: 4px;
       cursor: pointer;
       font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
     }
+    
     .btn:hover {
-      background-color: #555;
+      background-color: var(--cian-acento);
     }
-    h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
+    
+    /* FIX 1: Tarjeta Announce corregida a la paleta clara */
     .announce {
-      background-color: #444;
-      color: white;
-      padding: 8px;
-      border-radius: 4px;
+      background-color: var(--blanco-fondo);
+      color: var(--texto-carbon);
+      padding: 15px;
+      border-radius: 8px;
       margin-bottom: 10px;
+      border: 2px solid var(--cian-acento);
     }
+
+    .announce strong {
+      color: var(--azul-luwa);
+    }
+    
     /* Modal overlay for video */
     .video-overlay {
       position: fixed;
@@ -103,16 +179,19 @@
       justify-content: center;
       z-index: 9999;
     }
+    
     .video-container {
       position: relative;
       width: 80%;
       max-width: 800px;
     }
+    
     .video-container video {
       width: 100%;
       height: auto;
       border-radius: 5px;
     }
+    
     .close-btn {
       position: absolute;
       top: -30px;
@@ -124,11 +203,39 @@
       cursor: pointer;
       font-size: 16px;
     }
+
+    /* FIX 2: Diseño Responsivo para arreglar el logo encimado */
+    @media (max-width: 850px) {
+      header img.logo {
+        position: static; /* Suelta el logo de la esquina */
+        display: block;
+        margin: 0 auto 10px auto; /* Lo centra */
+        height: 80px;
+      }
+      header h1 {
+        padding-left: 0; /* Quita los topes laterales */
+        padding-right: 0;
+        font-size: 1.4rem;
+      }
+      nav {
+        display: flex;
+        flex-direction: column; /* Apila el menú hacia abajo */
+        align-items: center;
+        gap: 10px;
+      }
+      .cloud-btn {
+        margin-left: 0;
+      }
+    }
   </style>
 </head>
 <body>
 <header>
-  <img src="LOGO.png" alt="Logo" class="logo">
+  <!-- Logo envuelto en enlace hacia el Home -->
+  <a href="index.html">
+    <img src="assets/imagenes/imagenes_generales/LOGO.png" alt="Logo" class="logo">
+  </a>
+  
   <h1>Environmental Consultancy Services of LUWA Consultancy Group</h1>
   <nav>
     <a href="about.html">About</a>
@@ -140,16 +247,15 @@
     ☁️ Connect to Cloud
    </button>
   </nav>
-
 </header>
 
 <section>
   <!-- About Card -->
   <div class="card" id="about">
     <h2>Satellite Observations</h2>
-    <a href="Canarias.gif" data-lightbox="image"><img src="Canarias.gif" alt="Satellite Animation"></a>
+    <a href="assets/imagenes/imagenes_generales/Canarias.gif" data-lightbox="image"><img src="assets/imagenes/imagenes_generales/Canarias.gif" alt="Satellite Animation"></a>
     <p>Explore our TROPOMI-based observations:
-      <a href="https://temis.nl/" target="_blank">Visit the Satellite NL webpage database</a>
+      <a href="https://temis.nl/" target="_blank" style="color: var(--azul-luwa); font-weight: bold;">Visit the Satellite NL webpage database</a>
     </p>
   </div>
 
@@ -158,7 +264,7 @@
     <h2>Consultancy Services</h2>
     <p>
       Monitoring refineries, pig/chicken farms, emission estimation, plume transport and deposition impacts, air quality (NOx, NH3), and nitrogen impact.
-      <br>Low-Cost Sensor Networks + Data Assimilation Integrated Systems
+      <br><br>Low-Cost Sensor Networks + Data Assimilation Integrated Systems
     </p>
   </div>
 
@@ -175,52 +281,51 @@
   <div class="card announce">
     <strong>Enhance Monitoring with Data Assimilation Tools</strong>
     <br>
-    <a href="Data_Asimm_system.png" data-lightbox="image">
-      <img src="Data_Asimm_system.png" alt="Data Assimilation System" style="margin-top:10px; max-width:100%; border-radius:5px;">
+    <a href="assets/imagenes/imagenes_generales/Data_Asimm_system.png" data-lightbox="image">
+      <img src="assets/imagenes/imagenes_generales/Data_Asimm_system.png" alt="Data Assimilation System" style="margin-top:10px; max-width:100%; border-radius:5px;">
     </a>
   </div>
 
   <!-- Colombia Observations Card -->
   <div class="card">
     <h2>Colombia Observations</h2>
-    <a href="preview_observations_Colombia.png" data-lightbox="image"><img src="preview_observations_Colombia.png" alt="Observations Colombia"></a>
+    <a href="assets/imagenes/imagenes_generales/preview_observations_Colombia.png" data-lightbox="image"><img src="assets/imagenes/imagenes_generales/preview_observations_Colombia.png" alt="Observations Colombia"></a>
   </div>
 
   <!-- Prior Emissions Card -->
   <div class="card">
     <h2>Prior Emissions Colombia</h2>
-    <a href="preview_prior_emissions_Colombia.png" data-lightbox="image"><img src="preview_prior_emissions_Colombia.png" alt="Prior Emissions Colombia"></a>
+    <a href="assets/imagenes/imagenes_generales/preview_prior_emissions_Colombia.png" data-lightbox="image"><img src="assets/imagenes/imagenes_generales/preview_prior_emissions_Colombia.png" alt="Prior Emissions Colombia"></a>
   </div>
 
   <!-- 3D SO2 Visualization Card -->
   <div class="card">
     <h2>3D SO<sub>2</sub> Visualization</h2>
-    <!-- Video Thumbnail to open modal -->
-    <img src="LOGO.png" alt="Video Thumbnail" style="width:100px;" onclick="openVideoModal()">
+    <img src="assets/imagenes/imagenes_generales/LOGO.png" alt="Video Thumbnail" style="width:100px; margin: 15px auto;" onclick="openVideoModal()">
     <p>Click thumbnail to watch the video.</p>
   </div>
 
   <!-- SO2 Gulf Observations Card -->
   <div class="card">
     <h2>SO<sub>2</sub> Gulf Observations</h2>
-    <a href="SO2_gulf.png" data-lightbox="image"><img src="SO2_gulf.png" alt="SO2 Gulf Observations"></a>
+    <a href="assets/imagenes/imagenes_generales/SO2_gulf.png" data-lightbox="image"><img src="assets/imagenes/imagenes_generales/SO2_gulf.png" alt="SO2 Gulf Observations"></a>
   </div>
 </section>
 
-<!-- Emission Estimation Card -->
-<div class="card" id="data">
-  <p>Integration of emission estimation using Data Assimilation and lightweight methods...</p>
-
-  <!-- Add your new button here! -->
-  <button 
-    class="btn" 
-    onclick="window.open('leaflet_hpc_estimate.html','_blank')">
-    Calculate Simulation Domain & CPU Time
-  </button>
-</div>
+<!-- Footer Action Card -->
+<section style="padding-top: 0; padding-bottom: 0;">
+  <div class="card" style="width: 100%; max-width: 800px; margin: auto;">
+    <p>Integration of emission estimation using Data Assimilation and lightweight methods...</p>
+    <button 
+      class="btn" 
+      onclick="window.open('leaflet_hpc_estimate.html','_blank')">
+      Calculate Simulation Domain & CPU Time
+    </button>
+  </div>
+</section>
 
 <footer>
-  &copy; 2025 LUWA - Satellite Data & Environmental Monitoring
+  &copy; 2026 LUWA - Satellite Data & Environmental Monitoring
 </footer>
 
 <!-- Video Modal Overlay -->
@@ -228,7 +333,7 @@
   <div class="video-container">
     <button class="close-btn" onclick="closeVideoModal()">X</button>
     <video controls>
-      <source src="so2%20in%20LE_LOTOS_MEX_conc-3d_20160813.mp4" type="video/mp4">
+      <source src="assets/Videos/so2%20in%20LE_LOTOS_MEX_conc-3d_20160813.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
   </div>
@@ -245,10 +350,5 @@
   }
 </script>
 
-
-
 </body>
 </html>
-
-
-
