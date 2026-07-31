@@ -310,7 +310,7 @@
 </head>
 <body>
   <div class="sidebar">
-    <img src="./assets/imagenes/imagenes_generales/LOGO.png" alt="LUWA Logo">
+    <img src="/home/ayarceb/LUWA/LUWA/assets/imagenes/imagenes_generales/LOGO.png" alt="LUWA Logo">
     <div class="info-box">
       <strong>Selected Domain:</strong>
       <div id="domain-info">None</div>
@@ -528,12 +528,12 @@
 
       <div id="sim-videos">
         <video id="video-sim1" class="sim-video hidden" controls>
-          <source src="./assets/Videos/LE_nst_MAC_SPAIN_2021_002_conc-sfc_2021060.mp4" type="video/mp4">
+          <source src="LE_nst_MAC_SPAIN_2021_002_conc-sfc_2021060.mp4" type="video/mp4">
           Your browser requires video support.
         </video>
 
         <video id="video-sim2" class="sim-video hidden" controls>
-          <source src="./assets/Videos/LE_nst_MAC_SPAIN_2021_001_conc-sfc_2021060.mp4" type="video/mp4">
+          <source src="LE_nst_MAC_SPAIN_2021_001_conc-sfc_2021060.mp4" type="video/mp4">
           Your browser requires video support.
         </video>
 
@@ -701,12 +701,12 @@
     }
 
     function setMexicoVideo(variable) {
-      // Map variable -> video asset path relative to map.html
+      // Map variable -> filename (same folder as HTML)
       const files = {
-        "no2":  "./assets/Videos/no_LE_model_conc-3d_20240702.mp4",
-        "o3":   "./assets/Videos/o3_LE_model_conc-3d_20240702.mp4",
-        "so2":  "./assets/Videos/so2_LE_model_conc-3d_20240702.mp4",
-        "tpm25":"./assets/Videos/tpm25_LE_model_conc-3d_20240702.mp4"
+        "no2":  "no_LE_model_conc-3d_20240702.mp4",
+        "o3":   "o3_LE_model_conc-3d_20240702.mp4",
+        "so2":  "so2_LE_model_conc-3d_20240702.mp4",
+        "tpm25":"tpm25_LE_model_conc-3d_20240702.mp4"
       };
 
       const file = files[variable];
