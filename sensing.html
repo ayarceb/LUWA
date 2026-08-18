@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sensing Network & Dashboard - LUWA Consulting</title>
+  
+  <!-- Hoja de estilos de Leaflet para el mapa -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- Estilos Corporativos -->
+  <style>
+    :root {
+      --azul-luwa: #0056b3;
+      --cian-acento: #0ea5e9;
+      --blanco-fondo: #ffffff;
+      --gris-niebla: #f0f4f8;
+      --texto-carbon: #334155;
+    }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--texto-carbon);
+      background-color: var(--blanco-fondo);
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth; /* Movimiento suave al hacer clic en los enlaces */
+    }
+    
+    header {
+      background-color: var(--gris-niebla);
+      padding: 15px;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--azul-luwa);
+    }
+    
+    header img.logo {
+      height: 90px;
+      position: absolute;
+      left: 20px;
+      top: 12px;
+    }
+
+    header h1 {
+      color: var(--azul-luwa);
+      margin-bottom: 5px;
+      font-size: 1.8rem;
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+    
+    nav { margin-top: 8px; }
+    
+    nav a {
+      color: var(--texto-carbon);
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    nav a:hover {
+      color: var(--azul-luwa);
+      font-weight: bold;
+    }
+
+    .cloud-btn {
+      background-color: var(--azul-luwa);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .cloud-btn:hover { background-color: var(--cian-acento); }
+    
+    .card {
+      background-color: var(--blanco-fondo);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    /* ESTILOS TÍTULOS DE SECCIÓN */
+    .section-title {
+      color: var(--azul-luwa);
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
+
+    /* ESTILOS PARA LA GALERÍA */
+    .gallery-section {
+      margin-top: 50px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .gallery-card {
+      background: var(--blanco-fondo);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid #e2e8f0;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 3px solid var(--cian-acento);
+    }
+
+    .gallery-info {
+      padding: 15px 20px;
+    }
+
+    .gallery-caption {
+      font-size: 16px;
+      font-weight: bold;
+      color: #1e293b;
+      margin: 0 0 5px 0;
+    }
+
+    .gallery-subtext {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0;
+    }
+
+    /* ESTILOS PARA LA CALCULADORA */
+    .calculator-section { margin-top: 50px; }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+    .form-group input:focus { outline: none; border-color: var(--cian-acento); }
+    .full-width { grid-column: span 2; }
+    
+    .btn-calculate { 
+      background-color: var(--azul-luwa); color: white; border: none; padding: 12px; 
+      border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s ease; 
+    }
+    .btn-calculate:hover { background-color: var(--cian-acento); }
+    
+    .result-card { 
+      background: var(--gris-niebla); border-left: 4px solid var(--cian-acento); 
+      padding: 20px; border-radius: 4px; margin-top: 20px; display: none; 
+    }
+
+    footer {
+      background-color: var(--gris-niebla);
+      color: var(--texto-carbon);
+      text-align: center;
+      padding: 15px;
+      font-size: 13px;
+      border-top: 2px solid var(--azul-luwa);
+      margin-top: 50px;
+    }
+    
+    @media (max-width: 850px) {
+      header img.logo {
+        position: static;
+        display: block;
+        margin: 0 auto 10px auto;
+        height: 80px;
+      }
+      header h1 {
+        padding-left: 0;
+        padding-right: 0;
+        font-size: 1.4rem;
+      }
+      nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .cloud-btn { margin-left: 0; }
+      .form-grid { grid-template-columns: 1fr; }
+      .full-width { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">
+    <img src="assets/imagenes/imagenes_generales/LOGO.png" alt="Logo" class="logo">
+  </a>
+  <h1>Environmental Consultancy Services of LUWA Consultancy Group</h1>
+  <nav>
+    <a href="about.html">About</a>
+    <a href="consultancy-services.html">Consultancy Services</a>
+    <a href="data-methods.html">Data & Methods</a>
+    <a href="sensing.html">Sensing Network</a>
+    <!-- Enlace modificado para hacer scroll a la calculadora en esta misma página -->
+    <a href="#carbon-calculator">Carbon Calculator</a>
+    <a href="contact.html">Contact</a>
+    <button class="cloud-btn" onclick="window.location.href='auth.html'">
+      ☁️ Connect to Cloud
+    </button>
+  </nav>
+</header>
+
+<main style="padding: 20px; max-width: 1200px; margin: auto;">
+  
+  <!-- 1. SECCIÓN DEL MAPA EN VIVO -->
+  <h2 style="color: var(--azul-luwa); text-align: center; margin-bottom: 5px;">Real-Time Sensor Network</h2>
+  <p style="text-align: center; color: var(--texto-carbon); margin-bottom: 25px;">
+      Visualización de telemetría ambiental en tiempo real desde clúster EMQX.
+  </p>
+  
+  <div class="card" id="mapa-sensores" style="height: 600px; width: 100%; z-index: 1;"></div>
+
+  <!-- 2. SECCIÓN DE GALERÍA DE HARDWARE -->
+  <section class="gallery-section">
+    <h2 class="section-title">Instalaciones y Desarrollo de Hardware</h2>
+    
+    <div class="gallery-grid">
+        <!-- Tarjeta 1 -->
+        <div class="gallery-card">
+            <img src="assets/imagenes/imagenes_generales/sensor_1.jpeg" alt="Laboratorio de Baterías LUWA">
+            <div class="gallery-info">
+                <h4 class="gallery-caption">Dispositivo acoplado en laboratorio</h4>
+                <p class="gallery-subtext">Instalacion de pruebas en laboratorio de baterias y dispositivo de sensado</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2 -->
+        <div class="gallery-card">
+            <img src="assets/imagenes/imagenes_generales/sensor_2.png" alt="Carcasa de Nodo Sensor">
+            <div class="gallery-info">
+                <h4 class="gallery-caption">Dispositivo funcional ensamblado</h4>
+                <p class="gallery-subtext">Nodo sensor para montado en pared con cubierta protectora, ensamblado de componentes.</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta 3 -->
+        <div class="gallery-card">
+            <img src="assets/imagenes/imagenes_generales/sensor_3.jpeg" alt="Circuito Interno del Sensor">
+            <div class="gallery-info">
+                <h4 class="gallery-caption">Arquitectura Interna</h4>
+                <p class="gallery-subtext">Detalle de la placa (PCB), microcontrolador y sensores de calidad de aire integrados.</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta 4 -->
+        <div class="gallery-card">
+            <img src="assets/imagenes/imagenes_generales/sensor_4.png" alt="Ensamblaje Final">
+            <div class="gallery-info">
+                <h4 class="gallery-caption">Ensamblaje de Campo</h4>
+                <p class="gallery-subtext">Carcasa final con rejillas de ventilación lista para el despliegue en campo.</p>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- 3. SECCIÓN CALCULADORA DE HUELLA DE CARBONO -->
+  <section class="calculator-section" id="carbon-calculator">
+    <h2 class="section-title">Calculadora de Huella de Carbono (Norma ISO 14064)</h2>
+    
+    <div class="card form-grid">
+        <div class="form-group">
+            <label for="kwh">Consumo Eléctrico Anual (Alcance 2 - kWh):</label>
+            <input type="number" id="kwh" placeholder="Ej. 15000">
+        </div>
+
+        <div class="form-group">
+            <label for="litros">Consumo Combustible Flotilla (Alcance 1 - Litros):</label>
+            <input type="number" id="litros" placeholder="Ej. 3000">
+        </div>
+
+        <div class="form-group full-width">
+            <label for="residuos">Generación de Residuos Sólidos (Toneladas):</label>
+            <input type="number" id="residuos" placeholder="Ej. 5.5">
+        </div>
+
+        <div class="full-width">
+            <button class="btn-calculate" onclick="procesarCalculoISO()">Calcular Emisiones de GEI</button>
+        </div>
+    </div>
+
+    <!-- Tarjeta Dinámica de Resultados -->
+    <div class="result-card" id="cardResultado">
+        <h3 style="margin: 0 0 10px 0; color: var(--azul-luwa);">Resultado del Inventario de Emisiones</h3>
+        <div id="textoResultado" style="font-size: 24px; font-weight: bold; color: #0369a1;">0.00 kg CO₂e</div>
+        <p id="detalleTexto" style="font-size: 14px; color: var(--texto-carbon); margin-top: 8px;"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  &copy; 2026 LUWA - Satellite Data & Environmental Monitoring
+</footer>
+
+<!-- SCRIPTS EXTERNOS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+<!-- SCRIPTS DE LÓGICA -->
+<script>
+  // ==========================================
+  // LÓGICA DE LA CALCULADORA DE CARBONO
+  // ==========================================
+  function procesarCalculoISO() {
+      const factorElectricidad = 0.432;
+      const factorCombustible = 2.315;
+      const factorResiduos = 580.0;
+
+      const kwh = parseFloat(document.getElementById('kwh').value) || 0;
+      const litros = parseFloat(document.getElementById('litros').value) || 0;
+      const residuos = parseFloat(document.getElementById('residuos').value) || 0;
+
+      const emisionElectricidad = kwh * factorElectricidad;
+      const emisionCombustible = litros * factorCombustible;
+      const emisionResiduos = residuos * factorResiduos;
+      
+      const totalKgCO2e = emisionElectricidad + emisionCombustible + emisionResiduos;
+      const totalTonCO2e = totalKgCO2e / 1000;
+
+      document.getElementById('cardResultado').style.display = 'block';
+      document.getElementById('textoResultado').innerText = `${totalKgCO2e.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2})} kg CO₂e (${totalTonCO2e.toFixed(3)} Toneladas)`;
+      document.getElementById('detalleTexto').innerText = `Desglose: Alcance 2 (Electricidad): ${emisionElectricidad.toFixed(2)} kg | Alcance 1 (Combustible): ${emisionCombustible.toFixed(2)} kg | Residuos: ${emisionResiduos.toFixed(2)} kg`;
+  }
+
+  // ==========================================
+  // LÓGICA DEL MAPA EN VIVO Y MQTT
+  // ==========================================
+  function decodificarGeohash(geohash) {
+      const B32 = '0123456789bcdefghjkmnpqrstuvwxyz';
+      let isEven = true;
+      let lat = [-90, 90], lon = [-180, 180];
+      let latErr = 90, lonErr = 180;
+      
+      for (let i = 0; i < geohash.length; i++) {
+          let c = geohash[i];
+          let cd = B32.indexOf(c);
+          for (let j = 0; j < 5; j++) {
+              let mask = 1 << (4 - j);
+              if (isEven) {
+                  lonErr /= 2;
+                  if ((cd & mask) !== 0) lon[0] = (lon[0] + lon[1]) / 2;
+                  else lon[1] = (lon[0] + lon[1]) / 2;
+              } else {
+                  latErr /= 2;
+                  if ((cd & mask) !== 0) lat[0] = (lat[0] + lat[1]) / 2;
+                  else lat[1] = (lat[0] + lat[1]) / 2;
+              }
+              isEven = !isEven;
+          }
+      }
+      return { lat: (lat[0] + lat[1]) / 2, lng: (lon[0] + lon[1]) / 2 };
+  }
+
+  const map = L.map('mapa-sensores').setView([19.4326, -99.1332], 10);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  const marcadoresActivos = {};
+  const brokerUrl = 'wss://ws.iot.unloquer.org/mqtt';
+  const topicSensores = 'tele/#'; 
+  
+  const opcionesMQTT = { 
+      username: 'visor_web_luwa', 
+      password: 'luwa2026' 
+  };
+  
+  const client = mqtt.connect(brokerUrl, opcionesMQTT);
+
+  client.on('connect', () => {
+      console.log('¡Conexión segura establecida con EMQX!');
+      client.subscribe(topicSensores, (err) => {
+          if (!err) console.log(`Suscrito y escuchando el topic: ${topicSensores}`);
+      });
+  });
+
+  client.on('message', (topic, message) => {
+      try {
+          const payload = JSON.parse(message.toString());
+          const partesTopic = topic.split('/');
+          
+          if (partesTopic.length >= 3) {
+              const geohash = partesTopic[1];
+              const idSensor = partesTopic[2];
+              
+              const coordenadas = decodificarGeohash(geohash);
+              const lat = coordenadas.lat;
+              const lng = coordenadas.lng;
+              const variables = payload.fields || payload;
+
+              let contenidoVariables = `<div style="font-family: Arial, sans-serif;">`;
+              contenidoVariables += `<h4 style="margin: 0 0 8px 0; color: #0056b3;">Sensor: ${idSensor}</h4>`;
+              contenidoVariables += `<ul style="list-style-type: none; padding: 0; margin: 0;">`;
+
+              function extraerDatos(dato) {
+                  if (typeof dato === 'object' && dato !== null) {
+                      for (const [llave, valor] of Object.entries(dato)) {
+                          if (typeof valor === 'object' && valor !== null) {
+                              extraerDatos(valor); 
+                          } else {
+                              if (isNaN(llave)) {
+                                  contenidoVariables += `<li style="margin-bottom: 4px;"><b>${llave}:</b> ${valor}</li>`;
+                              }
+                          }
+                      }
+                  }
+              }
+
+              extraerDatos(variables);
+              contenidoVariables += `</ul></div>`;
+
+              if (marcadoresActivos[idSensor]) {
+                  marcadoresActivos[idSensor].setLatLng([lat, lng]);
+                  marcadoresActivos[idSensor].setPopupContent(contenidoVariables);
+              } else {
+                  const nuevoMarcador = L.marker([lat, lng]).addTo(map);
+                  nuevoMarcador.bindPopup(contenidoVariables).openPopup();
+                  marcadoresActivos[idSensor] = nuevoMarcador;
+                  map.setView([lat, lng], 13);
+              }
+          }
+      } catch (error) {
+          console.error('Mensaje recibido, pero no se pudo procesar:', error);
+      }
+  });
+</script>
+</body>
+</html>
