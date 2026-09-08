@@ -24,7 +24,7 @@
       background-color: var(--blanco-fondo);
       margin: 0;
       padding: 0;
-      scroll-behavior: smooth; /* Movimiento suave al hacer clic en los enlaces */
+      scroll-behavior: smooth;
     }
     
     header {
@@ -146,32 +146,6 @@
       margin: 0;
     }
 
-    /* ESTILOS PARA LA CALCULADORA */
-    .calculator-section { margin-top: 50px; }
-    
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      padding: 30px;
-    }
-
-    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
-    .form-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
-    .form-group input:focus { outline: none; border-color: var(--cian-acento); }
-    .full-width { grid-column: span 2; }
-    
-    .btn-calculate { 
-      background-color: var(--azul-luwa); color: white; border: none; padding: 12px; 
-      border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s ease; 
-    }
-    .btn-calculate:hover { background-color: var(--cian-acento); }
-    
-    .result-card { 
-      background: var(--gris-niebla); border-left: 4px solid var(--cian-acento); 
-      padding: 20px; border-radius: 4px; margin-top: 20px; display: none; 
-    }
-
     footer {
       background-color: var(--gris-niebla);
       color: var(--texto-carbon);
@@ -201,8 +175,6 @@
         gap: 10px;
       }
       .cloud-btn { margin-left: 0; }
-      .form-grid { grid-template-columns: 1fr; }
-      .full-width { grid-column: span 1; }
     }
   </style>
 </head>
@@ -218,8 +190,8 @@
     <a href="consultancy-services.html">Consultancy Services</a>
     <a href="data-methods.html">Data & Methods</a>
     <a href="sensing.html">Sensing Network</a>
-    <!-- Enlace modificado para hacer scroll a la calculadora en esta misma página -->
-    <a href="#carbon-calculator">Carbon Calculator</a>
+    <!-- Enlace restaurado a la página independiente -->
+    <a href="carbono.html">Carbon Calculator</a>
     <a href="contact.html">Contact</a>
     <button class="cloud-btn" onclick="window.location.href='auth.html'">
       ☁️ Connect to Cloud
@@ -280,39 +252,6 @@
     </div>
   </section>
 
-  <!-- 3. SECCIÓN CALCULADORA DE HUELLA DE CARBONO -->
-  <section class="calculator-section" id="carbon-calculator">
-    <h2 class="section-title">Calculadora de Huella de Carbono (Norma ISO 14064)</h2>
-    
-    <div class="card form-grid">
-        <div class="form-group">
-            <label for="kwh">Consumo Eléctrico Anual (Alcance 2 - kWh):</label>
-            <input type="number" id="kwh" placeholder="Ej. 15000">
-        </div>
-
-        <div class="form-group">
-            <label for="litros">Consumo Combustible Flotilla (Alcance 1 - Litros):</label>
-            <input type="number" id="litros" placeholder="Ej. 3000">
-        </div>
-
-        <div class="form-group full-width">
-            <label for="residuos">Generación de Residuos Sólidos (Toneladas):</label>
-            <input type="number" id="residuos" placeholder="Ej. 5.5">
-        </div>
-
-        <div class="full-width">
-            <button class="btn-calculate" onclick="procesarCalculoISO()">Calcular Emisiones de GEI</button>
-        </div>
-    </div>
-
-    <!-- Tarjeta Dinámica de Resultados -->
-    <div class="result-card" id="cardResultado">
-        <h3 style="margin: 0 0 10px 0; color: var(--azul-luwa);">Resultado del Inventario de Emisiones</h3>
-        <div id="textoResultado" style="font-size: 24px; font-weight: bold; color: #0369a1;">0.00 kg CO₂e</div>
-        <p id="detalleTexto" style="font-size: 14px; color: var(--texto-carbon); margin-top: 8px;"></p>
-    </div>
-  </section>
-
 </main>
 
 <footer>
@@ -325,30 +264,6 @@
 
 <!-- SCRIPTS DE LÓGICA -->
 <script>
-  // ==========================================
-  // LÓGICA DE LA CALCULADORA DE CARBONO
-  // ==========================================
-  function procesarCalculoISO() {
-      const factorElectricidad = 0.432;
-      const factorCombustible = 2.315;
-      const factorResiduos = 580.0;
-
-      const kwh = parseFloat(document.getElementById('kwh').value) || 0;
-      const litros = parseFloat(document.getElementById('litros').value) || 0;
-      const residuos = parseFloat(document.getElementById('residuos').value) || 0;
-
-      const emisionElectricidad = kwh * factorElectricidad;
-      const emisionCombustible = litros * factorCombustible;
-      const emisionResiduos = residuos * factorResiduos;
-      
-      const totalKgCO2e = emisionElectricidad + emisionCombustible + emisionResiduos;
-      const totalTonCO2e = totalKgCO2e / 1000;
-
-      document.getElementById('cardResultado').style.display = 'block';
-      document.getElementById('textoResultado').innerText = `${totalKgCO2e.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2})} kg CO₂e (${totalTonCO2e.toFixed(3)} Toneladas)`;
-      document.getElementById('detalleTexto').innerText = `Desglose: Alcance 2 (Electricidad): ${emisionElectricidad.toFixed(2)} kg | Alcance 1 (Combustible): ${emisionCombustible.toFixed(2)} kg | Residuos: ${emisionResiduos.toFixed(2)} kg`;
-  }
-
   // ==========================================
   // LÓGICA DEL MAPA EN VIVO Y MQTT
   // ==========================================
