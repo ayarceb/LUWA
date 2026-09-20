@@ -193,37 +193,28 @@
   }
 
   // ==========================================
-  // MAPAS PROFESIONALES (LUWA BRANDING) - CON ETIQUETAS
+  // MAPA PROFESIONAL (SATELLITE HD)
   // ==========================================
+  // Capa base de satélite
+  const sateliteFondo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
+      maxZoom: 19, 
+      attribution: '&copy; Esri' 
+  });
   
-  // 1. LUWA Base Map (Claro con calles y texto)
-  const claroFondo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: '&copy; Esri' });
-  const claroEtiquetas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
-  const mapaClaro = L.layerGroup([claroFondo, claroEtiquetas]);
-
-  // 2. Night Mode (Oscuro con calles y texto)
-  const oscuroFondo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16, attribution: '&copy; Esri' });
-  const oscuroEtiquetas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 });
-  const mapaOscuro = L.layerGroup([oscuroFondo, oscuroEtiquetas]);
-
-  // 3. Satellite HD (Satélite con fronteras políticas y nombres de lugares)
-  const sateliteFondo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: '&copy; Esri' });
-  const sateliteEtiquetas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
+  // Capa transparente con fronteras y nombres de lugares
+  const sateliteEtiquetas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { 
+      maxZoom: 19 
+  });
+  
+  // Empaquetamos ambas en una sola
   const mapaSatelite = L.layerGroup([sateliteFondo, sateliteEtiquetas]);
 
+  // Inicializamos el mapa fijando únicamente el satélite
   const map = L.map('mapa-sensores', {
-      center: [6.2518, -75.5636], // Medellín
+      center: [6.2518, -75.5636], // Centrado en Medellín
       zoom: 12,
-      layers: [mapaClaro] // Arranca con el mapa claro y sus etiquetas
+      layers: [mapaSatelite] 
   });
-
-  const capasBase = {
-      "LUWA Base Map (Light)": mapaClaro,
-      "Night Mode (Dark)": mapaOscuro,
-      "Satellite HD": mapaSatelite
-  };
-  
-  L.control.layers(capasBase).addTo(map);
 
   // ==========================================
   // MQTT Y DECODIFICADOR GEOHASH
