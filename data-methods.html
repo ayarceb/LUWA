@@ -589,9 +589,9 @@
       </div>
 
       <div class="method-card">
-        <h2>LOTOS-EUROS on AWS</h2>
+        <h2>Cloud-based Atmospheric Modelling</h2>
         <p>
-          Atmospheric chemistry-transport simulations using LOTOS-EUROS workflows deployed in
+          Atmospheric chemistry-transport simulations deployed in
           cloud infrastructure for controlled environmental scenarios.
         </p>
       </div>
@@ -639,7 +639,7 @@
       </div>
 
       <div class="resolution-callout">
-        <strong>Resolution rule for Humath:</strong> the LOTOS-EUROS <strong>output resolution</strong> is configurable up to <strong>1 km</strong> in both available domains. This does not mean that every input layer is native 1 km. Meteorology, boundary conditions, emissions, land cover, fires and surface fields enter with different native resolutions and update frequencies. The run package should therefore report both: <strong>the configured output grid</strong> and <strong>the native resolution of each input field</strong>.
+        <strong>Resolution rule for Humath:</strong> the atmospheric-model <strong>output resolution</strong> is configurable up to <strong>1 km</strong> in both available domains. This does not mean that every input layer is native 1 km. Meteorology, boundary conditions, emissions, land cover, fires and surface fields enter with different native resolutions and update frequencies. The simulation record should therefore report both: <strong>the configured output grid</strong> and <strong>the native resolution of each input field</strong>.
       </div>
 
       <div class="humath-box">
@@ -741,7 +741,7 @@
                   <a class="source-url" href="https://airqualitymodeling.tno.nl/lotos-euros/" target="_blank" rel="noopener">https://airqualitymodeling.tno.nl/lotos-euros/</a>
               </td>
               <td>
-                <strong>Executable LOTOS-EUROS run package</strong> with domain metadata, grid definition, output schedule, logs and reproducible configuration record.
+                <strong>Simulation outputs and reproducibility metadata</strong>, including domain metadata, grid definition, output schedule, logs and configuration records. Model software and executables are not distributed.
               </td>
               <td>
                 Humath defines the simulation request before launch and receives structured outputs for dashboard, report or API integration.
@@ -833,7 +833,7 @@
                 Helps distinguish local or regional source influence from pollution transported into the domain.
               </td>
               <td><strong>CAMS/MACC boundary conditions</strong> for reactive gases and aerosols are the standard option.</td>
-              <td><strong>CAMS global boundary conditions</strong> are the practical default; exact product/version is fixed in the run package.</td>
+              <td><strong>CAMS global boundary conditions</strong> are the practical default; exact product/version is documented in the simulation configuration record.</td>
             </tr>
 
             <tr>
