@@ -1,35 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>About - LUWA Consulting</title>
-  
-  <!-- Ruta hacia tu CSS global -->
+
+  <!-- Global LUWA stylesheet -->
   <link rel="stylesheet" href="assets/Cascading_Style_Sheets/style.css">
 
-  <!-- Estilos específicos para la alineación de los perfiles y el botón -->
   <style>
-    /* Contenedor principal de los perfiles */
-    .profiles {
-      display: grid;
-      /* Fuerza 4 columnas del mismo tamaño en pantallas grandes */
-      grid-template-columns: repeat(4, 1fr);
-      gap: 30px; 
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-      align-items: start; 
+
+    /* =========================================
+       ABOUT / MISSION SECTION
+       ========================================= */
+
+    .about-intro {
+      max-width: 1000px;
+      margin: 50px auto 20px auto;
+      padding: 0 30px;
+      color: #334155;
+      line-height: 1.7;
+      font-size: 16px;
     }
 
-    /* Estilos internos de cada tarjeta de perfil */
+    .about-intro h2 {
+      color: #0056b3;
+      font-size: 28px;
+      margin-bottom: 18px;
+    }
+
+    .about-intro h3 {
+      color: #0056b3;
+      font-size: 22px;
+      margin-top: 35px;
+      margin-bottom: 12px;
+    }
+
+    .about-intro p {
+      margin-bottom: 15px;
+    }
+
+
+    /* =========================================
+       TEAM PROFILES
+       ========================================= */
+
+    .profiles {
+      display: grid;
+
+      /* Four equal columns on large screens */
+      grid-template-columns: repeat(4, 1fr);
+
+      gap: 30px;
+      max-width: 1200px;
+      margin: 45px auto;
+      padding: 0 20px;
+      align-items: start;
+    }
+
     .profile {
       text-align: center;
       background: #ffffff;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
       border: 1px solid #e2e8f0;
+
       transition: transform 0.3s ease;
     }
 
@@ -37,14 +77,17 @@
       transform: translateY(-5px);
     }
 
-    /* Asegura que las imágenes tengan el mismo tamaño circular */
     .profile img {
       width: 160px;
       height: 160px;
+
       object-fit: cover;
+
       border-radius: 50%;
+
       margin-bottom: 15px;
-      border: 3px solid #0ea5e9; /* Color cian de LUWA */
+
+      border: 3px solid #0ea5e9;
     }
 
     .profile h2 {
@@ -59,98 +102,323 @@
       line-height: 1.5;
     }
 
+
     /* =========================================
-       NUEVOS ESTILOS PARA EL BOTÓN BACK TO HOME
+       BUTTONS
        ========================================= */
-    .back-btn {
+
+    .about-buttons {
+      text-align: center;
+      margin: 20px 0 60px 0;
+    }
+
+    .back-btn,
+    .download-btn {
       display: inline-block;
-      background-color: #0056b3; /* Fondo Azul LUWA */
-      color: #ffffff !important; /* Fuerza el texto blanco */
+
       padding: 12px 28px;
+
       border-radius: 6px;
+
       text-decoration: none;
+
       font-weight: bold;
+
       font-size: 15px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+
+      margin: 8px;
+
+      transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
+
       box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
     }
 
+
+    /* Back button */
+
+    .back-btn {
+      background-color: #0056b3;
+      color: #ffffff !important;
+    }
+
     .back-btn:hover {
-      background-color: #0ea5e9; /* Cambia a Cian al pasar el mouse */
+      background-color: #0ea5e9;
       transform: translateY(-3px);
       color: #ffffff !important;
     }
 
-    /* Diseño Responsivo: 2 columnas en Tablets */
+
+    /* Download brochure button */
+
+    .download-btn {
+      background-color: #0ea5e9;
+      color: #ffffff !important;
+    }
+
+    .download-btn:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+      color: #ffffff !important;
+    }
+
+
+    /* =========================================
+       RESPONSIVE DESIGN
+       ========================================= */
+
     @media (max-width: 900px) {
+
       .profiles {
         grid-template-columns: repeat(2, 1fr);
       }
+
     }
 
-    /* Diseño Responsivo: 1 columna en Celulares */
+
     @media (max-width: 550px) {
+
       .profiles {
         grid-template-columns: 1fr;
       }
+
+      .about-intro {
+        padding: 0 20px;
+      }
+
+      .about-intro h2 {
+        font-size: 24px;
+      }
+
+      .back-btn,
+      .download-btn {
+        display: block;
+        width: fit-content;
+        margin: 12px auto;
+      }
+
     }
+
   </style>
 </head>
 
+
 <body>
+
+
+  <!-- =========================================
+       HEADER
+       ========================================= -->
+
   <header>
-    <!-- Ruta hacia tu Logo -->
+
     <a href="index.html">
-      <img src="assets/imagenes/imagenes_generales/LOGO.png" alt="Logo" class="logo">
+
+      <img
+        src="assets/imagenes/imagenes_generales/LOGO.png"
+        alt="LUWA Logo"
+        class="logo">
+
     </a>
+
+
     <h1>About LUWA Consulting</h1>
+
+
     <nav>
+
       <a href="index.html">Home</a>
+
       <a href="about.html" class="active">About</a>
+
       <a href="consultancy-services.html">Services</a>
+
       <a href="data-methods.html">Data & Methods</a>
+
       <a href="contact.html">Contact</a>
+
       <a href="sensing.html">Sensing Network</a>
+
       <a href="carbono.html">Carbon Calculator</a>
+
     </nav>
+
   </header>
 
+
+
   <main>
-    <section class="profiles">
-      <div class="profile">
-        <!-- Rutas hacia las fotos de perfil -->
-        <img src="assets/imagenes/perfiles/Profile_2.jpeg" alt="Andrés Yarce Botero">
-        <h2>Andrés Yarce Botero</h2>
-        <p>Specialist in satellite data processing and emission inversion methods. Focused on integrating high-resolution atmospheric data with advanced computational models.</p>
-      </div>
 
-      <div class="profile">
-        <img src="assets/imagenes/perfiles/Profile_1.jpeg" alt="Álvaro de Jesus Ochoa Calle">
-        <h2>Álvaro de Jesus Ochoa Calle</h2>
-        <p>Expert in environmental consultancy and policy assessment. Dedicated to bridging scientific modeling and decision-making frameworks for sustainable management.</p>
-      </div>
-      
-      <div class="profile">
-        <img src="assets/imagenes/perfiles/Profile_3.jpeg" alt="Juan Jesus Valdez Vasquez">
-        <h2>Juan Jesus Valdez Vasquez</h2>
-        <p>Developer dedicated to the scientific study of environmental pollution.</p>
-      </div>
 
-      <div class="profile">
-        <img src="assets/imagenes/perfiles/profile_4.png" alt="Michiel van Weele">
-        <h2>Michiel van Weele</h2>
-        <p>Scientific Advisor<br>Atmospheric scientist specializing in atmospheric composition, air quality, climate interactions, and satellite observations.</p>
-      </div>
+    <!-- =========================================
+         ABOUT LUWA
+         ========================================= -->
+
+    <section class="about-intro">
+
+      <h2>About LUWA</h2>
+
+      <p>
+        LUWA is an atmospheric intelligence platform that integrates
+        numerical modeling, satellite observations, ground-based sensors,
+        and cloud computing to generate information on air quality,
+        emissions, and atmospheric dynamics.
+      </p>
+
+      <p>
+        Its infrastructure enables on-demand atmospheric simulations and
+        transforms complex scientific data into accessible products for
+        public institutions, researchers, businesses, and communities.
+      </p>
+
+
+      <h3>Mission</h3>
+
+      <p>
+        To democratize access to advanced atmospheric information to
+        improve the understanding and management of air quality and
+        emissions, especially in areas where monitoring infrastructure
+        is limited.
+      </p>
+
+      <p>
+        LUWA seeks to transform high-level scientific capabilities into
+        operational tools that support public health, environmental
+        management, research, and regional decision-making.
+      </p>
+
     </section>
 
-    <!-- Botón con la nueva clase aplicada -->
-    <div style="text-align:center; margin-bottom: 60px;">
-      <a href="index.html" class="back-btn">← Back to Home</a>
+
+
+    <!-- =========================================
+         LUWA TEAM
+         ========================================= -->
+
+    <section class="profiles">
+
+
+      <!-- Andrés -->
+
+      <div class="profile">
+
+        <img
+          src="assets/imagenes/perfiles/Profile_2.jpeg"
+          alt="Andrés Yarce Botero">
+
+        <h2>Andrés Yarce Botero</h2>
+
+        <p>
+          Specialist in satellite data processing and emission inversion
+          methods. Focused on integrating high-resolution atmospheric
+          data with advanced computational models.
+        </p>
+
+      </div>
+
+
+
+      <!-- Álvaro -->
+
+      <div class="profile">
+
+        <img
+          src="assets/imagenes/perfiles/Profile_1.jpeg"
+          alt="Álvaro de Jesus Ochoa Calle">
+
+        <h2>Álvaro de Jesus Ochoa Calle</h2>
+
+        <p>
+          Expert in environmental consultancy and policy assessment.
+          Dedicated to bridging scientific modeling and decision-making
+          frameworks for sustainable management.
+        </p>
+
+      </div>
+
+
+
+      <!-- Juan -->
+
+      <div class="profile">
+
+        <img
+          src="assets/imagenes/perfiles/Profile_3.jpeg"
+          alt="Juan Jesus Valdez Vasquez">
+
+        <h2>Juan Jesus Valdez Vasquez</h2>
+
+        <p>
+          Developer dedicated to the scientific study of environmental
+          pollution.
+        </p>
+
+      </div>
+
+
+
+      <!-- Michiel -->
+
+      <div class="profile">
+
+        <img
+          src="assets/imagenes/perfiles/profile_4.png"
+          alt="Michiel van Weele">
+
+        <h2>Michiel van Weele</h2>
+
+        <p>
+          Scientific Advisor<br>
+          Atmospheric scientist specializing in atmospheric composition,
+          air quality, climate interactions, and satellite observations.
+        </p>
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         BUTTONS
+         ========================================= -->
+
+    <div class="about-buttons">
+
+      <a
+        href="LUWA_Broshure_business_lines.pdf"
+        class="download-btn"
+        download>
+        ↓ Download Brochure
+      </a>
+
+
+      <a
+        href="index.html"
+        class="back-btn">
+        ← Back to Home
+      </a>
+
     </div>
+
+
   </main>
 
+
+
+  <!-- =========================================
+       FOOTER
+       ========================================= -->
+
   <footer>
+
     &copy; 2026 LUWA - Satellite Data & Environmental Monitoring
+
   </footer>
+
+
 </body>
+
 </html>
