@@ -13,33 +13,140 @@
   <style>
 
     /* =========================================
-       ABOUT / MISSION SECTION
+       ABOUT LUWA
        ========================================= */
 
-    .about-intro {
-      max-width: 1000px;
-      margin: 50px auto 20px auto;
-      padding: 0 30px;
-      color: #334155;
-      line-height: 1.7;
-      font-size: 16px;
+    .about-section {
+      max-width: 1150px;
+      margin: 60px auto 30px auto;
+      padding: 0 25px;
     }
 
-    .about-intro h2 {
-      color: #0056b3;
-      font-size: 28px;
-      margin-bottom: 18px;
+    .about-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 40px auto;
     }
 
-    .about-intro h3 {
+    .about-header h2 {
+      font-size: 32px;
       color: #0056b3;
-      font-size: 22px;
-      margin-top: 35px;
       margin-bottom: 12px;
     }
 
-    .about-intro p {
-      margin-bottom: 15px;
+    .about-header p {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #475569;
+      margin: 0;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .about-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 32px;
+
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .about-card h3 {
+      color: #0056b3;
+      font-size: 21px;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    .about-card p {
+      color: #334155;
+      font-size: 15.5px;
+      line-height: 1.75;
+      margin: 0;
+    }
+
+    .mission-card {
+      border-top: 4px solid #0ea5e9;
+    }
+
+    .platform-card {
+      border-top: 4px solid #0056b3;
+    }
+
+
+    /* =========================================
+       BROCHURE
+       ========================================= */
+
+    .brochure-area {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .brochure-area p {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .download-btn {
+      display: inline-block;
+      background-color: #0ea5e9;
+      color: #ffffff !important;
+
+      padding: 12px 28px;
+
+      border-radius: 6px;
+
+      text-decoration: none;
+
+      font-weight: bold;
+      font-size: 15px;
+
+      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.22);
+
+      transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
+    }
+
+    .download-btn:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+      color: #ffffff !important;
+    }
+
+
+    /* =========================================
+       TEAM SECTION
+       ========================================= */
+
+    .team-section {
+      max-width: 1200px;
+      margin: 70px auto 30px auto;
+      padding: 0 20px;
+    }
+
+    .team-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .team-header h2 {
+      font-size: 30px;
+      color: #0056b3;
+      margin-bottom: 8px;
+    }
+
+    .team-header p {
+      color: #64748b;
+      font-size: 15px;
     }
 
 
@@ -49,21 +156,18 @@
 
     .profiles {
       display: grid;
-
-      /* Four equal columns on large screens */
       grid-template-columns: repeat(4, 1fr);
-
       gap: 30px;
-      max-width: 1200px;
-      margin: 45px auto;
-      padding: 0 20px;
       align-items: start;
     }
 
     .profile {
       text-align: center;
+
       background: #ffffff;
+
       padding: 20px;
+
       border-radius: 8px;
 
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -99,22 +203,24 @@
     .profile p {
       font-size: 14px;
       color: #334155;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
 
     /* =========================================
-       BUTTONS
+       BACK BUTTON
        ========================================= */
 
-    .about-buttons {
+    .back-area {
       text-align: center;
-      margin: 20px 0 60px 0;
+      margin: 45px 0 65px 0;
     }
 
-    .back-btn,
-    .download-btn {
+    .back-btn {
       display: inline-block;
+
+      background-color: #0056b3;
+      color: #ffffff !important;
 
       padding: 12px 28px;
 
@@ -123,24 +229,13 @@
       text-decoration: none;
 
       font-weight: bold;
-
       font-size: 15px;
-
-      margin: 8px;
 
       transition:
         background-color 0.3s ease,
         transform 0.2s ease;
 
       box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
-    }
-
-
-    /* Back button */
-
-    .back-btn {
-      background-color: #0056b3;
-      color: #ffffff !important;
     }
 
     .back-btn:hover {
@@ -150,25 +245,15 @@
     }
 
 
-    /* Download brochure button */
-
-    .download-btn {
-      background-color: #0ea5e9;
-      color: #ffffff !important;
-    }
-
-    .download-btn:hover {
-      background-color: #0056b3;
-      transform: translateY(-3px);
-      color: #ffffff !important;
-    }
-
-
     /* =========================================
-       RESPONSIVE DESIGN
+       RESPONSIVE
        ========================================= */
 
-    @media (max-width: 900px) {
+    @media (max-width: 950px) {
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
 
       .profiles {
         grid-template-columns: repeat(2, 1fr);
@@ -179,28 +264,35 @@
 
     @media (max-width: 550px) {
 
+      .about-section {
+        margin-top: 40px;
+        padding: 0 18px;
+      }
+
+      .about-header h2 {
+        font-size: 27px;
+      }
+
+      .about-header p {
+        font-size: 15px;
+      }
+
+      .about-card {
+        padding: 24px;
+      }
+
       .profiles {
         grid-template-columns: 1fr;
       }
 
-      .about-intro {
-        padding: 0 20px;
-      }
-
-      .about-intro h2 {
-        font-size: 24px;
-      }
-
-      .back-btn,
-      .download-btn {
-        display: block;
-        width: fit-content;
-        margin: 12px auto;
+      .team-section {
+        padding: 0 18px;
       }
 
     }
 
   </style>
+
 </head>
 
 
@@ -222,9 +314,7 @@
 
     </a>
 
-
     <h1>About LUWA Consulting</h1>
-
 
     <nav>
 
@@ -255,124 +345,86 @@
          ABOUT LUWA
          ========================================= -->
 
-    <section class="about-intro">
-
-      <h2>About LUWA</h2>
-
-      <p>
-        LUWA is an atmospheric intelligence platform that integrates
-        numerical modeling, satellite observations, ground-based sensors,
-        and cloud computing to generate information on air quality,
-        emissions, and atmospheric dynamics.
-      </p>
-
-      <p>
-        Its infrastructure enables on-demand atmospheric simulations and
-        transforms complex scientific data into accessible products for
-        public institutions, researchers, businesses, and communities.
-      </p>
+    <section class="about-section">
 
 
-      <h3>Mission</h3>
+      <div class="about-header">
 
-      <p>
-        To democratize access to advanced atmospheric information to
-        improve the understanding and management of air quality and
-        emissions, especially in areas where monitoring infrastructure
-        is limited.
-      </p>
-
-      <p>
-        LUWA seeks to transform high-level scientific capabilities into
-        operational tools that support public health, environmental
-        management, research, and regional decision-making.
-      </p>
-
-    </section>
-
-
-
-    <!-- =========================================
-         LUWA TEAM
-         ========================================= -->
-
-    <section class="profiles">
-
-
-      <!-- Andrés -->
-
-      <div class="profile">
-
-        <img
-          src="assets/imagenes/perfiles/Profile_2.jpeg"
-          alt="Andrés Yarce Botero">
-
-        <h2>Andrés Yarce Botero</h2>
+        <h2>Atmospheric Intelligence for Better Decisions</h2>
 
         <p>
-          Specialist in satellite data processing and emission inversion
-          methods. Focused on integrating high-resolution atmospheric
-          data with advanced computational models.
+          LUWA connects atmospheric science, environmental observations
+          and computational infrastructure to make advanced atmospheric
+          information more accessible and operational.
         </p>
 
       </div>
 
 
 
-      <!-- Álvaro -->
+      <div class="about-grid">
 
-      <div class="profile">
 
-        <img
-          src="assets/imagenes/perfiles/Profile_1.jpeg"
-          alt="Álvaro de Jesus Ochoa Calle">
+        <!-- Platform -->
 
-        <h2>Álvaro de Jesus Ochoa Calle</h2>
+        <div class="about-card platform-card">
 
-        <p>
-          Expert in environmental consultancy and policy assessment.
-          Dedicated to bridging scientific modeling and decision-making
-          frameworks for sustainable management.
-        </p>
+          <h3>About LUWA</h3>
+
+          <p>
+            LUWA is an atmospheric intelligence platform that integrates
+            numerical modeling, satellite observations, ground-based sensors,
+            and cloud computing to generate information on air quality,
+            emissions, and atmospheric dynamics.
+            <br><br>
+            Its infrastructure enables on-demand atmospheric simulations
+            and transforms complex scientific data into accessible products
+            for public institutions, researchers, businesses, and communities.
+          </p>
+
+        </div>
+
+
+
+        <!-- Mission -->
+
+        <div class="about-card mission-card">
+
+          <h3>Mission</h3>
+
+          <p>
+            To democratize access to advanced atmospheric information
+            to improve the understanding and management of air quality
+            and emissions, especially in areas where monitoring
+            infrastructure is limited.
+            <br><br>
+            LUWA seeks to transform high-level scientific capabilities
+            into operational tools that support public health,
+            environmental management, research, and regional
+            decision-making.
+          </p>
+
+        </div>
+
 
       </div>
 
 
 
-      <!-- Juan -->
+      <!-- Brochure -->
 
-      <div class="profile">
-
-        <img
-          src="assets/imagenes/perfiles/Profile_3.jpeg"
-          alt="Juan Jesus Valdez Vasquez">
-
-        <h2>Juan Jesus Valdez Vasquez</h2>
+      <div class="brochure-area">
 
         <p>
-          Developer dedicated to the scientific study of environmental
-          pollution.
+          Learn more about LUWA's capabilities, services and areas of application.
         </p>
 
-      </div>
-
-
-
-      <!-- Michiel -->
-
-      <div class="profile">
-
-        <img
-          src="assets/imagenes/perfiles/profile_4.png"
-          alt="Michiel van Weele">
-
-        <h2>Michiel van Weele</h2>
-
-        <p>
-          Scientific Advisor<br>
-          Atmospheric scientist specializing in atmospheric composition,
-          air quality, climate interactions, and satellite observations.
-        </p>
+        <a
+          href="LUWA_Broshure_business_lines.pdf"
+          class="download-btn"
+          download>
+          ↓ Download Brochure
+        </a>
 
       </div>
 
@@ -382,18 +434,117 @@
 
 
     <!-- =========================================
-         BUTTONS
+         TEAM
          ========================================= -->
 
-    <div class="about-buttons">
+    <section class="team-section">
 
-      <a
-        href="LUWA_Broshure_business_lines.pdf"
-        class="download-btn"
-        download>
-        ↓ Download Brochure
-      </a>
 
+      <div class="team-header">
+
+        <h2>Our Team</h2>
+
+        <p>
+          Scientific, technical and environmental expertise behind LUWA.
+        </p>
+
+      </div>
+
+
+
+      <div class="profiles">
+
+
+        <!-- Andrés -->
+
+        <div class="profile">
+
+          <img
+            src="assets/imagenes/perfiles/Profile_2.jpeg"
+            alt="Andrés Yarce Botero">
+
+          <h2>Andrés Yarce Botero</h2>
+
+          <p>
+            Specialist in satellite data processing and emission inversion
+            methods. Focused on integrating high-resolution atmospheric
+            data with advanced computational models.
+          </p>
+
+        </div>
+
+
+
+        <!-- Álvaro -->
+
+        <div class="profile">
+
+          <img
+            src="assets/imagenes/perfiles/Profile_1.jpeg"
+            alt="Álvaro de Jesus Ochoa Calle">
+
+          <h2>Álvaro de Jesus Ochoa Calle</h2>
+
+          <p>
+            Expert in environmental consultancy and policy assessment.
+            Dedicated to bridging scientific modeling and decision-making
+            frameworks for sustainable management.
+          </p>
+
+        </div>
+
+
+
+        <!-- Juan -->
+
+        <div class="profile">
+
+          <img
+            src="assets/imagenes/perfiles/Profile_3.jpeg"
+            alt="Juan Jesus Valdez Vasquez">
+
+          <h2>Juan Jesus Valdez Vasquez</h2>
+
+          <p>
+            Developer dedicated to the scientific study of environmental
+            pollution.
+          </p>
+
+        </div>
+
+
+
+        <!-- Michiel -->
+
+        <div class="profile">
+
+          <img
+            src="assets/imagenes/perfiles/profile_4.png"
+            alt="Michiel van Weele">
+
+          <h2>Michiel van Weele</h2>
+
+          <p>
+            Scientific Advisor<br>
+            Atmospheric scientist specializing in atmospheric composition,
+            air quality, climate interactions, and satellite observations.
+          </p>
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         BACK HOME
+         ========================================= -->
+
+    <div class="back-area">
 
       <a
         href="index.html"
