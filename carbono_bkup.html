@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Calculator - LUWA Consulting</title>
+  
+  <style>
+    /* Paleta de colores corporativa LUWA */
+    :root {
+      --azul-luwa: #0056b3;
+      --cian-acento: #0ea5e9;
+      --blanco-fondo: #ffffff;
+      --gris-niebla: #f0f4f8;
+      --texto-carbon: #334155;
+    }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--texto-carbon);
+      background-color: var(--blanco-fondo);
+      margin: 0;
+      padding: 0;
+    }
+    
+    header {
+      background-color: var(--gris-niebla);
+      padding: 15px;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--azul-luwa);
+    }
+    
+    header img.logo {
+      height: 90px;
+      position: absolute;
+      left: 20px;
+      top: 12px;
+    }
+
+    header h1 {
+      color: var(--azul-luwa);
+      margin-bottom: 5px;
+      font-size: 1.8rem;
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+    
+    nav { margin-top: 8px; }
+    
+    nav a {
+      color: var(--texto-carbon);
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+    
+    nav a:hover {
+      color: var(--azul-luwa);
+      font-weight: bold;
+    }
+
+    .cloud-btn {
+      background-color: var(--azul-luwa);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .cloud-btn:hover { background-color: var(--cian-acento); }
+
+    /* ESTILOS DE LA CALCULADORA DE GEI */
+    main {
+      padding: 20px;
+      min-height: 70vh; /* Asegura que el footer quede abajo */
+    }
+
+    .calculator-container { 
+      max-width: 1100px; 
+      margin: 30px auto; 
+      padding: 35px; 
+      background: #f8fafc; 
+      border-radius: 12px; 
+      border: 1px solid #e2e8f0; 
+      box-shadow: 0 4px 25px rgba(0,0,0,0.05); 
+    }
+    
+    .calc-title { 
+      color: var(--azul-luwa); 
+      text-align: center; 
+      margin-top: 0; 
+      font-size: 28px; 
+      border-bottom: 2px solid #e2e8f0; 
+      padding-bottom: 15px; 
+    }
+    
+    .calc-subtitle { 
+      text-align: center; 
+      color: #64748b; 
+      margin-bottom: 40px; 
+      font-size: 16px; 
+    }
+    
+    .calc-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 25px; 
+      margin-bottom: 30px; 
+    }
+    
+    .scope-card { 
+      background: white; 
+      padding: 25px; 
+      border-radius: 8px; 
+      border-top: 5px solid var(--azul-luwa); 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+    }
+    
+    .scope-card h3 { 
+      margin-top: 0; 
+      color: var(--azul-luwa); 
+      font-size: 18px; 
+      border-bottom: 1px solid #f1f5f9; 
+      padding-bottom: 10px; 
+    }
+    
+    .calc-group { margin-bottom: 18px; }
+    .calc-group label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #475569; }
+    .calc-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; font-size: 14px; transition: 0.3s; }
+    .calc-group input:focus { border-color: var(--cian-acento); outline: none; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1); }
+    
+    .btn-calc-large { background: var(--azul-luwa); color: white; border: none; padding: 18px; width: 100%; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); }
+    .btn-calc-large:hover { background: var(--cian-acento); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(14, 165, 233, 0.3); }
+
+    /* Estilos del Reporte Visual */
+    .result-dashboard { margin-top: 40px; padding: 30px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; display: none; }
+    .result-header { text-align: center; margin-bottom: 30px; }
+    .total-emissions { font-size: 42px; font-weight: bold; color: var(--azul-luwa); margin: 10px 0; }
+    
+    .bar-container { margin-bottom: 20px; }
+    .bar-label { display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; margin-bottom: 8px; color: #334155; }
+    .bar-track { width: 100%; background: #e2e8f0; height: 16px; border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; transition: width 1s ease-in-out; }
+    .fill-scope1 { background: #ef4444; } /* Rojo */
+    .fill-scope2 { background: #eab308; } /* Amarillo */
+    .fill-scope3 { background: #22c55e; } /* Verde */
+
+    footer {
+      background-color: var(--gris-niebla);
+      color: var(--texto-carbon);
+      text-align: center;
+      padding: 15px;
+      font-size: 13px;
+      border-top: 2px solid var(--azul-luwa);
+    }
+    
+    @media (max-width: 850px) {
+      header img.logo { position: static; display: block; margin: 0 auto 10px auto; height: 80px; }
+      header h1 { padding-left: 0; padding-right: 0; font-size: 1.4rem; }
+      nav { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+      .cloud-btn { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">
+    <img src="assets/imagenes/imagenes_generales/LOGO.png" alt="Logo" class="logo">
+  </a>
+  
+  <h1>Environmental Consultancy Services of LUWA Consultancy Group</h1>
+  <nav>
+    <a href="about.html">About</a>
+    <a href="consultancy-services.html">Consultancy Services</a>
+    <a href="data-methods.html">Data & Methods</a>
+    <a href="carbono.html">Carbon Calculator</a>
+    <a href="sensing.html">Sensing Network</a>
+    <a href="contact.html">Contact</a>
+    <button class="cloud-btn" onclick="window.location.href='auth.html'">☁️ Connect to Cloud</button>
+  </nav>
+</header>
+
+<main>
+  <div class="calculator-container">
+      <h2 class="calc-title">Plataforma de Inventario de GEI (Norma ISO 14064)</h2>
+      <p class="calc-subtitle">Herramienta corporativa para la cuantificación paramétrica de Gases de Efecto Invernadero por alcances operativos.</p>
+      
+      <div class="calc-grid">
+          <!-- Alcance 1 -->
+          <div class="scope-card" style="border-top-color: #ef4444;">
+              <h3 style="color: #ef4444;">Alcance 1: Emisiones Directas</h3>
+              <div class="calc-group">
+                  <label>Combustible Flotilla (Gasolina - Litros):</label>
+                  <input type="number" id="c_gasolina" placeholder="Ej. 2500">
+              </div>
+              <div class="calc-group">
+                  <label>Combustión Estacionaria (Gas Natural - m³):</label>
+                  <input type="number" id="c_gasnat" placeholder="Ej. 850">
+              </div>
+          </div>
+
+          <!-- Alcance 2 -->
+          <div class="scope-card" style="border-top-color: #eab308;">
+              <h3 style="color: #ca8a04;">Alcance 2: Energía Indirecta</h3>
+              <div class="calc-group">
+                  <label>Consumo Eléctrico de la Red (kWh):</label>
+                  <input type="number" id="c_electricidad" placeholder="Ej. 18500">
+              </div>
+              <p style="font-size:12px; color:#94a3b8; margin-top:5px; line-height: 1.5;">Considera las emisiones generadas en las centrales eléctricas durante la producción de la energía adquirida.</p>
+          </div>
+
+          <!-- Alcance 3 -->
+          <div class="scope-card" style="border-top-color: #22c55e;">
+              <h3 style="color: #16a34a;">Alcance 3: Cadena de Valor</h3>
+              <div class="calc-group">
+                  <label>Residuos Sólidos (Toneladas):</label>
+                  <input type="number" id="c_residuos" placeholder="Ej. 4.2">
+              </div>
+              <div class="calc-group">
+                  <label>Viajes de Negocios (Horas de Vuelo):</label>
+                  <input type="number" id="c_vuelos" placeholder="Ej. 15">
+              </div>
+          </div>
+      </div>
+
+      <button class="btn-calc-large" onclick="generarReporteGEI()">Procesar Inventario de Emisiones</button>
+
+      <!-- Visualización de Resultados -->
+      <div id="panel-resultados" class="result-dashboard">
+          <div class="result-header">
+              <h3 style="margin:0; color:#475569; text-transform:uppercase; letter-spacing:1px; font-size:15px;">Total de Emisiones Equivalentes</h3>
+              <div class="total-emissions" id="res-total">0.00 Ton CO₂e</div>
+              <p style="margin:0; color:#64748b; font-size:15px;" id="res-kg">0 kg CO₂e calculados</p>
+          </div>
+
+          <!-- Barras de Progreso -->
+          <div class="bar-container">
+              <div class="bar-label"><span>Alcance 1 (Directas)</span> <span id="lbl-scope1">0%</span></div>
+              <div class="bar-track"><div class="bar-fill fill-scope1" id="bar-scope1" style="width: 0%;"></div></div>
+          </div>
+          <div class="bar-container">
+              <div class="bar-label"><span>Alcance 2 (Eléctricas)</span> <span id="lbl-scope2">0%</span></div>
+              <div class="bar-track"><div class="bar-fill fill-scope2" id="bar-scope2" style="width: 0%;"></div></div>
+          </div>
+          <div class="bar-container">
+              <div class="bar-label"><span>Alcance 3 (Indirectas)</span> <span id="lbl-scope3">0%</span></div>
+              <div class="bar-track"><div class="bar-fill fill-scope3" id="bar-scope3" style="width: 0%;"></div></div>
+          </div>
+      </div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 LUWA - Satellite Data & Environmental Monitoring
+</footer>
+
+<script>
+  function generarReporteGEI() {
+      // Factores de emisión de referencia (kg CO2e por unidad)
+      const f_gasolina = 2.31;
+      const f_gasnat = 2.02;     // por m3
+      const f_electricidad = 0.432; // por kWh
+      const f_residuos = 580.0;  // por Tonelada
+      const f_vuelos = 250.0;    // por hora de vuelo
+
+      // Extracción de datos
+      const v_gasolina = parseFloat(document.getElementById('c_gasolina').value) || 0;
+      const v_gasnat = parseFloat(document.getElementById('c_gasnat').value) || 0;
+      const v_electricidad = parseFloat(document.getElementById('c_electricidad').value) || 0;
+      const v_residuos = parseFloat(document.getElementById('c_residuos').value) || 0;
+      const v_vuelos = parseFloat(document.getElementById('c_vuelos').value) || 0;
+
+      // Cálculos por Alcance
+      const scope1 = (v_gasolina * f_gasolina) + (v_gasnat * f_gasnat);
+      const scope2 = (v_electricidad * f_electricidad);
+      const scope3 = (v_residuos * f_residuos) + (v_vuelos * f_vuelos);
+
+      const total_kg = scope1 + scope2 + scope3;
+      const total_ton = total_kg / 1000;
+
+      // Mostrar el panel
+      const panel = document.getElementById('panel-resultados');
+      panel.style.display = 'block';
+
+      if (total_kg === 0) {
+          document.getElementById('res-total').innerText = "0.00 Ton CO₂e";
+          document.getElementById('res-kg').innerText = "0.00 kg CO₂e calculados";
+          return;
+      }
+
+      // Imprimir totales
+      document.getElementById('res-total').innerText = total_ton.toFixed(3) + " Ton CO₂e";
+      document.getElementById('res-kg').innerText = total_kg.toLocaleString('es-MX', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + " kg CO₂e calculados";
+
+      // Calcular porcentajes
+      const pct1 = (scope1 / total_kg) * 100;
+      const pct2 = (scope2 / total_kg) * 100;
+      const pct3 = (scope3 / total_kg) * 100;
+
+      // Animar barras
+      setTimeout(() => {
+          document.getElementById('bar-scope1').style.width = pct1 + "%";
+          document.getElementById('lbl-scope1').innerText = scope1.toFixed(1) + " kg (" + pct1.toFixed(1) + "%)";
+          
+          document.getElementById('bar-scope2').style.width = pct2 + "%";
+          document.getElementById('lbl-scope2').innerText = scope2.toFixed(1) + " kg (" + pct2.toFixed(1) + "%)";
+          
+          document.getElementById('bar-scope3').style.width = pct3 + "%";
+          document.getElementById('lbl-scope3').innerText = scope3.toFixed(1) + " kg (" + pct3.toFixed(1) + "%)";
+      }, 100);
+  }
+</script>
+</body>
+</html>

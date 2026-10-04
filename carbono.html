@@ -176,12 +176,13 @@
   </a>
   
   <h1>Environmental Consultancy Services of LUWA Consultancy Group</h1>
-  <nav>
+  <nav class="luwa-main-nav">
+    <a href="index.html">Home</a>
     <a href="about.html">About</a>
     <a href="consultancy-services.html">Consultancy Services</a>
     <a href="data-methods.html">Data & Methods</a>
-    <a href="carbono.html">Carbon Calculator</a>
     <a href="sensing.html">Sensing Network</a>
+    <a href="carbono.html" class="active">Carbon Calculator</a>
     <a href="contact.html">Contact</a>
     <button class="cloud-btn" onclick="window.location.href='auth.html'">☁️ Connect to Cloud</button>
   </nav>
@@ -297,7 +298,7 @@
 
       // Display totals
       document.getElementById('res-total').innerText = total_ton.toFixed(3) + " Ton CO₂e";
-      document.getElementById('res-kg').innerText = total_kg.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + " kg CO₂e calculated";
+      document.getElementById('res-kg').innerText = total_kg.toLocaleString((window.LUWA_i18n?.getLanguage() === 'es' ? 'es-MX' : 'en-US'), {minimumFractionDigits: 1, maximumFractionDigits: 1}) + " kg CO₂e calculated";
 
       // Calculate percentages
       const pct1 = (scope1 / total_kg) * 100;
@@ -316,6 +317,12 @@
           document.getElementById('lbl-scope3').innerText = scope3.toFixed(1) + " kg (" + pct3.toFixed(1) + "%)";
       }, 100);
   }
+
+  window.addEventListener('luwa:languagechange', () => {
+      const panel = document.getElementById('panel-resultados');
+      if (panel && panel.style.display === 'block') generateGHGReport();
+  });
 </script>
+  <script src="assets/language.js"></script>
 </body>
 </html>
