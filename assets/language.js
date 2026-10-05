@@ -13,6 +13,7 @@
     'Sensing Network': 'Red de Sensores',
     'Contact': 'Contacto',
     'Carbon Calculator': 'Calculadora de Carbono',
+    'Visits': 'Visitas',
     '☁️ Connect to Cloud': '☁️ Conectar a la Nube',
     '← Back to Home': '← Volver al Inicio',
     '© 2026 LUWA - Satellite Data & Environmental Monitoring': '© 2026 LUWA - Datos Satelitales y Monitoreo Ambiental',
@@ -29,6 +30,7 @@
     'Contact LUWA Consulting': 'Contactar a LUWA Consulting',
     'Sensing Network & Dashboard - LUWA Consulting': 'Red de Sensores y Panel - LUWA Consulting',
     'Carbon Calculator - LUWA Consulting': 'Calculadora de Carbono - LUWA Consulting',
+    'Visits - LUWA Consulting': 'Visitas - LUWA Consulting',
     'Authenticate - LUWA Cloud': 'Autenticación - LUWA Cloud',
     'Authenticate to LUWA Cloud': 'Autenticarse en LUWA Cloud',
 
@@ -123,6 +125,31 @@
     'Scope 1 (Direct)': 'Alcance 1 (Directas)',
     'Scope 2 (Electricity)': 'Alcance 2 (Electricidad)',
     'Scope 3 (Indirect)': 'Alcance 3 (Indirectas)',
+
+
+    // Visits / privacy-friendly public-IP preview
+    'LUWA Visit Map': 'Mapa de Visitas de LUWA',
+    'Approximate visitor locations': 'Ubicaciones aproximadas de visitantes',
+    'This page uses public IP geolocation to estimate city and country. In this static version, history is stored only in this browser.': 'Esta página usa geolocalización pública por IP para estimar ciudad y país. En esta versión estática, el historial se guarda únicamente en este navegador.',
+    'Period': 'Periodo',
+    'Last 24 hours': 'Últimas 24 horas',
+    'Last 7 days': 'Últimos 7 días',
+    'Last 30 days': 'Últimos 30 días',
+    'All local history': 'Todo el historial local',
+    'Visits on this browser': 'Visitas en este navegador',
+    'Countries': 'Países',
+    'Cities': 'Ciudades',
+    'Last activity': 'Última actividad',
+    'Approximate locations recorded by this browser': 'Ubicaciones aproximadas registradas por este navegador',
+    'Point size represents the number of locally recorded visits.': 'El tamaño del punto representa el número de visitas registradas localmente.',
+    'Top countries': 'Principales países',
+    'Top cities': 'Principales ciudades',
+    'Privacy by design.': 'Privacidad desde el diseño.',
+    'No GPS permission is requested. The page uses approximate IP geolocation and stores only city, country, coarse coordinates, count and time in this browser. The IP address itself is not stored by LUWA.': 'No se solicita permiso de GPS. La página usa geolocalización aproximada por IP y guarda únicamente ciudad, país, coordenadas aproximadas, conteo y fecha en este navegador. LUWA no almacena la dirección IP.',
+    'Location detected': 'Ubicación detectada',
+    'Location service unavailable': 'Servicio de ubicación no disponible',
+    'Local-only analytics': 'Analítica solo local',
+    'Global aggregation requires a shared analytics service.': 'La agregación global requiere un servicio de analítica compartido.',
 
     // Authentication
     'Sign in': 'Iniciar sesión',
@@ -333,7 +360,8 @@
       nav.luwa-main-nav > a:nth-of-type(4) { width: 130px; }
       nav.luwa-main-nav > a:nth-of-type(5) { width: 140px; }
       nav.luwa-main-nav > a:nth-of-type(6) { width: 156px; }
-      nav.luwa-main-nav > a:nth-of-type(7) { width: 88px; }
+      nav.luwa-main-nav > a:nth-of-type(7) { width: 86px; }
+      nav.luwa-main-nav > a:nth-of-type(8) { width: 88px; }
       nav.luwa-main-nav > .cloud-btn {
         position: static !important;
         inset: auto !important;
