@@ -308,6 +308,10 @@
     nodes.forEach(node => translateNode(node, lang));
     translateAttributes(root, lang);
     document.documentElement.lang = lang;
+    // Keep the Visits navigation label synchronized on every LUWA page.
+    document.querySelectorAll('a[href="visits.html"]').forEach(link => {
+      link.textContent = lang === 'es' ? 'Visitas' : 'Visits';
+    });
     updateSwitcher(lang);
   }
 

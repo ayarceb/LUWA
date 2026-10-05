@@ -82,6 +82,8 @@
     @media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.details{grid-template-columns:1fr}#world-map-stage{min-height:470px}}
     @media(max-width:550px){main.visits-page{padding:26px 8px 55px}.stat{padding:14px 8px}.stat strong{font-size:24px}#world-map-stage{min-height:360px}.map-head{padding:9px 10px}.map-head h3{display:block;font-size:14px}.map-head p{display:block;margin:4px 0 0;font-size:11px}.legend{padding:10px 8px;gap:8px}.visit-marker{border-width:1.5px}}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase-config.js"></script>
   <script src="assets/language.js" defer></script>
 </head>
 <body>
@@ -107,7 +109,7 @@
     <p data-visits-i18n="subtitle">This page uses public IP geolocation to estimate city and country. Detected city points are stored locally and remain on this map across future visits from this browser.</p>
   </section>
 
-  <div class="notice"><strong data-visits-i18n="noticeTitle">Local persistent analytics.</strong> <span data-visits-i18n="noticeText">Detected city points remain stored in this browser until its site data are cleared. Global aggregation across different visitors still requires a shared analytics service.</span></div>
+  <div class="notice"><strong data-visits-i18n="noticeTitle">Global visit analytics.</strong> <span data-visits-i18n="noticeText">Visitor cities are stored in a shared Supabase database so the accumulated map can be seen by all LUWA visitors. Local storage remains as a fallback.</span></div>
 
   <div class="toolbar">
     <label for="period" data-visits-i18n="period">Period</label>
@@ -115,13 +117,13 @@
       <option value="1" data-visits-i18n="last24">Last 24 hours</option>
       <option value="7" data-visits-i18n="last7">Last 7 days</option>
       <option value="30" data-visits-i18n="last30">Last 30 days</option>
-      <option value="all" selected data-visits-i18n="allHistory">All local history</option>
+      <option value="all" selected data-visits-i18n="allHistory">All-time global history</option>
     </select>
     <span id="status" class="status"><span class="dot"></span><span id="status-text" data-visits-i18n="detecting">Detecting approximate location…</span></span>
   </div>
 
   <section class="stats">
-    <div class="stat"><strong id="visits-count">0</strong><span data-visits-i18n="visitsBrowser">Visits on this browser</span></div>
+    <div class="stat"><strong id="visits-count">0</strong><span data-visits-i18n="visitsBrowser">Global visits</span></div>
     <div class="stat"><strong id="countries-count">0</strong><span data-visits-i18n="countries">Countries</span></div>
     <div class="stat"><strong id="cities-count">0</strong><span data-visits-i18n="cities">Cities</span></div>
     <div class="stat"><strong id="last-activity">—</strong><span data-visits-i18n="lastActivity">Last activity</span></div>
@@ -139,8 +141,8 @@
       </div>
 
       <div class="map-head">
-        <h3 data-visits-i18n="globeTitle">Approximate locations recorded by this browser</h3>
-        <p data-visits-i18n="globeText">All recorded cities are displayed together on one continuous world map. Point size represents the number of locally recorded visits.</p>
+        <h3 data-visits-i18n="globeTitle">Approximate global visitor locations</h3>
+        <p data-visits-i18n="globeText">All recorded visitor cities are displayed together on one continuous world map. Point size represents the accumulated number of visits.</p>
       </div>
 
       <div class="legend" aria-label="Privacy information">
@@ -149,7 +151,7 @@
         <span aria-hidden="true">•</span>
         <span data-visits-i18n="noGps">No GPS permission</span>
         <span aria-hidden="true">•</span>
-        <span data-visits-i18n="noIp">No IP stored locally</span>
+        <span data-visits-i18n="noIp">No IP stored by LUWA</span>
       </div>
     </div>
   </section>
@@ -159,7 +161,7 @@
     <article class="panel"><h3 data-visits-i18n="topCities">Top cities</h3><ol id="cities-list" class="rank"></ol></article>
   </section>
 
-  <aside class="privacy"><strong data-visits-i18n="privacyTitle">Privacy by design.</strong> <span data-visits-i18n="privacyText">No GPS permission is requested. The page uses approximate IP geolocation and stores only city, country, coarse coordinates, count and time in this browser. The IP address itself is not stored by LUWA.</span></aside>
+  <aside class="privacy"><strong data-visits-i18n="privacyTitle">Privacy by design.</strong> <span data-visits-i18n="privacyText">No GPS permission is requested. LUWA stores only approximate city, country, coarse coordinates and visit time in the shared analytics database. The IP address itself is not stored by LUWA.</span></aside>
 </main>
 
 <footer>&copy; 2026 LUWA - Satellite Data & Environmental Monitoring</footer>
@@ -171,6 +173,9 @@
   const PLACES_KEY = 'luwa-local-visited-places-v1';
   const SESSION_KEY = 'luwa-local-visit-recorded-v1';
   const GEO_URL = 'https://ipwho.is/';
+  const SB_CONFIG = window.LUWA_SUPABASE_CONFIG || {};
+  const SUPABASE_READY = Boolean(window.supabase && SB_CONFIG.url && SB_CONFIG.publishableKey && !SB_CONFIG.url.includes('YOUR_'));
+  const sb = SUPABASE_READY ? window.supabase.createClient(SB_CONFIG.url, SB_CONFIG.publishableKey, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }) : null;
 
 
   const VISITS_TEXT = {
@@ -178,29 +183,29 @@
       navVisits: 'Visits',
       title: 'LUWA Visit Map',
       subtitle: 'This page uses public IP geolocation to estimate city and country. Detected city points are stored locally and remain on this map across future visits from this browser.',
-      noticeTitle: 'Local persistent analytics.',
-      noticeText: 'Detected city points remain stored in this browser until its site data are cleared. Global aggregation across different visitors still requires a shared analytics service.',
-      period: 'Period', last24: 'Last 24 hours', last7: 'Last 7 days', last30: 'Last 30 days', allHistory: 'All local history',
-      detecting: 'Detecting approximate location…', visitsBrowser: 'Visits on this browser', countries: 'Countries', cities: 'Cities', lastActivity: 'Last activity',
-      globeTitle: 'Approximate locations recorded by this browser',
-      globeText: 'All recorded cities are displayed together on one world map. Points remain visible once detected in this browser, and point size represents the number of locally recorded visits.',
-      privacyShort: 'Privacy:', cityOnly: 'City/country level only', noGps: 'No GPS permission', noIp: 'No IP stored locally',
+      noticeTitle: 'Global visit analytics.',
+      noticeText: 'Visitor cities are stored in a shared Supabase database so the accumulated map can be seen by all LUWA visitors. Local storage remains as a fallback.',
+      period: 'Period', last24: 'Last 24 hours', last7: 'Last 7 days', last30: 'Last 30 days', allHistory: 'All-time global history',
+      detecting: 'Detecting approximate location…', visitsBrowser: 'Global visits', countries: 'Countries', cities: 'Cities', lastActivity: 'Last activity',
+      globeTitle: 'Approximate global visitor locations',
+      globeText: 'All recorded visitor cities are displayed together on one continuous world map. Point size represents the accumulated number of visits.',
+      privacyShort: 'Privacy:', cityOnly: 'City/country level only', noGps: 'No GPS permission', noIp: 'No IP stored by LUWA',
       topCountries: 'Top countries', topCities: 'Top cities', privacyTitle: 'Privacy by design.',
-      privacyText: 'No GPS permission is requested. The page uses approximate IP geolocation and stores only city, country, coarse coordinates, count and time in this browser. The IP address itself is not stored by LUWA.'
+      privacyText: 'No GPS permission is requested. LUWA stores only approximate city, country, coarse coordinates and visit time in the shared analytics database. The IP address itself is not stored by LUWA.'
     },
     es: {
       navVisits: 'Visitas',
       title: 'Mapa de Visitas de LUWA',
       subtitle: 'Esta página utiliza geolocalización pública por IP para estimar la ciudad y el país. Los puntos de las ciudades detectadas se guardan localmente y permanecen en este mapa en futuras visitas desde este navegador.',
-      noticeTitle: 'Analítica local persistente.',
-      noticeText: 'Los puntos de las ciudades detectadas permanecen almacenados en este navegador hasta que se borren los datos del sitio. La agregación global entre distintos visitantes todavía requiere un servicio de analítica compartido.',
-      period: 'Periodo', last24: 'Últimas 24 horas', last7: 'Últimos 7 días', last30: 'Últimos 30 días', allHistory: 'Todo el historial local',
-      detecting: 'Detectando ubicación aproximada…', visitsBrowser: 'Visitas en este navegador', countries: 'Países', cities: 'Ciudades', lastActivity: 'Última actividad',
-      globeTitle: 'Ubicaciones aproximadas registradas por este navegador',
-      globeText: 'Todas las ciudades registradas se muestran juntas en un mapa mundi continuo. Los puntos permanecen visibles una vez detectados en este navegador y su tamaño representa el número de visitas registradas localmente.',
-      privacyShort: 'Privacidad:', cityOnly: 'Solo nivel ciudad/país', noGps: 'Sin permiso de GPS', noIp: 'La IP no se almacena localmente',
+      noticeTitle: 'Analítica global de visitas.',
+      noticeText: 'Las ciudades de los visitantes se almacenan en una base compartida de Supabase para que el mapa acumulado pueda ser visto por todos los visitantes de LUWA. El almacenamiento local queda como respaldo.',
+      period: 'Periodo', last24: 'Últimas 24 horas', last7: 'Últimos 7 días', last30: 'Últimos 30 días', allHistory: 'Todo el historial global',
+      detecting: 'Detectando ubicación aproximada…', visitsBrowser: 'Visitas globales', countries: 'Países', cities: 'Ciudades', lastActivity: 'Última actividad',
+      globeTitle: 'Ubicaciones globales aproximadas de visitantes',
+      globeText: 'Todas las ciudades de visitantes registradas se muestran juntas en un mapa mundi continuo. El tamaño de cada punto representa el número acumulado de visitas.',
+      privacyShort: 'Privacidad:', cityOnly: 'Solo nivel ciudad/país', noGps: 'Sin permiso de GPS', noIp: 'LUWA no almacena la IP',
       topCountries: 'Principales países', topCities: 'Principales ciudades', privacyTitle: 'Privacidad desde el diseño.',
-      privacyText: 'No se solicita permiso de GPS. La página utiliza geolocalización aproximada por IP y guarda únicamente ciudad, país, coordenadas aproximadas, conteo y fecha en este navegador. LUWA no almacena la dirección IP.'
+      privacyText: 'No se solicita permiso de GPS. LUWA guarda únicamente ciudad aproximada, país, coordenadas aproximadas y fecha de visita en la base de analítica compartida. LUWA no almacena la dirección IP.'
     }
   };
 
@@ -271,14 +276,16 @@
 
   async function recordApproximateVisit(){
     if (sessionStorage.getItem(SESSION_KEY) === '1') {
-      setStatus('ok', tr('Location detected','Ubicación detectada'));
+      setStatus('ok', tr('Visit already recorded for this session','Visita ya registrada en esta sesión'));
       return;
     }
+
     try {
       const r = await fetch(GEO_URL, {headers:{'Accept':'application/json'}});
       if(!r.ok) throw new Error('HTTP '+r.status);
       const g = await r.json();
       if(g.success === false || !g.country || !Number.isFinite(Number(g.latitude)) || !Number.isFinite(Number(g.longitude))) throw new Error('Invalid geolocation response');
+
       const row = {
         city: g.city || g.region || g.country,
         country: g.country,
@@ -287,12 +294,29 @@
         lng: coarse(g.longitude),
         time: new Date().toISOString()
       };
+
+      // Always keep a local backup.
       const h = loadHistory(); h.push(row); saveHistory(h);
       rememberPlace(row);
+
+      if (SUPABASE_READY) {
+        const { error } = await sb.rpc('record_luwa_visit', {
+          p_city: row.city,
+          p_country: row.country,
+          p_country_code: row.country_code,
+          p_lat: row.lat,
+          p_lng: row.lng
+        });
+        if (error) throw error;
+        setStatus('ok', tr('Global visit recorded','Visita global registrada') + ': ' + row.city + ', ' + row.country);
+      } else {
+        setStatus('', tr('Supabase not configured — local fallback','Supabase no configurado — respaldo local'));
+      }
+
       sessionStorage.setItem(SESSION_KEY,'1');
-      setStatus('ok', tr('Location detected','Ubicación detectada') + ': ' + row.city + ', ' + row.country);
     } catch(e){
-      setStatus('err', tr('Location service unavailable','Servicio de ubicación no disponible'));
+      console.warn('LUWA visit registration:', e);
+      setStatus('err', tr('Global service unavailable — using local data','Servicio global no disponible — usando datos locales'));
     }
   }
 
@@ -316,6 +340,57 @@
   function renderList(id, rows){
     const el=document.getElementById(id); el.replaceChildren();
     rows.slice(0,8).forEach((r,i)=>{ const li=document.createElement('li'); li.innerHTML='<span class="rank-num">'+(i+1)+'</span><span class="rank-place">'+esc(r.name)+'</span><span class="rank-value">'+r.visits.toLocaleString(lang()==='es'?'es-MX':'en-US')+'</span>'; el.appendChild(li); });
+  }
+
+  function periodDays(){
+    return period.value === 'all' ? null : (Number(period.value) || 30);
+  }
+
+  async function fetchGlobalLocations(days){
+    if (!SUPABASE_READY) return null;
+    const { data, error } = await sb.rpc('get_luwa_visit_locations', { p_days: days });
+    if (error) throw error;
+    return Array.isArray(data) ? data.map(r => ({
+      city: r.city,
+      country: r.country,
+      lat: Number(r.lat),
+      lng: Number(r.lng),
+      visits: Number(r.visits) || 0,
+      last: r.last_activity
+    })) : [];
+  }
+
+  function aggregateGlobalLocations(cities){
+    const countries = new Map();
+    for (const c of cities) countries.set(c.country, (countries.get(c.country) || 0) + c.visits);
+    return {
+      cities: [...cities].sort((a,b)=>b.visits-a.visits),
+      countries: [...countries].map(([name,visits])=>({name,visits})).sort((a,b)=>b.visits-a.visits)
+    };
+  }
+
+  async function renderGlobal(){
+    if (!SUPABASE_READY) { render(); return; }
+    try {
+      const [selectedCities, allTimeCities] = await Promise.all([
+        fetchGlobalLocations(periodDays()),
+        fetchGlobalLocations(null)
+      ]);
+      const a = aggregateGlobalLocations(selectedCities || []);
+      const totalVisits = a.cities.reduce((sum,c)=>sum+c.visits,0);
+      document.getElementById('visits-count').textContent = totalVisits.toLocaleString(lang()==='es'?'es-MX':'en-US');
+      document.getElementById('countries-count').textContent = a.countries.length;
+      document.getElementById('cities-count').textContent = a.cities.length;
+      const last = a.cities.length ? a.cities.reduce((x,y)=>new Date(x.last)>new Date(y.last)?x:y).last : null;
+      document.getElementById('last-activity').textContent = last ? new Intl.DateTimeFormat(lang()==='es'?'es-MX':'en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(last)) : '—';
+      renderList('countries-list', a.countries);
+      renderList('cities-list', a.cities.map(r=>({name:r.city+', '+r.country,visits:r.visits})));
+      renderWorldMapPoints(allTimeCities || []);
+    } catch(e) {
+      console.warn('LUWA global analytics:', e);
+      setStatus('err', tr('Global service unavailable — showing local backup','Servicio global no disponible — mostrando respaldo local'));
+      render();
+    }
   }
 
   function render(){
@@ -438,9 +513,9 @@
   async function init(){
     applyVisitsLanguage();
     await recordApproximateVisit();
-    render();
-    period.addEventListener('change',render);
-    window.addEventListener('luwa:languagechange',()=>setTimeout(()=>{ applyVisitsLanguage(); render(); },0));
+    await renderGlobal();
+    period.addEventListener('change',renderGlobal);
+    window.addEventListener('luwa:languagechange',()=>setTimeout(()=>{ applyVisitsLanguage(); renderGlobal(); },0));
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
 })();
