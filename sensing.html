@@ -25,8 +25,12 @@
     header h1 { color: var(--azul-luwa); margin-bottom: 5px; font-size: 1.8rem; padding-left: 120px; padding-right: 120px; }
     
     nav { margin-top: 8px; }
-    nav a { color: var(--texto-carbon); margin: 0 10px; text-decoration: none; font-size: 14px; transition: color 0.3s ease; }
-    nav a:hover { color: var(--azul-luwa); font-weight: bold; }
+    nav a { color: var(--texto-carbon); margin: 0 10px; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.3s ease; position: relative; padding: 0.25rem 0; }
+    nav a:hover,
+    nav a.active { color: var(--azul-luwa); font-weight: bold; }
+    nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--azul-luwa); transition: all 0.3s ease; transform: translateX(-50%); }
+    nav a:hover::after,
+    nav a.active::after { width: 100%; }
 
     .cloud-btn { background-color: var(--azul-luwa); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-left: 10px; transition: 0.3s; }
     .cloud-btn:hover { background-color: var(--cian-acento); }
@@ -103,7 +107,6 @@
     <a href="data-methods.html">Data & Methods</a>
     <a href="sensing.html" class="active">Sensing Network</a>
     <a href="carbono.html">Carbon Calculator</a>
-    <a href="visits.html">Visits</a>
     <a href="contact.html">Contact</a>
     <button class="cloud-btn" onclick="window.location.href='auth.html'">☁️ Connect to Cloud</button>
   </nav>
