@@ -615,7 +615,7 @@
       nav.luwa-main-nav > a:nth-of-type(3) { width: 166px; }
       nav.luwa-main-nav > a:nth-of-type(4) { width: 130px; }
       nav.luwa-main-nav > a:nth-of-type(5) { width: 140px; }
-      nav.luwa-main-nav > a:nth-of-type(6) { width: 156px; }
+      nav.luwa-main-nav > a:nth-of-type(6) { width: 86px; }
       nav.luwa-main-nav > a:nth-of-type(7) { width: 86px; }
       nav.luwa-main-nav > a:nth-of-type(8) { width: 88px; }
       nav.luwa-main-nav > .cloud-btn {
